@@ -1,6 +1,4 @@
 buildscript {
-    val kotlinVersion : String by extra {"1.3.21"}
-    
     repositories {
         mavenCentral()
         gradlePluginPortal()
@@ -25,8 +23,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${extra.get("kotlinVersion")}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${extra.get("kotlinVersion")}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
 
@@ -38,7 +36,7 @@ dependencies {
 }
 
 tasks.bootJar {
-    archiveBaseName.set("effit-webapp.jar")
+    baseName = "effit-webapp.jar"
 }
 
 tasks.compileKotlin {
