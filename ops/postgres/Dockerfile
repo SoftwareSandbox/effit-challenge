@@ -1,0 +1,3 @@
+FROM postgres:10-alpine
+ENV POSTGRES_USER effit
+ENV POSTGRES_PASSWORD deveffit

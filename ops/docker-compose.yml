@@ -1,0 +1,20 @@
+version: '3'
+services:
+  effit:
+    build: ./webapp/
+    ports:
+        - "8080:8080"
+        - "9876:9876"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://effit_db/
+      SPRING_DATASOURCE_USERNAME: effit
+      SPRING_DATASOURCE_PASSWORD: deveffit
+#      SPRING_PROFILES_ACTIVE: localsecurity
+      JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,address=*:9876,server=y,suspend=n"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+  effit_db:
+    build: ./postgres/
+    restart: always
+    ports:
+        - "5544:5432"
