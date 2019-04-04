@@ -45,3 +45,10 @@ tasks.compileKotlin {
 tasks.compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+tasks.processResources {
+    dependsOn(":effit-ui:build")
+    from ("../effit-ui/dist") {
+        into("static")
+    }
+}
