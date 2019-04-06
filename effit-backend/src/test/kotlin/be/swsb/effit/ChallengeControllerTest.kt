@@ -45,7 +45,6 @@ class ChallengeControllerTest : StringSpec() {
                     .andExpect(status().isOk)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(content().json(toJson(expectedChallenges), true))
-                    .andReturn()
         }
     }
 
