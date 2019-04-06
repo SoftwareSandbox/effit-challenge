@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/challenge",
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-class ChallengeController {
+class ChallengeController(private val challengeRepository: ChallengeRepository) {
 
     @GetMapping
     fun allChallenges() : ResponseEntity<List<Challenge>> {
-        val someChallenge = Challenge("Playboy", 7, "ride down a slope with exposed torso")
-        return ResponseEntity.ok(listOf(someChallenge))
+        return ResponseEntity.ok(challengeRepository.findAll())
     }
 }

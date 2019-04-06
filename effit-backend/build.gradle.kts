@@ -35,10 +35,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "junit")
+        exclude(module = "mockito-core")
+    }
     testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
     testImplementation("io.kotlintest:kotlintest-extensions-spring:$kotlinTestVersion")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.13")
 }
 
 tasks.bootJar {
