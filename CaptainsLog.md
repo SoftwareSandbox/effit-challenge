@@ -1,3 +1,13 @@
+## 2019/04/06 - @AutoConfiguration misery
+Somehow tests are loading beans defined in separate configuration classes.
+
+We'll try to use JUnit instead of kotlin-test to get that fixed. :pray:
+
+## 2019/04/06 - No-arg plugin not working?
+Had to manually add default constructors to fix our RepositoryIntegrationTest T_T
+
+Really need to resolve this issue!
+
 ## 2019/04/06 - Using functional package names instead of technical ones
 
 ## 2019/04/06 - WebMvcTest vs. SpringBootTest
