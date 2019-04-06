@@ -12,3 +12,5 @@ SpringBoot web app both serves the REST API, **and** the VueJS app.
 
 ## A note on incremental architecture
 We'll start off by building a monolith (with an attempt at keeping it modular).
+
+See [CaptainsLog](CaptainsLog.md) for more [Lightweight ADR's](https://adr.github.io/)
