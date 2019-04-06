@@ -11,6 +11,6 @@ class ChallengeResource {
 
     @GetMapping
     fun allChallenges() : ResponseEntity<Challenge> {
-        return ResponseEntity.ok(Challenge("RickRolled"))
+        return ResponseEntity.ok(Challenge("RickRolled", 7, "ride down a slope with exposed torso"))
     }
 }
