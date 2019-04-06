@@ -22,6 +22,10 @@ repositories {
     mavenCentral()
 }
 
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform { }
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
@@ -30,9 +34,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.13")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
 }
 
 tasks.bootJar {
