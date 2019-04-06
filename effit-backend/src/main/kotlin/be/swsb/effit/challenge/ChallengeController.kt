@@ -1,4 +1,4 @@
-package be.swsb.effit
+package be.swsb.effit.challenge
 
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

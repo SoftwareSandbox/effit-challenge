@@ -1,5 +1,8 @@
-package be.swsb.effit
+package be.swsb.effit.challenge
 
+import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.ChallengeController
+import be.swsb.effit.challenge.ChallengeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotlintest.specs.StringSpec
 import io.kotlintest.spring.SpringListener
@@ -8,10 +11,8 @@ import io.mockk.mockk
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders

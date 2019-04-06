@@ -1,3 +1,5 @@
+## 2019/04/06 - Using functional package names instead of technical ones
+
 ## 2019/04/06 - WebMvcTest vs. SpringBootTest
 `@SpringBootTest` requires your test `@Configuration` to be in a separate class (probably because of initialization order).
 

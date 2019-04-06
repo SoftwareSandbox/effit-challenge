@@ -1,4 +1,4 @@
-package be.swsb.effit
+package be.swsb.effit.challenge
 
 import java.lang.IllegalStateException
 
