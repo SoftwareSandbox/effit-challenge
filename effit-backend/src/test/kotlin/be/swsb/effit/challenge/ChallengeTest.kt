@@ -1,6 +1,5 @@
 package be.swsb.effit.challenge
 
-import be.swsb.effit.challenge.Challenge
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowExactly
 import io.kotlintest.specs.DescribeSpec

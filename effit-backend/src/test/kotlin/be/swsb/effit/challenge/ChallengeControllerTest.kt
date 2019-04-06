@@ -1,8 +1,5 @@
 package be.swsb.effit.challenge
 
-import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.challenge.ChallengeController
-import be.swsb.effit.challenge.ChallengeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotlintest.specs.StringSpec
 import io.kotlintest.spring.SpringListener
@@ -16,7 +13,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [ChallengeController::class])
 @AutoConfigureMockMvc
@@ -37,7 +35,7 @@ class ChallengeControllerTest : StringSpec() {
 
     init {
         "GET /api/challenge should return all Challenges" {
-            val expectedChallenges = listOf(Challenge("Playboy", 7, "ride down a slope with exposed torso"))
+            val expectedChallenges = listOf(Challenge(name = "Playboy", points = 7, description = "ride down a slope with exposed torso"))
 
             every { challengeRepository.findAll() } returns expectedChallenges
 

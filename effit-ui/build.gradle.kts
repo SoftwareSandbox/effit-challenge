@@ -1,7 +1,6 @@
 import com.moowork.gradle.node.npm.NpmTask
 
 plugins {
-    kotlin("jvm") version "1.3.21"
     id("com.moowork.node") version "1.2.0"
 }
 
@@ -18,13 +17,9 @@ tasks.register("buildUI", NpmTask::class) {
     setArgs(listOf("run", "build"))
 }
 
-tasks.register("jestTests", NpmTask::class) {
+tasks.register("build", NpmTask::class) {
     dependsOn("buildUI")
     group = "build"
     description = "Run tests"
     setArgs(listOf("run", "test:unit"))
-}
-
-tasks.build {
-    dependsOn("jestTests")
 }

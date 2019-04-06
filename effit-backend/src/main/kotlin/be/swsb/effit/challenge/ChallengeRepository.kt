@@ -1,10 +1,6 @@
 package be.swsb.effit.challenge
 
-import org.springframework.stereotype.Repository
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
 
-@Repository
-class ChallengeRepository {
-    fun findAll(): List<Challenge> {
-        return emptyList()
-    }
-}
+interface ChallengeRepository : JpaRepository<Challenge, UUID>

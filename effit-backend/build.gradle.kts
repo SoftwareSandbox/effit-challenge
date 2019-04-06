@@ -13,10 +13,11 @@ apply(plugin = "io.spring.dependency-management")
 
 plugins {
     kotlin("jvm") version "1.3.21"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.21"
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.21" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.3.21"
     id("org.springframework.boot") version "2.1.4.RELEASE"
 }
-
 
 repositories {
     mavenCentral()
@@ -33,7 +34,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    testImplementation("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "junit")
@@ -41,10 +46,12 @@ dependencies {
     }
     testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
     testImplementation("io.kotlintest:kotlintest-extensions-spring:$kotlinTestVersion")
+    testImplementation("io.mockk:mockk:1.9.1")
 }
 
 tasks.bootJar {
     baseName = "effit-webapp.jar"
+    mainClassName = "be.swsb.effit.EffitApplication"
 }
 
 tasks.compileKotlin {
