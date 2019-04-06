@@ -26,15 +26,18 @@ val test by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
 
+val kotlinTestVersion = "3.3.2"
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
+    testImplementation("io.kotlintest:kotlintest-extensions-spring:$kotlinTestVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.13")
 }
 
