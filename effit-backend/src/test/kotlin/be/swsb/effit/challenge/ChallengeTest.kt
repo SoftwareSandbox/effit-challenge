@@ -1,20 +1,20 @@
 package be.swsb.effit.challenge
 
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrowExactly
-import io.kotlintest.specs.DescribeSpec
+import org.assertj.core.api.Assertions
 
-class ChallengeTest : DescribeSpec({
-    describe("Challenge construction") {
-        it("should fail with negative points") {
-            shouldThrowExactly<IllegalStateException> {
-                Challenge(name = "Playboy", points = -7, description = "ride down a slope with exposed torso")
-            }.message shouldBe "Cannot create a Challenge with negative points"
-        }
-        it("should fail with 0 points") {
-            shouldThrowExactly<IllegalStateException> {
-                Challenge(name = "Playboy", points = 0, description = "ride down a slope with exposed torso")
-            }.message shouldBe "Cannot create a Challenge with 0 points"
-        }
+class ChallengeTest {
+
+    fun `should fail with negative points`() {
+        Assertions.assertThatThrownBy {
+            Challenge(name = "Playboy", points = -7, description = "ride down a slope with exposed torso")
+        }.isInstanceOf(IllegalStateException::class.java)
+        .hasMessage("Cannot create a Challenge with negative points")
     }
-})
+
+    fun `should fail with 0 points`() {
+        Assertions.assertThatThrownBy {
+            Challenge(name = "Playboy", points = 0, description = "ride down a slope with exposed torso")
+        }.isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("Cannot create a Challenge with 0 points")
+    }
+}

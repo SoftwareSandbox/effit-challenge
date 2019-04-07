@@ -1,30 +1,29 @@
 package be.swsb.effit.challenge
 
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
-import io.kotlintest.spring.SpringListener
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.test.context.junit4.SpringRunner
 
+@RunWith(SpringRunner::class)
 @DataJpaTest
-class ChallengeRepositoryIntegrationTest : StringSpec() {
-    override fun listeners() = listOf(SpringListener)
+class ChallengeRepositoryIntegrationTest {
 
     @Autowired
     lateinit var challengeRepository: ChallengeRepository
 
-    init {
-        "findAll should return all of the Challenges that are persisted in the DB" {
-            val playboyChallenge = Challenge(name = "Playboy", points = 7, description = "playboy description")
-            val picassoChallenge = Challenge(name = "Picasso", points = 3, description = "picasso description")
+    @Test
+    fun `findAll should return all of the Challenges that are persisted in the DB`() {
+        val playboyChallenge = Challenge(name = "Playboy", points = 7, description = "playboy description")
+        val picassoChallenge = Challenge(name = "Picasso", points = 3, description = "picasso description")
 
-            challengeRepository.save(playboyChallenge)
-            challengeRepository.save(picassoChallenge)
+        challengeRepository.save(playboyChallenge)
+        challengeRepository.save(picassoChallenge)
 
-            val actual = challengeRepository.findAll()
+        val actual = challengeRepository.findAll()
 
-            actual shouldBe listOf(playboyChallenge, picassoChallenge)
-        }
-
+        assertThat(actual).containsExactly(playboyChallenge, picassoChallenge)
     }
 }

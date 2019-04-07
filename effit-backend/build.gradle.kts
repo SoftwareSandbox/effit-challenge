@@ -40,13 +40,7 @@ dependencies {
 
     testImplementation("com.h2database:h2")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "junit")
-        exclude(module = "mockito-core")
-    }
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
-    testImplementation("io.kotlintest:kotlintest-extensions-spring:$kotlinTestVersion")
-    testImplementation("io.mockk:mockk:1.9.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.bootJar {
