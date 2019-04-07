@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import ChallengesOverview from './views/ChallengesOverview.vue';
+import ChallengesOverview from './components/ChallengesOverview.vue';
 
 Vue.use(Router);
 
@@ -9,7 +9,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '/challenges',
       name: 'challenges',
       component: ChallengesOverview,
     },
