@@ -27,10 +27,11 @@
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>{{title}}</v-toolbar-title>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
+        <!-- To be replaced with router-outlet  -->
         <v-layout justify-center align-center>
           <v-flex shrink>
             <v-tooltip right>
@@ -67,6 +68,7 @@
       props: {source: String}
   })
   export default class App extends Vue {
+      title = 'EFFIT'
       drawer = null;
   }
 </script>
