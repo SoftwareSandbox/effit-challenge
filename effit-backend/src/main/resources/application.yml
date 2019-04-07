@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url : jdbc:postgresql://localhost:5544/effitdb
+    driverClassName: org.postgresql.Driver
+    username: effit
+    password: deveffit
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults : false # Disable feature detection by this undocumented parameter. Check the org.hibernate.engine.jdbc.internal.JdbcServiceImpl.configure method for more details.
+    database-platform : org.hibernate.dialect.PostgreSQL95Dialect

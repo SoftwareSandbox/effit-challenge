@@ -38,6 +38,9 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    implementation("org.flywaydb:flyway-core:5.2.4")
+    implementation("org.postgresql:postgresql:42.2.5")
+    
     testImplementation("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

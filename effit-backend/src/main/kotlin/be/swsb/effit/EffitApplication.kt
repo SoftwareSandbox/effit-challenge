@@ -8,9 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableTransactionManagement
-class EffitApplication {
+class EffitApplication
 
-    fun main(args: Array<String>) {
-        SpringApplication.run(EffitApplication::class.java, *args)
-    }
+fun main(args: Array<String>) {
+    SpringApplication.run(EffitApplication::class.java, *args)
 }
