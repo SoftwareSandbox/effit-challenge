@@ -1,9 +1,11 @@
 package be.swsb.effit.challenge
 
 import org.assertj.core.api.Assertions
+import org.junit.Test
 
 class ChallengeTest {
 
+    @Test
     fun `should fail with negative points`() {
         Assertions.assertThatThrownBy {
             Challenge(name = "Playboy", points = -7, description = "ride down a slope with exposed torso")
@@ -11,6 +13,7 @@ class ChallengeTest {
         .hasMessage("Cannot create a Challenge with negative points")
     }
 
+    @Test
     fun `should fail with 0 points`() {
         Assertions.assertThatThrownBy {
             Challenge(name = "Playboy", points = 0, description = "ride down a slope with exposed torso")
