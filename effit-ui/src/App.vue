@@ -7,20 +7,20 @@
             app
     >
       <v-list dense>
-        <v-list-tile @click="">
+        <v-list-tile @click="$router.push('challenges')">
           <v-list-tile-action>
             <v-icon>dashboard</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Dashboard</v-list-tile-title>
+            <v-list-tile-title>Home</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile @click="$router.push('about')">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Settings</v-list-tile-title>
+            <v-list-tile-title>About</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -35,7 +35,7 @@
       </v-container>
     </v-content>
     <v-footer app fixed>
-      <span>&copy; 2017</span>
+      <span>&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
@@ -46,7 +46,7 @@
   @Component({
   })
   export default class App extends Vue {
-      private title = 'EFFIT';
-      private drawer = null;
+      title = 'EFFIT';
+      drawer = null;
   }
 </script>
