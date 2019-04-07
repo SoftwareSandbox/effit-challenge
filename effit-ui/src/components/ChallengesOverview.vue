@@ -31,14 +31,10 @@
         ];
         public challenges: any[] = [];
 
-        // [x] should list all challenges in a table
-        // [x] those challenges should first come from a hardcoded array
-        // [ ] later they should be the result of a REST API call
         public mounted() {
-            const playboyChallenge = {name: 'playboy', points: 7, description: 'playboy description'};
-            const picassoChallenge = {name: 'picasso', points: 3, description: 'picasso description'};
-
-            this.challenges = [playboyChallenge, picassoChallenge];
+            this.$axios
+                .get('/api/challenge')
+                .then(({data}) => this.challenges = data);
         }
     }
 </script>
