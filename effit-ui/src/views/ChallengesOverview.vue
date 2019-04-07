@@ -25,11 +25,9 @@
   import {Component, Vue} from 'vue-property-decorator';
 
   @Component({
-  components: {
-
-  },
+    props: {source: String},
+    components: {},
 })
 export default class ChallengesOverview extends Vue {
-    source = null;
 }
 </script>

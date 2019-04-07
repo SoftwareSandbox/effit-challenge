@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
   <v-app id="inspire" dark>
     <v-navigation-drawer
             v-model="drawer"
@@ -41,14 +41,12 @@
 </template>
 
 <script>
-  import Component from "vue-class-component";
-  import Vue from "vue";
+  import {Component, Vue} from 'vue-property-decorator';
 
   @Component({
-      props: {source: String}
   })
   export default class App extends Vue {
-      title = 'EFFIT'
-      drawer = null;
+      private title = 'EFFIT';
+      private drawer = null;
   }
 </script>
