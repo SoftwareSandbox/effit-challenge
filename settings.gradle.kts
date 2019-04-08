@@ -1,3 +1,3 @@
 rootProject.name = "effit-challenge"
 
-include("effit-backend","effit-ui")
+include("effit-backend","effit-ui","ops")

@@ -48,7 +48,7 @@ dependencies {
 }
 
 tasks.bootJar {
-    baseName = "effit-webapp.jar"
+    baseName = "effit-webapp"
     mainClassName = "be.swsb.effit.EffitApplication"
 }
 
