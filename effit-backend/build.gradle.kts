@@ -27,7 +27,7 @@ val test by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
 
-val kotlinTestVersion = "3.3.2"
+val junit5Version = "5.4.1"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
@@ -44,6 +44,7 @@ dependencies {
     testImplementation("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit5Version")
 }
 
 tasks.bootJar {
