@@ -14,10 +14,13 @@ import org.springframework.stereotype.Component
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableTransactionManagement
-class EffitApplication
-
-fun main(args: Array<String>) {
-    SpringApplication.run(EffitApplication::class.java, *args)
+class EffitApplication {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            SpringApplication.run(EffitApplication::class.java, *args)
+        }
+    }
 }
 
 @Component

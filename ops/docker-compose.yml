@@ -6,7 +6,7 @@ services:
         - "8080:8080"
         - "9876:9876"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://effit_db/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://effit_db/effitdb
       SPRING_DATASOURCE_USERNAME: effit
       SPRING_DATASOURCE_PASSWORD: deveffit
 #      SPRING_PROFILES_ACTIVE: localsecurity
