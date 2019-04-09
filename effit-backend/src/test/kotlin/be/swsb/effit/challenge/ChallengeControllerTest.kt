@@ -1,16 +1,15 @@
 package be.swsb.effit.challenge
 
+import be.swsb.effit.competition.CompetitionRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -25,6 +24,8 @@ class ChallengeControllerTest {
 
     @MockBean
     lateinit var challengeRepositoryMock: ChallengeRepository
+    @MockBean
+    lateinit var competitionRepositoryMock: CompetitionRepository
 
     @Test
     fun `GET api challenge should return all Challenges`() {
