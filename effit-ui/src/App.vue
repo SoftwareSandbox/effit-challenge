@@ -9,7 +9,7 @@
       <v-list dense>
         <v-list-tile @click="$router.push('challenges')">
           <v-list-tile-action>
-            <v-icon>dashboard</v-icon>
+            <v-icon>stars</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Challenges</v-list-tile-title>
@@ -18,7 +18,7 @@
 
         <v-list-tile @click="$router.push('competitions')">
           <v-list-tile-action>
-            <v-icon>dashboard</v-icon>
+            <v-icon>stars</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Competitions</v-list-tile-title>
