@@ -8,6 +8,29 @@ import java.time.LocalDate
 class CompetitionTest {
 
     @Test
+    fun `A Competition can be created with a Name, Start and End Date`() {
+        val startDate = LocalDate.of(2018,3,19)
+        val endDate = LocalDate.of(2018,3,29)
+        val actual = Competition.competition(name = "SnowCase Val Thorens 2018", startDate = startDate, endDate = endDate)
+
+        assertThat(actual.name).isEqualTo("SnowCase Val Thorens 2018")
+        assertThat(actual.startDate).isEqualTo(startDate)
+        assertThat(actual.endDate).isEqualTo(endDate)
+    }
+
+    @Test
+    fun `A Competition cannot be created with an endDate before the startDate`() {
+        val startDate = LocalDate.of(2018,3,19)
+        val endDate = startDate.minusDays(10)
+
+        assertThatThrownBy {
+            Competition.competition(name = "SnowCase Val Thorens 2018", startDate = startDate, endDate = endDate)
+        }
+                .isInstanceOf(IllegalArgumentException::class.java)
+                .hasMessage("The end date can not be before the start date")
+    }
+
+    @Test
     fun `when a Competition is created with just an endDate, startDate defaults to today`() {
         val today = LocalDate.now()
 
