@@ -43,6 +43,20 @@ class CompetitionControllerTest {
                 .andExpect(content().json(toJson(expectedCompetitions), true))
     }
 
+    @Test
+    fun `GET api competition name should return the competition with matching name`() {
+        val requestedCompetitionName = "SnowCase2018"
+        val expectedCompetition = Competition.competition(requestedCompetitionName, LocalDate.now(), LocalDate.now().plusDays(10))
+
+        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(expectedCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{name}", requestedCompetitionName)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(toJson(expectedCompetition), true))
+    }
+
     fun toJson(jsonObject: Any): String {
         return objectMapper.writeValueAsString(jsonObject)
     }
