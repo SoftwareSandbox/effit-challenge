@@ -28,13 +28,13 @@ class EffitApplication {
 
 @Component
 class AppStartupRunner(private val challengeRepository: ChallengeRepository,
-                       private val competionRepository: CompetitionRepository) : ApplicationRunner {
+                       private val competitionRepository: CompetitionRepository) : ApplicationRunner {
 
     @Throws(Exception::class)
     override fun run(args: ApplicationArguments) {
         val snowcase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 16), LocalDate.of(2018, 3, 26))
-        competionRepository.deleteAll()
-        competionRepository.save(snowcase2018)
+        competitionRepository.deleteAll()
+        competitionRepository.save(snowcase2018)
         challengeRepository.deleteAll()
         happyLittleChallenges.map { challengeRepository.save(it) }
     }
