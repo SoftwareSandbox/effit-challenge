@@ -2,6 +2,8 @@ package be.swsb.effit
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.competition.Competition
+import be.swsb.effit.competition.CompetitionRepository
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 
 @SpringBootApplication
@@ -24,10 +27,14 @@ class EffitApplication {
 }
 
 @Component
-class AppStartupRunner(private val challengeRepository: ChallengeRepository) : ApplicationRunner {
+class AppStartupRunner(private val challengeRepository: ChallengeRepository,
+                       private val competionRepository: CompetitionRepository) : ApplicationRunner {
 
     @Throws(Exception::class)
     override fun run(args: ApplicationArguments) {
+        val snowcase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 16), LocalDate.of(2018, 3, 26))
+        competionRepository.deleteAll()
+        competionRepository.save(snowcase2018)
         challengeRepository.deleteAll()
         happyLittleChallenges.map { challengeRepository.save(it) }
     }
