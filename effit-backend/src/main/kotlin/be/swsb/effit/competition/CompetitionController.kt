@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("api/competition", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+@RequestMapping("/api/competition",
+        produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 class CompetitionController(private val competitionRepository: CompetitionRepository) {
 
     @GetMapping
