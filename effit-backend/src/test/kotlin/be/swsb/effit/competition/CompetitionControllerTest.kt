@@ -57,6 +57,17 @@ class CompetitionControllerTest {
                 .andExpect(content().json(toJson(expectedCompetition), true))
     }
 
+    @Test
+    fun `GET api competition name should return 404 when no matching Competition found for given name`() {
+        val requestedCompetitionName = "SnowCase2018"
+
+        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(null)
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{name}", requestedCompetitionName)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().`is`(404))
+    }
+
     fun toJson(jsonObject: Any): String {
         return objectMapper.writeValueAsString(jsonObject)
     }
