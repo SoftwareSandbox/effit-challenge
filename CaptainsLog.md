@@ -1,3 +1,6 @@
+## 2019/04/07 - JUnit 5 to the rescue
+Using JUnit 5 did help fix our problem with configuration loading...
+
 ## 2019/04/06 - @AutoConfiguration misery
 Somehow tests are loading beans defined in separate configuration classes.
 
