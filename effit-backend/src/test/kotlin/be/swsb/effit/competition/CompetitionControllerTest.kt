@@ -1,6 +1,6 @@
-package be.swsb.effit.challenge
+package be.swsb.effit.competition
 
-import be.swsb.effit.competition.CompetitionRepository
+import be.swsb.effit.challenge.ChallengeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,10 +14,11 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(controllers = [ChallengeController::class])
-class ChallengeControllerTest {
+@WebMvcTest(controllers = [CompetitionController::class])
+class CompetitionControllerTest {
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -25,21 +26,21 @@ class ChallengeControllerTest {
     lateinit var objectMapper: ObjectMapper
 
     @MockBean
-    lateinit var challengeRepositoryMock: ChallengeRepository
-    @MockBean
     lateinit var competitionRepositoryMock: CompetitionRepository
+    @MockBean
+    lateinit var challengeRepositoryMock: ChallengeRepository
 
     @Test
-    fun `GET api challenge should return all Challenges`() {
-        val expectedChallenges = listOf(Challenge(name = "Playboy", points = 7, description = "ride down a slope with exposed torso"))
+    fun `GET api competition should return all Competitions`() {
+        val expectedCompetitions = listOf(Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10)))
 
-        Mockito.`when`(challengeRepositoryMock.findAll()).thenReturn(expectedChallenges)
+        Mockito.`when`(competitionRepositoryMock.findAll()).thenReturn(expectedCompetitions)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition")
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(toJson(expectedChallenges), true))
+                .andExpect(content().json(toJson(expectedCompetitions), true))
     }
 
     fun toJson(jsonObject: Any): String {
