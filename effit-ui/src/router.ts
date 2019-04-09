@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import ChallengesOverview from './components/ChallengesOverview.vue';
+import CompetitionsOverview from './components/CompetitionsOverview.vue';
 
 Vue.use(Router);
 
@@ -12,6 +13,11 @@ export default new Router({
       name: 'challenges',
       path: '/challenges',
       component: ChallengesOverview,
+    },
+    {
+      name: 'competitions',
+      path: '/competitions',
+      component: CompetitionsOverview,
     },
     {
       name: 'about',
