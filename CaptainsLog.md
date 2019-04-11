@@ -1,3 +1,18 @@
+## 2019/04/11 - Use router-link instead of @click="router.push()"
+`<router-link>` has a `tag` attribute that replaces the element with that tag:
+```
+<router-link to="/challenges" tag="v-list-tile">
+```
+
+## 2019/04/11 - Backing properties
+To make sure exposed lists are not mutable externally, provide backing property like so:
+
+```
+private var _challenges: List<Challenge> = emptyList()
+val challenges: List<Challenge>
+    get() = _challenges
+```
+
 ## 2019/04/07 - JUnit 5 to the rescue
 Using JUnit 5 did help fix our problem with configuration loading...
 
