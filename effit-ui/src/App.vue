@@ -7,32 +7,32 @@
             app
     >
       <v-list dense>
-        <v-list-tile @click="$router.push('/challenges')">
+        <router-link to="/challenges" tag="v-list-tile">
           <v-list-tile-action>
             <v-icon>stars</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Challenges</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </router-link >
 
-        <v-list-tile @click="$router.push('/competitions')">
+        <router-link to="/competitions" tag="v-list-tile">
           <v-list-tile-action>
             <v-icon>stars</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Competitions</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </router-link>
 
-        <v-list-tile @click="$router.push('/about')">
+        <router-link to="/about" tag="v-list-tile">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>About</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </router-link>
 
       </v-list>
     </v-navigation-drawer>
