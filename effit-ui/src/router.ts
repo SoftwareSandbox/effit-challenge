@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import ChallengesOverview from './components/ChallengesOverview.vue';
 import CompetitionsOverview from './components/CompetitionsOverview.vue';
+import ChallengesOverview from './views/ChallengesOverview.vue';
 import CompetitionDetail from './views/CompetitionDetail.vue';
 
 Vue.use(Router);
