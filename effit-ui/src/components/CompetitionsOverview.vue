@@ -7,7 +7,9 @@
                 align top
         >
             <template v-slot:items="props">
-                <td class="text-xs-left competition-name" @click="navigateToCompetition(props.item)">{{ props.item.name }}</td>
+                <router-link tag="td"
+                             class="text-xs-left competition-name"
+                             :to="`/competitions/${props.item.name}`">{{ props.item.name }}</router-link>
                 <td class="text-xs-right">{{ props.item.startDate }}</td>
                 <td class="text-xs-left">{{ props.item.endDate }}</td>
             </template>
@@ -37,9 +39,6 @@
                 .then(({data}) => this.competitions = data);
         }
 
-        public navigateToCompetition(competition: any) {
-            this.$router.push(`/competitions/${competition.name}`);
-        }
     }
 </script>
 
