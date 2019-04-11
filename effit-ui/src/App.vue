@@ -7,7 +7,7 @@
             app
     >
       <v-list dense>
-        <v-list-tile @click="$router.push('challenges')">
+        <v-list-tile @click="$router.push('/challenges')">
           <v-list-tile-action>
             <v-icon>stars</v-icon>
           </v-list-tile-action>
@@ -16,7 +16,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="$router.push('competitions')">
+        <v-list-tile @click="$router.push('/competitions')">
           <v-list-tile-action>
             <v-icon>stars</v-icon>
           </v-list-tile-action>
@@ -25,7 +25,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="$router.push('about')">
+        <v-list-tile @click="$router.push('/about')">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
