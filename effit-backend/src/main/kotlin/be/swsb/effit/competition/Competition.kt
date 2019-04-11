@@ -3,8 +3,7 @@ package be.swsb.effit.competition
 import be.swsb.effit.challenge.Challenge
 import java.time.LocalDate
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
@@ -12,6 +11,8 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val startDate: LocalDate,
                                       val endDate: LocalDate) {
 
+    @OneToMany
+    @JoinColumn(name = "FK_COMPETITION_ID")
     private var _challenges: List<Challenge> = emptyList()
 
     val challenges: List<Challenge>
