@@ -1,5 +1,6 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
@@ -46,15 +47,16 @@ class CompetitionControllerTest {
     @Test
     fun `GET api competition name should return the competition with matching name`() {
         val requestedCompetitionName = "SnowCase2018"
-        val expectedCompetition = Competition.competition(requestedCompetitionName, LocalDate.now(), LocalDate.now().plusDays(10))
+        val expectedCompetitionWithChallenges = Competition.competition(requestedCompetitionName, LocalDate.now(), LocalDate.now().plusDays(10))
+        expectedCompetitionWithChallenges.addChallenge(Challenge(name = "Picasso", points = 3, description = "snarf"))
 
-        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(expectedCompetition)
+        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(expectedCompetitionWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{name}", requestedCompetitionName)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(toJson(expectedCompetition), true))
+                .andExpect(content().json(toJson(expectedCompetitionWithChallenges), true))
     }
 
     @Test
