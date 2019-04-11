@@ -10,10 +10,15 @@ import javax.persistence.Id
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val name: String? = "MyCompetition",
                                       val startDate: LocalDate,
-                                      val endDate: LocalDate,
-                                      var challenges: List<Challenge> = emptyList()) {
+                                      val endDate: LocalDate) {
+
+    private var _challenges: List<Challenge> = emptyList()
+
+    val challenges: List<Challenge>
+        get() = _challenges
+
     fun addChallenge(challenge: Challenge) {
-        challenges += challenge
+        _challenges = _challenges + challenge
     }
 
     init {
