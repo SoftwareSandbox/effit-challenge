@@ -1,5 +1,6 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.challenge.Challenge
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -46,5 +47,15 @@ class CompetitionTest {
         val actual = Competition.competitionWithoutEndDate(startDate = startDate)
 
         assertThat(actual.endDate).isEqualTo(startDate.plusDays(10))
+    }
+
+    @Test
+    fun `a Competition without Challenges still can have Challenges added to it`() {
+        val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,4,9))
+
+        val picassoChallenge = Challenge(name = "Picasso", points = 3, description = "description")
+        someCompetition.addChallenge(picassoChallenge)
+
+        assertThat(someCompetition.challenges).contains(picassoChallenge)
     }
 }

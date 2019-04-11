@@ -1,6 +1,6 @@
 package be.swsb.effit.competition
 
-import java.lang.IllegalArgumentException
+import be.swsb.effit.challenge.Challenge
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.Entity
@@ -10,7 +10,11 @@ import javax.persistence.Id
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val name: String? = "MyCompetition",
                                       val startDate: LocalDate,
-                                      val endDate: LocalDate) {
+                                      val endDate: LocalDate,
+                                      var challenges: List<Challenge> = emptyList()) {
+    fun addChallenge(challenge: Challenge) {
+        challenges += challenge
+    }
 
     init {
         if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
