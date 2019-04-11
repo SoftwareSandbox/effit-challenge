@@ -7,7 +7,7 @@
                 align top
         >
             <template v-slot:items="props">
-                <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left competition-name" @click="navigateToCompetition(props.item)">{{ props.item.name }}</td>
                 <td class="text-xs-right">{{ props.item.startDate }}</td>
                 <td class="text-xs-left">{{ props.item.endDate }}</td>
             </template>
@@ -36,5 +36,15 @@
                 .get('/api/competition')
                 .then(({data}) => this.competitions = data);
         }
+
+        public navigateToCompetition(competition: any) {
+            this.$router.push(`/competitions/${competition.name}`);
+        }
     }
 </script>
+
+<style>
+    .competition-name:hover {
+        cursor: pointer;
+    }
+</style>
