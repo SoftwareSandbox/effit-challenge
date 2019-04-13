@@ -39,7 +39,7 @@
 
         private submit() {
             this.$axios.post(`/api/challenge`, this.challenge)
-                .then((res) => this.successfullyCreatedChallengeId = res.headers['location']);
+                .then((res) => this.successfullyCreatedChallengeId = res.headers.location);
         }
     }
 </script>
