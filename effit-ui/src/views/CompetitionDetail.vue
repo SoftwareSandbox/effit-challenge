@@ -1,13 +1,7 @@
 <template>
-    <v-layout align-start justify-start>
-        <v-container>
-            <v-layout align-start justify-start>
-                <h1>{{competition.name}} : {{competition.startDate}} - {{competition.endDate}}</h1>
-            </v-layout>
-            <v-layout align-start justify-start>
-                <challenges-table :challenges="competition.challenges"></challenges-table>
-            </v-layout>
-        </v-container>
+    <v-layout align-start justify-start column fill-height>
+        <h2>{{competition.name}} : {{competition.startDate}} - {{competition.endDate}}</h2>
+        <challenges-table :challenges="competition.challenges"></challenges-table>
     </v-layout>
 </template>
 

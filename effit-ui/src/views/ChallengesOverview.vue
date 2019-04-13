@@ -1,5 +1,6 @@
 <template>
-    <v-layout align-start justify-start>
+    <v-layout align-start justify-start column fill-height>
+        <h2>Challenges</h2>
         <challenges-table :challenges="challenges"></challenges-table>
     </v-layout>
 </template>
