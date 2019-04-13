@@ -23,7 +23,7 @@ class CompetitionIdTest {
 
     @Test
     fun `CompetitionId from a string containing reserved URL characters, should remove those characters`() {
-        val reservedCharacters = "; / ? : @ = &"
+        val reservedCharacters = "; / ? : @ = &".split(" ")
         reservedCharacters.forEach {
             val actual = CompetitionId("SnowCase${it}2018")
             Assertions.assertThat(actual.id).isEqualTo("SnowCase2018")
@@ -40,5 +40,17 @@ class CompetitionIdTest {
     @Test
     fun `CompetitionId's equality, includes case sensitivity`() {
         Assertions.assertThat(CompetitionId("SnowCase2018")).isEqualTo(CompetitionId("SnowCase2018"))
+        Assertions.assertThat(CompetitionId("SnowCase2018")).isNotEqualTo(CompetitionId("snowcase2018"))
+    }
+
+    @Test
+    fun `CompetitionId's equality, ignore removed characters`() {
+        val spaceRemoved = listOf(" ")
+        val reservedCharacters = listOf(";", "/", "?", ":", "@", "=", "&")
+        val unsafeCharacters = listOf("\"", "<", ">", "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`")
+        val removedCharacters = spaceRemoved + reservedCharacters + unsafeCharacters
+        removedCharacters.forEach {
+            Assertions.assertThat(CompetitionId("SnowCase${it}2018")).isEqualTo(CompetitionId("SnowCase2018"))
+        }
     }
 }

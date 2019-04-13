@@ -50,18 +50,40 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
 }
 
 @Embeddable
-data class CompetitionId constructor(@Column(name = "COMPETITION_ID") private val internalId: String) {
+class CompetitionId constructor(name: String) {
+
+    @Column(name = "COMPETITION_ID")
+    private var _id: String
 
     val id: String
         get() {
-            return `remove characters considered ugly in a URL`()
+            return _id
         }
 
-    private fun `remove characters considered ugly in a URL`(): String {
+    init {
+        _id = `remove characters considered ugly in a URL`(name)
+    }
+
+    private fun `remove characters considered ugly in a URL`(someString: String): String {
         val spaceRemoved = listOf(" ")
         val reservedCharacters = listOf(";", "/", "?", ":", "@", "=", "&")
         val unsafeCharacters = listOf("\"", "<", ">", "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`")
         return (spaceRemoved + reservedCharacters + unsafeCharacters)
-                .fold(internalId) { acc, reservedChar -> acc.replace(reservedChar, "") }
+                .fold(someString) { acc, reservedChar -> acc.replace(reservedChar, "") }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CompetitionId
+
+        if (_id != other._id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return _id.hashCode()
     }
 }
