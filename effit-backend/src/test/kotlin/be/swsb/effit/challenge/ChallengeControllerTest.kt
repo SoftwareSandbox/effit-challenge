@@ -7,13 +7,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest
@@ -39,6 +40,33 @@ class ChallengeControllerTest {
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(toJson(expectedChallenges), true))
+    }
+
+    @Test
+    fun `POST api challenge should save the created challenge and return its id in the location header`() {
+        val createChallengeJson = CreateChallenge(name = "Snarf", points = 3, description = "snarf snarf")
+        val createdChallengeId = UUID.randomUUID()
+        Mockito.`when`(challengeRepositoryMock.save(createChallengeJson))
+                .thenReturn(Challenge(id = createdChallengeId, name = "Snarf", points = 3, description = "snarf snarf"))
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/challenge")
+                .content(toJson(createChallengeJson))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated)
+                .andExpect(header().string(HttpHeaders.LOCATION, createdChallengeId.toString()))
+    }
+
+    @Test
+    fun `POST api challenge should return 500 when repository fails to save`() {
+        val createChallengeJson = CreateChallenge(name = "Snarf", points = 3, description = "snarf snarf")
+        Mockito.doThrow(IllegalStateException::class.java).`when`(challengeRepositoryMock).save(createChallengeJson)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/challenge")
+                .content(toJson(createChallengeJson))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is5xxServerError)
     }
 
     fun toJson(jsonObject: Any): String {
