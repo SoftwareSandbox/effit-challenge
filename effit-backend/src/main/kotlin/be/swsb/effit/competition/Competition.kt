@@ -41,3 +41,18 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
 }
+
+data class CompetitionId constructor(private val idUsedForCreation: String) {
+    val id: String
+        get() {
+            return `remove characters considered ugly in a URL`()
+        }
+
+    private fun `remove characters considered ugly in a URL`(): String {
+        val spaceRemoved = listOf(" ")
+        val reservedCharacters = listOf(";", "/", "?", ":", "@", "=", "&")
+        val unsafeCharacters = listOf("\"", "<", ">", "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`")
+        return (spaceRemoved + reservedCharacters + unsafeCharacters)
+                .fold(idUsedForCreation) { acc, reservedChar -> acc.replace(reservedChar, "") }
+    }
+}
