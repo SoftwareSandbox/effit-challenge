@@ -1,5 +1,5 @@
 # effit-challenge web app [![](https://travis-ci.org/SoftwareSandbox/effit-challenge.svg?branch=master)](https://travis-ci.org/SoftwareSandbox/effit-challenge)
-Web application for the PHUCQIT Challenge:  
+Web application for the PHUCIT Challenge:  
 A week filled with challenges to make your Snowcase holiday even more memorable.
 
 

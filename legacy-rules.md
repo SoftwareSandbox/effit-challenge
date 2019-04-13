@@ -1,5 +1,8 @@
 # PHUC IT - The Game
 
+## Abbreviation
+`PHUC IT` stands for: `P`eter `H`as `U`s `C`ompeting `I`n `T`reachery
+
 ## Rules
 The purpose of the game is collect the most points by Friday evening when the _Last Ledger_ is held and a ranking is made.
 
