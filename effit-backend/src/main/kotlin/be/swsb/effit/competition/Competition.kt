@@ -15,11 +15,14 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @JoinColumn(name = "FK_COMPETITION_ID")
     private var _challenges: List<Challenge> = emptyList()
 
+    @Embedded
+    private var competitionIdentifier: CompetitionId
+
     val challenges: List<Challenge>
         get() = _challenges
 
     val competitionId: CompetitionId
-        get() = CompetitionId(name)
+        get() = competitionIdentifier
 
     fun addChallenge(challenge: Challenge) {
         _challenges = _challenges + challenge
@@ -27,6 +30,7 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
 
     init {
         if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
+        competitionIdentifier = CompetitionId(name)
     }
 
     companion object {
@@ -45,7 +49,9 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
 
 }
 
-data class CompetitionId constructor(private val idUsedForCreation: String) {
+@Embeddable
+data class CompetitionId constructor(@Column(name = "COMPETITION_ID") private val internalId: String) {
+
     val id: String
         get() {
             return `remove characters considered ugly in a URL`()
@@ -56,6 +62,6 @@ data class CompetitionId constructor(private val idUsedForCreation: String) {
         val reservedCharacters = listOf(";", "/", "?", ":", "@", "=", "&")
         val unsafeCharacters = listOf("\"", "<", ">", "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`")
         return (spaceRemoved + reservedCharacters + unsafeCharacters)
-                .fold(idUsedForCreation) { acc, reservedChar -> acc.replace(reservedChar, "") }
+                .fold(internalId) { acc, reservedChar -> acc.replace(reservedChar, "") }
     }
 }

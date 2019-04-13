@@ -33,23 +33,23 @@ class CompetitionRepositoryIntegrationTest {
     }
 
     @Test
-    fun `findByName, Competition with given name exists, retrieves that exact Competition`() {
+    fun `findByCompetitionId, Competition with given CompetitionId exists, retrieves that exact Competition`() {
         val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
         val snowCase2019 = Competition.competition("SnowCase2019", LocalDate.of(2019, 3, 18), LocalDate.of(2019, 3, 28))
         testEntityManager.persist(snowCase2018)
         testEntityManager.persist(snowCase2019)
 
-        val actual = competitionRepository.findByName("SnowCase2019")
+        val actual = competitionRepository.findByCompetitionIdentifier(snowCase2019.competitionId)
 
-        assertThat(actual).isEqualTo(snowCase2019)
+        assertThat(actual).isEqualToComparingFieldByField(snowCase2019)
     }
 
     @Test
-    fun `findByName, Competition with given name does not exist, returns null`() {
+    fun `findByCompetitionId, Competition with given CompetitionId does not exist, returns null`() {
         val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
         testEntityManager.persist(snowCase2018)
 
-        val actual = competitionRepository.findByName("snarf")
+        val actual = competitionRepository.findByCompetitionIdentifier(CompetitionId("snarf"))
 
         assertThat(actual).isNull()
     }

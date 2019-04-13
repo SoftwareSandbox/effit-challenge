@@ -17,9 +17,9 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return ResponseEntity.ok(competitionRepository.findAll())
     }
 
-    @GetMapping("{name}")
-    fun competitionDetail(@PathVariable name: String): ResponseEntity<Competition> {
-        return competitionRepository.findByName(name)
+    @GetMapping("{competitionId}")
+    fun competitionDetail(@PathVariable competitionId: String): ResponseEntity<Competition> {
+        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?.let { ResponseEntity.ok(it) }
                 ?:ResponseEntity.notFound().build()
     }

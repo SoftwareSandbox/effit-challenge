@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface CompetitionRepository : JpaRepository<Competition, UUID> {
-    fun findByName(name: String): Competition?
+    fun findByCompetitionIdentifier(competitionId: CompetitionId): Competition?
 }

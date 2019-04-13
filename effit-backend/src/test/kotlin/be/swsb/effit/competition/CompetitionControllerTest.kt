@@ -46,13 +46,13 @@ class CompetitionControllerTest {
 
     @Test
     fun `GET api competition name should return the competition with matching name`() {
-        val requestedCompetitionName = "SnowCase2018"
-        val expectedCompetitionWithChallenges = Competition.competition(requestedCompetitionName, LocalDate.now(), LocalDate.now().plusDays(10))
+        val requestedCompetitionIdAsString = "SnowCase2018"
+        val expectedCompetitionWithChallenges = Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10))
         expectedCompetitionWithChallenges.addChallenge(Challenge(name = "Picasso", points = 3, description = "snarf"))
 
-        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(expectedCompetitionWithChallenges)
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetitionWithChallenges)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{name}", requestedCompetitionName)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -61,11 +61,11 @@ class CompetitionControllerTest {
 
     @Test
     fun `GET api competition name should return 404 when no matching Competition found for given name`() {
-        val requestedCompetitionName = "SnowCase2018"
+        val requestedCompetitionIdAsString = "SnowCase2018"
 
-        Mockito.`when`(competitionRepositoryMock.findByName(requestedCompetitionName)).thenReturn(null)
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{name}", requestedCompetitionName)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().`is`(404))
     }
