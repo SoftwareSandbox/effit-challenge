@@ -22,7 +22,7 @@ export default new Router({
     },
     {
       name: 'competitionDetail',
-      path: '/competitions/:name',
+      path: '/competitions/:competitionId',
       component: CompetitionDetail,
       props: true,
     },

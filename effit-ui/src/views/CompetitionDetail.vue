@@ -19,11 +19,11 @@
         components: {ChallengesTable},
     })
     export default class CompetitionDetail extends Vue {
-        @Prop({type: String}) protected name!: string;
+        @Prop({type: String}) protected competitionId!: string;
         protected competition = {name: '', startDate: '', endDate: ''};
 
         private mounted() {
-            this.$axios.get(`/api/competition/${this.name}`)
+            this.$axios.get(`/api/competition/${this.competitionId}`)
                 .then(({data}) => this.competition = data);
         }
     }
