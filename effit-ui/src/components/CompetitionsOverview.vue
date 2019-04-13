@@ -9,7 +9,7 @@
             <template v-slot:items="props">
                 <router-link tag="td"
                              class="text-xs-left competition-name"
-                             :to="`/competitions/${props.item.name}`">{{ props.item.name }}</router-link>
+                             :to="`/competitions/${props.item.competitionId.id}`">{{ props.item.name }}</router-link>
                 <td class="text-xs-right">{{ props.item.startDate }}</td>
                 <td class="text-xs-left">{{ props.item.endDate }}</td>
             </template>
