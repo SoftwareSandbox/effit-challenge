@@ -20,6 +20,14 @@ class CompetitionTest {
     }
 
     @Test
+    fun `A Competition has a CompetitionId upon creation`() {
+        val startDate = LocalDate.of(2018,3,19)
+        val actual = Competition.competitionWithoutEndDate(name = "SnowCase Val Thorens 2018", startDate = startDate)
+
+        assertThat(actual.competitionId).isEqualTo(CompetitionId("SnowCase Val Thorens 2018"))
+    }
+
+    @Test
     fun `A Competition cannot be created with an endDate before the startDate`() {
         val startDate = LocalDate.of(2018,3,19)
         val endDate = startDate.minusDays(10)

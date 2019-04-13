@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
-                                      val name: String? = "MyCompetition",
+                                      val name: String,
                                       val startDate: LocalDate,
                                       val endDate: LocalDate) {
 
@@ -18,6 +18,9 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     val challenges: List<Challenge>
         get() = _challenges
 
+    val competitionId: CompetitionId
+        get() = CompetitionId(name)
+
     fun addChallenge(challenge: Challenge) {
         _challenges = _challenges + challenge
     }
@@ -27,15 +30,15 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     companion object {
-        fun competition(name: String? = null, startDate: LocalDate, endDate: LocalDate): Competition {
+        fun competition(name: String = "MyCompetition", startDate: LocalDate, endDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = endDate)
         }
 
-        fun competitionWithoutStartDate(name: String? = null, endDate: LocalDate): Competition {
+        fun competitionWithoutStartDate(name: String = "MyCompetition", endDate: LocalDate): Competition {
             return Competition(name = name, startDate = LocalDate.now(), endDate = endDate)
         }
 
-        fun competitionWithoutEndDate(name: String? = null, startDate: LocalDate): Competition {
+        fun competitionWithoutEndDate(name: String = "MyCompetition", startDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = startDate.plusDays(10))
         }
     }
