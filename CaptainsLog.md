@@ -1,3 +1,22 @@
+## 2019/04/13 - backing properties on Jpa classes determine JpaRepository convention functions
+For backing property:
+```
+@Embedded
+private var _competitionId: CompetitionId
+```
+The convention function would look like:
+```
+fun findBy_competitionId(competitionId: CompetitionId): Competition?
+```
+
+IF you're lucky, Spring will try and suggest which backing property you meant when writing the convention function.
+If not, you end up getting an exception that looks like:
+```
+Caused by: org.springframework.data.mapping.PropertyReferenceException: No property competitionIdentifier found for type Competition!
+```
+
+Where `competitionIdentifier` relates to the name in the convention function you wrote.
+
 ## 2019/04/11 - Use router-link instead of @click="router.push()"
 `<router-link>` has a `tag` attribute that replaces the element with that tag:
 ```
