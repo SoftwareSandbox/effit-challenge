@@ -16,6 +16,15 @@
           </v-list-tile-content>
         </router-link >
 
+        <router-link to="/challenges/create" tag="v-list-tile">
+          <v-list-tile-action>
+            <v-icon>stars</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Create a new Challenge</v-list-tile-title>
+          </v-list-tile-content>
+        </router-link >
+
         <router-link to="/competitions" tag="v-list-tile">
           <v-list-tile-action>
             <v-icon>stars</v-icon>
