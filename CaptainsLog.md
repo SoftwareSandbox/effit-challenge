@@ -1,3 +1,8 @@
+## 2019/04/13 - Having Jackson automagically create a new UUID for a Challenge is juuuuuust fine.
+At least for now.
+
+There **is** a typealias for when I need to actually use that type instead of just using a `Challenge`.
+
 ## 2019/04/13 - Fixing repository mocks in ControllerTests
 `@WebMvcTest(controller = SomeController::class)` would still try to create beans for JpaRepositories, and consequently fail on trying to find an entityManager.
 
