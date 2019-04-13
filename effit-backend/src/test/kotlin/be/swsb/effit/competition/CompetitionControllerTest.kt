@@ -1,5 +1,6 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.WebMvcTestConfiguration
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -18,7 +20,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(controllers = [CompetitionController::class])
+@WebMvcTest
+@ContextConfiguration(classes = [WebMvcTestConfiguration::class])
 class CompetitionControllerTest {
 
     @Autowired
@@ -26,10 +29,8 @@ class CompetitionControllerTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    @MockBean
+    @Autowired
     lateinit var competitionRepositoryMock: CompetitionRepository
-    @MockBean
-    lateinit var challengeRepositoryMock: ChallengeRepository
 
     @Test
     fun `GET api competition should return all Competitions`() {

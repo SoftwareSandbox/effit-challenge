@@ -1,3 +1,19 @@
+## 2019/04/13 - Fixing repository mocks in ControllerTests
+`@WebMvcTest(controller = SomeController::class)` would still try to create beans for JpaRepositories, and consequently fail on trying to find an entityManager.
+
+I fixed it before by manually providing `@MockBean`s for unused repositories, but that would expand quite fast into duplicate `@MockBean` fields in tests.
+
+I tried using `excludeAutoConfig...` which didn't work T_T
+
+Eventually provided my own `@ContextConfiguration` for tests, that lists all repositories as `@MockBean`s, so I only have to do that once.
+
+I also needed to have that configuration actually scan my Controller classes.
+
+The remaining `@WebMvcTest` is now only used to setup `MockMvc`.
+
+Mocking repositories that are used in ControllerTests now works by simply `@Autowired`ing the needed collaborating repositories.
+
+
 ## 2019/04/13 - backing properties on Jpa classes determine JpaRepository convention functions
 For backing property:
 ```
