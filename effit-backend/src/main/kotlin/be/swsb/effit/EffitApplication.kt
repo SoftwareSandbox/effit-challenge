@@ -34,7 +34,7 @@ class AppStartupRunner(private val challengeRepository: ChallengeRepository,
     override fun run(args: ApplicationArguments) {
         challengeRepository.deleteAll()
         happyLittleChallenges.map { challengeRepository.save(it) }
-        val snowcase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 16), LocalDate.of(2018, 3, 26))
+        val snowcase2018 = Competition.competition("Snowcase 2018", LocalDate.of(2018, 3, 16), LocalDate.of(2018, 3, 26))
         happyLittleChallenges.map { snowcase2018.addChallenge(it) }
         competitionRepository.deleteAll()
         competitionRepository.save(snowcase2018)
