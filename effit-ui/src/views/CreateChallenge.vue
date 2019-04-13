@@ -35,14 +35,11 @@
     })
     export default class CreateChallenge extends Vue {
         protected challenge = {name: '', points: 0, description: ''};
+        protected successfullyCreatedChallengeId: string = '';
 
         private submit() {
-
+            this.$axios.post(`/api/challenge`, this.challenge)
+                .then((res) => this.successfullyCreatedChallengeId = res.headers['location']);
         }
-
-        // private mounted() {
-        //     this.$axios.get(`/api/challenge`)
-        //         .then(({data}) => this.competition = data);
-        // }
     }
 </script>
