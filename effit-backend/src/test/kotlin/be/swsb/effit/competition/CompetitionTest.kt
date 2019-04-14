@@ -58,7 +58,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `a Competition without Challenges still can have Challenges added to it`() {
+    fun `A Competition without Challenges still can have Challenges added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,4,9))
 
         val picassoChallenge = Challenge(name = "Picasso", points = 3, description = "description")
