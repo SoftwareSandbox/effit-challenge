@@ -4,6 +4,7 @@ import CompetitionsOverview from './components/CompetitionsOverview.vue';
 import ChallengesOverview from './views/ChallengesOverview.vue';
 import CompetitionDetail from './views/CompetitionDetail.vue';
 import CreateChallenge from './views/CreateChallenge.vue';
+import CreateCompetition from './views/CreateCompetition.vue';
 
 Vue.use(Router);
 
@@ -17,7 +18,7 @@ export default new Router({
       component: ChallengesOverview,
     },
     {
-      name: 'challenges',
+      name: 'CreateChallenge',
       path: '/challenges/create',
       component: CreateChallenge,
     },
@@ -25,6 +26,11 @@ export default new Router({
       name: 'competitions',
       path: '/competitions',
       component: CompetitionsOverview,
+    },
+    {
+      name: 'CreateCompetition',
+      path: '/competitions/create',
+      component: CreateCompetition,
     },
     {
       name: 'competitionDetail',
