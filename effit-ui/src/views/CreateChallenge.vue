@@ -39,7 +39,12 @@
 
         private submit() {
             this.$axios.post(`/api/challenge`, this.challenge)
-                .then((res) => this.successfullyCreatedChallengeId = res.headers.location);
+                .then((res) => this.successfullyCreatedChallengeId = res.headers.location)
+                .then(() => this.resetForm());
+        }
+
+        private resetForm() {
+            return this.challenge = {name: '', points: 0, description: ''};
         }
     }
 </script>
