@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <v-layout align-start justify-start column fill-height>
         <h2>New Competition</h2>
         <v-form>
@@ -8,48 +8,10 @@
                     label="Name"
                     required
             ></v-text-field>
-            <v-menu
-                    v-model="startDateDatePickerMenu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px"
-            >
-                <template v-slot:activator="{ on }">
-                    <v-text-field
-                            v-model="competition.startDate"
-                            label="Starts"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                    ></v-text-field>
-                </template>
-                <v-date-picker v-model="competition.startDate" @input="startDateDatePickerMenu = false"></v-date-picker>
-            </v-menu>
-            <v-menu
-                    v-model="endDateDatePickerMenu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px"
-            >
-                <template v-slot:activator="{ on }">
-                    <v-text-field
-                            v-model="competition.endDate"
-                            label="Ends"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                    ></v-text-field>
-                </template>
-                <v-date-picker v-model="competition.endDate" @input="endDateDatePickerMenu = false"></v-date-picker>
-            </v-menu>
+
+            <date-field label="Starts" v-model="competition.startDate"></date-field>
+            <date-field label="Ends" v-model="competition.endDate"></date-field>
+
             <v-btn @click="submit">submit</v-btn>
         </v-form>
 
@@ -67,12 +29,17 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import DateField from '@/components/DateField.vue';
 
     @Component({
-        components: {},
+        components: {DateField},
     })
     export default class CreateCompetition extends Vue {
-        protected competition = {name: '', startDate: new Date().toISOString().substr(0, 10), endDate: new Date().toISOString().substr(0, 10)};
+        protected competition = {
+            name: '',
+            startDate: new Date().toISOString().substr(0, 10),
+            endDate: new Date().toISOString().substr(0, 10),
+        };
         protected successfullyCreatedCompetitionId: string = '';
         // datepicker stuff
         protected startDateDatePickerMenu = false;
@@ -94,7 +61,11 @@
         }
 
         private resetForm() {
-            this.competition = {name: '', startDate: new Date().toISOString().substr(0, 10), endDate: new Date().toISOString().substr(0, 10)};
+            this.competition = {
+                name: '',
+                startDate: new Date().toISOString().substr(0, 10),
+                endDate: new Date().toISOString().substr(0, 10),
+            };
         }
 
         private closeSnackbar() {
