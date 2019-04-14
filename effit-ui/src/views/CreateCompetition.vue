@@ -41,9 +41,6 @@
             endDate: new Date().toISOString().substr(0, 10),
         };
         protected successfullyCreatedCompetitionId: string = '';
-        // datepicker stuff
-        protected startDateDatePickerMenu = false;
-        protected endDateDatePickerMenu = false;
 
         // snackbar stuff
         protected showSnackbar = false;
