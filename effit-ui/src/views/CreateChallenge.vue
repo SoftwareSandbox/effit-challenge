@@ -53,7 +53,7 @@
         private submit() {
             this.$axios.post(`/api/challenge`, this.challenge)
                 .then((res) => {
-                    this.successfullyCreatedCompetitionId = res.headers.location;
+                    this.successfullyCreatedChallengeId = res.headers.location;
                     this.snackbarMessage = `Successfully created your new Challenge!`;
                     this.showSnackbar = true;
                 })
