@@ -2,6 +2,7 @@
 Web application for the PHUCIT Challenge:  
 A week filled with challenges to make your Snowcase holiday even more memorable.
 
+I will mostly be live-coding my working on this project. You can follow along and rewatch recent past broadcast over at [my Twitch channel](https://twitch.tv/sch3lpsc2).
 
 ## Goals of this hobby project
 
