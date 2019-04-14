@@ -34,6 +34,15 @@
           </v-list-tile-content>
         </router-link>
 
+        <router-link to="/competitions/create" tag="v-list-tile">
+          <v-list-tile-action>
+            <v-icon>stars</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Create a new Competition</v-list-tile-title>
+          </v-list-tile-content>
+        </router-link >
+
         <router-link to="/about" tag="v-list-tile">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
