@@ -1,3 +1,15 @@
+## 2019/04/14 - Avoid using mutated properties in components
+
+Warning message we get from Vue:
+```
+[Vue warn]: Avoid mutating a prop directly since the value will be overwritten whenever the parent component re-renders. 
+Instead, use a data or computed property based on the prop's value. 
+Prop being mutated: "model"
+```
+
+Vue has single-way binding. To update parent components, use `@input="emitOnInput"` instead.  
+This causes the value to propagate back to the parent, and then because of `v-bind` (or `v-model`) update the child's value again.
+
 ## 2019/04/13 - Having Jackson automagically create a new UUID for a Challenge is juuuuuust fine.
 At least for now.
 
