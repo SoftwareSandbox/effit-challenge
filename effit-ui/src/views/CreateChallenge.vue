@@ -38,10 +38,9 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import ChallengesTable from '@/components/ChallengesTable.vue';
 
     @Component({
-        components: {ChallengesTable},
+        components: {},
     })
     export default class CreateChallenge extends Vue {
         protected challenge = {name: '', points: 0, description: ''};
@@ -54,7 +53,7 @@
         private submit() {
             this.$axios.post(`/api/challenge`, this.challenge)
                 .then((res) => {
-                    this.successfullyCreatedChallengeId = res.headers.location;
+                    this.successfullyCreatedCompetitionId = res.headers.location;
                     this.snackbarMessage = `Successfully created your new Challenge!`;
                     this.showSnackbar = true;
                 })
