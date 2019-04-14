@@ -1,3 +1,10 @@
+## 2019/04/14 - Came to the painful conclusion that a Competition will never be created by a person without having any start or end date
+And only noticed that after I created the UI page for creating a Competition.
+
+Unit Testing the constructor didn't trigger my brains to think about how a person would actually want to create a Competition when faced with a UI for it.
+
+Maybe when I come up with another concept that a user can _create_ manually, I'll start by creating a UI page for it.
+
 ## 2019/04/14 - Avoid using mutated properties in components
 
 Warning message we get from Vue:
