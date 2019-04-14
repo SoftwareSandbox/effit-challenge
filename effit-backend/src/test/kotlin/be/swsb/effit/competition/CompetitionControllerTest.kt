@@ -2,14 +2,13 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.WebMvcTestConfiguration
 import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -42,7 +41,7 @@ class CompetitionControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(toJson(expectedCompetitions), true))
+                .andExpect(content().json(expectedCompetitions.toJson(objectMapper), true))
     }
 
     @Test
@@ -57,7 +56,7 @@ class CompetitionControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(toJson(expectedCompetitionWithChallenges), true))
+                .andExpect(content().json(expectedCompetitionWithChallenges.toJson(objectMapper), true))
     }
 
     @Test
@@ -69,9 +68,5 @@ class CompetitionControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().`is`(404))
-    }
-
-    fun toJson(jsonObject: Any): String {
-        return objectMapper.writeValueAsString(jsonObject)
     }
 }

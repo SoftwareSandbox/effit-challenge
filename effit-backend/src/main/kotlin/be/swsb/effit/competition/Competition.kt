@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.util.RestApiExposed
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
@@ -9,7 +10,7 @@ import javax.persistence.*
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val name: String,
                                       val startDate: LocalDate,
-                                      val endDate: LocalDate) {
+                                      val endDate: LocalDate) : RestApiExposed {
 
     @OneToMany
     @JoinColumn(name = "FK_COMPETITION_ID")

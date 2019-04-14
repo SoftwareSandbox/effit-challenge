@@ -1,6 +1,7 @@
 package be.swsb.effit.challenge
 
 import be.swsb.effit.WebMvcTestConfiguration
+import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,7 +40,7 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(toJson(expectedChallenges), true))
+                .andExpect(content().json(expectedChallenges.toJson(objectMapper), true))
     }
 
     @Test
@@ -50,7 +51,7 @@ class ChallengeControllerTest {
                 .thenReturn(Challenge(id = createdChallengeId, name = "Snarf", points = 3, description = "snarf snarf"))
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/challenge")
-                .content(toJson(createChallengeJson))
+                .content(createChallengeJson.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isCreated)
@@ -63,13 +64,9 @@ class ChallengeControllerTest {
         Mockito.doThrow(IllegalStateException::class.java).`when`(challengeRepositoryMock).save(createChallengeJson)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/challenge")
-                .content(toJson(createChallengeJson))
+                .content(createChallengeJson.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is5xxServerError)
-    }
-
-    fun toJson(jsonObject: Any): String {
-        return objectMapper.writeValueAsString(jsonObject)
     }
 }

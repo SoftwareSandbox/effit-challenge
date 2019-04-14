@@ -2,9 +2,12 @@ package be.swsb.effit.scenariotests
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.Competition
+import be.swsb.effit.util.RestApiExposed
+import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Ignore
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +23,7 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Ignore
+@Disabled
 class CreatingCompetitions {
 
     @Autowired
@@ -67,7 +70,7 @@ class CreatingCompetitions {
         return mvcResult.response.getHeader(HttpHeaders.LOCATION)
     }
 
-    fun toJson(jsonObject: Any): String {
-        return objectMapper.writeValueAsString(jsonObject)
+    fun toJson(jsonObject: RestApiExposed): String {
+        return jsonObject.toJson(objectMapper)
     }
 }
