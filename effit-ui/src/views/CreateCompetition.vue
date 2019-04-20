@@ -49,6 +49,9 @@
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import ChallengeCard from '@/components/ChallengeCard.vue';
 
+    type Challenge = {name: string, points: number, description: string};
+    type SelectableChallenge = Challenge & {selected: boolean};
+
     @Component({
         components: {ChallengeCard, ChallengesTable, DateField},
     })
@@ -59,7 +62,7 @@
             endDate: new Date().toISOString().substr(0, 10),
         };
         protected successfullyCreatedCompetitionId: string = '';
-        protected challenges: any[] = [];
+        protected challenges: Array<SelectableChallenge> = [];
 
         // data iterator stuff
         protected rowsPerPageItems = [4, 8, 12];
@@ -72,11 +75,19 @@
 
         private mounted() {
             this.$axios.get(`/api/challenge`)
-                .then(({data}) => this.challenges = data);
+                .then(({data}: {data: Array<Challenge>}) => this.challenges = data.map(this.expandWithSelectedProperty));
+        }
+
+        private expandWithSelectedProperty(challenge: Challenge) {
+            return {...challenge, ...{selected: false}};
         }
 
         private submit() {
             this.$axios.post(`/api/competition`, this.competition)
+                // .then((res) => {
+                //     this.successfullyCreatedCompetitionId = res.headers.location;
+                // })
+                // .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.challenges.filter(c => c.selected)))
                 .then((res) => {
                     this.successfullyCreatedCompetitionId = res.headers.location;
                     this.snackbarMessage = `Successfully created your new Competition!`;
