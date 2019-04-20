@@ -15,8 +15,7 @@
         components: {},
     })
     export default class ChallengeCard extends Vue {
-        @Prop({type: Array}) public challenge !: { name: string, points: number, description: string };
-
+        @Prop({type: Object}) public challenge !: { name: string, points: number, description: string };
 
     }
 </script>
