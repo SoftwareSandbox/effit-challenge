@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout align-start justify-start column fill-height>
         <h2>New Competition</h2>
         <v-form>
@@ -11,6 +11,28 @@
 
             <date-field label="Starts" v-model="competition.startDate"></date-field>
             <date-field label="Ends" v-model="competition.endDate"></date-field>
+
+            <v-data-iterator
+                    :items="challenges"
+                    :rows-per-page-items="rowsPerPageItems"
+                    :pagination.sync="pagination"
+                    content-tag="div"
+                    row
+            >
+                <template v-slot:header><h3>Select your challenges for this competition</h3></template>
+                <template v-slot:item="props">
+                    <v-layout column justify-start>
+                        <v-card>
+                            <v-layout row justify-space-between>
+                                <v-card-title><h3>{{props.item.name}}</h3></v-card-title>
+                                <div><v-chip title="Points">{{props.item.points}}</v-chip></div>
+                            </v-layout>
+                            <v-card-text>{{props.item.description}}</v-card-text>
+                        </v-card>
+                        <v-divider inset></v-divider>
+                    </v-layout>
+                </template>
+            </v-data-iterator>
 
             <v-btn @click="submit">submit</v-btn>
         </v-form>
@@ -30,9 +52,11 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import DateField from '@/components/DateField.vue';
+    import ChallengesTable from '@/components/ChallengesTable.vue';
+    import ChallengeCard from '@/components/ChallengeCard.vue';
 
     @Component({
-        components: {DateField},
+        components: {ChallengeCard, ChallengesTable, DateField},
     })
     export default class CreateCompetition extends Vue {
         protected competition = {
@@ -41,11 +65,21 @@
             endDate: new Date().toISOString().substr(0, 10),
         };
         protected successfullyCreatedCompetitionId: string = '';
+        protected challenges: any[] = [];
+
+        // data iterator stuff
+        protected rowsPerPageItems = [4, 8, 12];
+        protected pagination = { rowsPerPage: 4 };
 
         // snackbar stuff
         protected showSnackbar = false;
         protected snackbarMessage = '';
         protected snackbarTimeout = 3000;
+
+        private mounted() {
+            this.$axios.get(`/api/challenge`)
+                .then(({data}) => this.challenges = data);
+        }
 
         private submit() {
             this.$axios.post(`/api/competition`, this.competition)
