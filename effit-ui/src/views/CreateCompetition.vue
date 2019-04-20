@@ -22,13 +22,7 @@
                 <template v-slot:header><h3>Select your challenges for this competition</h3></template>
                 <template v-slot:item="props">
                     <v-layout column justify-start>
-                        <v-card>
-                            <v-layout row justify-space-between>
-                                <v-card-title><h3>{{props.item.name}}</h3></v-card-title>
-                                <div><v-chip title="Points">{{props.item.points}}</v-chip></div>
-                            </v-layout>
-                            <v-card-text>{{props.item.description}}</v-card-text>
-                        </v-card>
+                        <challenge-card :challenge="props.item"></challenge-card>
                         <v-divider inset></v-divider>
                     </v-layout>
                 </template>
