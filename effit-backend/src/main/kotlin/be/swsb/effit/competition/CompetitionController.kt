@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -25,7 +26,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     fun competitionDetail(@PathVariable competitionId: String): ResponseEntity<Competition> {
         return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?.let { ResponseEntity.ok(it) }
-                ?: ResponseEntity.notFound().build()
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
     }
 
     @PostMapping

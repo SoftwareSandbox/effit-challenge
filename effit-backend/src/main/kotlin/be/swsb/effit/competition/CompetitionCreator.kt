@@ -1,7 +1,7 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.springframework.stereotype.Component
-import java.lang.IllegalStateException
 
 @Component
 class CompetitionCreator {
@@ -16,7 +16,7 @@ class CompetitionCreator {
             createCompetition.startDate != null && createCompetition.endDate == null
                 -> Competition.competitionWithoutEndDate(name = createCompetition.name, startDate = createCompetition.startDate)
             else
-                -> throw IllegalStateException("Cannot create a Competition without both a start and end date")
+                -> throw DomainValidationRuntimeException("Cannot create a Competition without both a start and end date")
         }
     }
 

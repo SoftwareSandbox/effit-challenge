@@ -1,5 +1,6 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -32,11 +33,11 @@ class CompetitionCreatorTest {
     }
 
     @Test
-    internal fun `from - Cannot create a Competition without both a start and end date`() {
+    fun `from - Cannot create a Competition without both a start and end date`() {
         assertThatThrownBy {
             CompetitionCreator().from(CreateCompetition("unimportant", null, null))
         }
-                .isInstanceOf(IllegalStateException::class.java)
+                .isInstanceOf(DomainValidationRuntimeException::class.java)
                 .hasMessage("Cannot create a Competition without both a start and end date")
     }
 }
