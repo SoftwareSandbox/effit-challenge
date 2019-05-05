@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.ChallengeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -12,6 +13,7 @@ import java.net.URI
 @RequestMapping("/api/competition",
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 class CompetitionController(private val competitionRepository: CompetitionRepository,
+                            private val challengeRepository: ChallengeRepository,
                             private val competitionCreator: CompetitionCreator) {
 
     @GetMapping
@@ -47,7 +49,8 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
         challengesToBeAdded.forEach {
-            foundCompetition.addChallenge(it)
+            val persistedChallenge = challengeRepository.save(it)
+            foundCompetition.addChallenge(persistedChallenge)
         }
         competitionRepository.save(foundCompetition)
         return ResponseEntity.accepted().build()

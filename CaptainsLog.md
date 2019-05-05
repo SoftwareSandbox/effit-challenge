@@ -1,3 +1,10 @@
+## 2019/05/05 - Decided not to deal with broken encapsulation of Challenges when adding them to a Competition
+POST'ing to : `/api/competition/{competitionId}/addChallenges`, with Challenges that happen to already exist in the database, would in fact override the existing Challenges.
+
+Since our UI is the only consumer of our own REST API, and our UI does not pass Challenge UUID's to addChallenges, this isn't an actual problem.
+
+Let's hope I never accidentally pass existing Challenge UUID's to this REST API controller.
+
 ## 2019/05/05 - Deciding to NOT cascade Challenges when saving a Competition
 Just so saving a Competition does not accidentally save (updates to) Challenges along with it.
 

@@ -2,9 +2,11 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.WebMvcTestConfiguration
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest
@@ -33,6 +36,8 @@ class CompetitionControllerTest {
 
     @Autowired
     lateinit var competitionRepositoryMock: CompetitionRepository
+    @Autowired
+    lateinit var challengeRepositoryMock: ChallengeRepository
 
     @MockBean
     lateinit var competitionCreatorMock: CompetitionCreator
@@ -139,12 +144,16 @@ class CompetitionControllerTest {
         val challenge1 = Challenge(name = "FirstChallenge", points = 3, description = "1st")
         val challenge2 = Challenge(name = "SecondChallenge", points = 4, description = "2nd")
         val givenChallenges = listOf(challenge1, challenge2)
+        val persistedChallenge1 = challenge1.copy(id = UUID.randomUUID())
+        val persistedChallenge2 = challenge2.copy(id = UUID.randomUUID())
 
         val requestedCompetitionIdAsString = "Snarf"
 
         val thundercatsComp = Competition.competitionWithoutEndDate("Thundercats", LocalDate.now())
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString)))
                 .thenReturn(thundercatsComp)
+        Mockito.`when`(challengeRepositoryMock.save(challenge1)).thenReturn(persistedChallenge1)
+        Mockito.`when`(challengeRepositoryMock.save(challenge2)).thenReturn(persistedChallenge2)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
                 .content(givenChallenges.toJson(objectMapper))
@@ -152,7 +161,7 @@ class CompetitionControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        Assertions.assertThat(thundercatsComp.challenges).containsExactly(challenge1, challenge2)
+        assertThat(thundercatsComp.challenges).containsExactly(persistedChallenge1, persistedChallenge2)
         Mockito.verify(competitionRepositoryMock).save(thundercatsComp)
     }
 
