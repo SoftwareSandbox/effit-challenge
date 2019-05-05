@@ -1,11 +1,10 @@
 package be.swsb.effit.competition
 
-import be.swsb.effit.WebMvcTestConfiguration
+import be.swsb.test.effit.WebMvcTestConfiguration
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -56,7 +55,7 @@ class CompetitionControllerTest {
     }
 
     @Test
-    fun `GET api competition name should return the competition with matching name`() {
+    fun `GET api competition name should return the competition with matching competition id`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
         val expectedCompetitionWithChallenges = Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10))
         expectedCompetitionWithChallenges.addChallenge(Challenge(name = "Picasso", points = 3, description = "snarf"))

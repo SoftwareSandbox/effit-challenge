@@ -1,6 +1,6 @@
 package be.swsb.effit.challenge
 
-import be.swsb.effit.WebMvcTestConfiguration
+import be.swsb.test.effit.WebMvcTestConfiguration
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test

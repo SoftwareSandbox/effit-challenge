@@ -1,4 +1,4 @@
-package be.swsb.effit
+package be.swsb.test.effit
 
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.CompetitionRepository
