@@ -1,6 +1,8 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.challenge.Challenge
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,5 +54,47 @@ class CompetitionRepositoryIntegrationTest {
         val actual = competitionRepository.findByCompetitionIdentifier(CompetitionId("snarf"))
 
         assertThat(actual).isNull()
+    }
+
+    @Test
+    fun `save does not cascade Challenges of a Competition`() {
+        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        testEntityManager.persist(snowCase2018)
+
+        val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
+
+        val someUnpersistedChallenge = Challenge(name = "Picasso", points = 3, description = "picasso yo")
+        assertThat(testEntityManager.entityManager.find(Challenge::class.java, someUnpersistedChallenge.id)).isNull()
+
+        existingCompetition.addChallenge(someUnpersistedChallenge)
+
+        assertThatThrownBy {
+            competitionRepository.save(existingCompetition)
+        }
+        testEntityManager.clear()
+
+        val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
+        assertThat(updatedCompetition.challenges).doesNotContain(someUnpersistedChallenge)
+
+    }
+
+    @Test
+    fun `saving a Competition with persisted Challenges`() {
+        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        testEntityManager.persist(snowCase2018)
+
+        val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
+
+        val someChallenge = Challenge(name = "Picasso", points = 3, description = "picasso yo")
+        testEntityManager.persist(someChallenge)
+        testEntityManager.flush()
+
+        existingCompetition.addChallenge(someChallenge)
+
+        competitionRepository.save(existingCompetition)
+        testEntityManager.flush()
+
+        val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
+        assertThat(updatedCompetition.challenges).containsExactly(someChallenge)
     }
 }

@@ -1,3 +1,8 @@
+## 2019/05/05 - Deciding to NOT cascade Challenges when saving a Competition
+Just so saving a Competition does not accidentally save (updates to) Challenges along with it.
+
+It brings along some more boilerplate, but it's more explicit this way.
+
 ## 2019/04/14 - Came to the painful conclusion that a Competition will never be created by a person without having any start or end date
 And only noticed that after I created the UI page for creating a Competition.
 
