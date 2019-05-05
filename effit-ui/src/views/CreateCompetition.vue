@@ -84,16 +84,17 @@
 
         private submit() {
             this.$axios.post(`/api/competition`, this.competition)
-                // .then((res) => {
-                //     this.successfullyCreatedCompetitionId = res.headers.location;
-                // })
-                // .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.challenges.filter(c => c.selected)))
-                .then((res) => {
-                    this.successfullyCreatedCompetitionId = res.headers.location;
+                .then((res) => this.successfullyCreatedCompetitionId = res.headers.location)
+                .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.selectedChallenges()))
+                .then(() => {
                     this.snackbarMessage = `Successfully created your new Competition!`;
                     this.showSnackbar = true;
                 })
                 .then(() => this.resetForm());
+        }
+
+        private selectedChallenges() {
+            return this.challenges.filter(c => c.selected);
         }
 
         private resetForm() {
