@@ -1,3 +1,23 @@
+## 2019/05/05 - Returning proper error messages on backend exceptions
+### Use a SpringBoot ExceptionHandler
+Pros:
+* Exception transformation, which is generic for all controller exposed functions, is extracted in to one place
+
+Cons:
+* _A developer needs to know_ that Exceptions are handled in this ExceptionHandler.
+* Need for runtime exceptions
+
+### Wrap domain logic in a Result type
+Pros:
+* Exception transformation is explicit and in the correct place
+
+Cons:
+* Boilerplate code, taking away from what's interesting to the controller
+* Needs to happen in every controller exposed function (easy to forget)
+
+### Conclusion
+I went with the ExceptionHandler, mainly because I want my controller logic to contain only the most interesting bits.
+
 ## 2019/05/05 - @get:JsonIgnore Fixes deserialization error 
 Exception I was getting during the CreatingCompetition Scenario test:
 
