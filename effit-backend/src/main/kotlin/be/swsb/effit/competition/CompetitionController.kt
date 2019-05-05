@@ -33,7 +33,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         try {
             val competitionToBeCreated = competitionCreator.from(createCompetition)
             val createdCompetition = competitionRepository.save(competitionToBeCreated)
-            return ResponseEntity.created(URI(createdCompetition.id.toString())).build()
+            return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went horribly wrong", e)
         }

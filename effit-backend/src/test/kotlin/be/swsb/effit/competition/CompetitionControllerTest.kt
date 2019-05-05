@@ -102,7 +102,7 @@ class CompetitionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isCreated)
-                .andExpect(header().string(HttpHeaders.LOCATION, createdCompetition.id.toString()))
+                .andExpect(header().string(HttpHeaders.LOCATION, createdCompetition.competitionId.id))
     }
 
     @Test
