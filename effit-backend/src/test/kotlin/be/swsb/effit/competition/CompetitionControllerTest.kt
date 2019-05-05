@@ -4,10 +4,10 @@ import be.swsb.effit.WebMvcTestConfiguration
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -73,7 +73,7 @@ class CompetitionControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().`is`(404))
+                .andExpect(status().isNotFound)
     }
 
     @Test
@@ -134,5 +134,38 @@ class CompetitionControllerTest {
                 .andExpect(status().is5xxServerError)
     }
 
+    @Test
+    fun `POST api competition addChallenges should add given Challenges to the given Competition`() {
+        val challenge1 = Challenge(name = "FirstChallenge", points = 3, description = "1st")
+        val challenge2 = Challenge(name = "SecondChallenge", points = 4, description = "2nd")
+        val givenChallenges = listOf(challenge1, challenge2)
 
+        val requestedCompetitionIdAsString = "Snarf"
+
+        val thundercatsComp = Competition.competitionWithoutEndDate("Thundercats", LocalDate.now())
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString)))
+                .thenReturn(thundercatsComp)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
+                .content(givenChallenges.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isAccepted)
+
+        Assertions.assertThat(thundercatsComp.challenges).containsExactly(challenge1, challenge2)
+        Mockito.verify(competitionRepositoryMock).save(thundercatsComp)
+    }
+
+    @Test
+    fun `POST api competition addChallenges should return 404 when no matching Competition found for given CompetitionId`() {
+        val requestedCompetitionIdAsString = "SnowCase2018"
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addChallenges", requestedCompetitionIdAsString)
+                .content(listOf(Challenge(name = "FirstChallenge", points = 3, description = "1st")).toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+    }
 }

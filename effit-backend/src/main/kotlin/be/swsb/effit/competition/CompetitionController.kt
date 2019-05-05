@@ -1,12 +1,12 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.challenge.Challenge
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
-import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/competition",
@@ -35,6 +35,22 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went horribly wrong", e)
         }
+    }
+
+    @PostMapping("{competitionId}/addChallenges")
+    fun addChallenges(@PathVariable competitionId: String,
+                      @RequestBody challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
+        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?.let { addChallengesAndSaveCompetition(it, challengesToBeAdded) }
+                ?: ResponseEntity.notFound().build()
+    }
+
+    private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
+        challengesToBeAdded.forEach {
+            foundCompetition.addChallenge(it)
+        }
+        competitionRepository.save(foundCompetition)
+        return ResponseEntity.accepted().build()
     }
 
 }
