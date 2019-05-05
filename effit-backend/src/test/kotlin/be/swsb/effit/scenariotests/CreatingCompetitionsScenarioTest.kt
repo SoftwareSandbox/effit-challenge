@@ -2,12 +2,11 @@ package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitApplication
 import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.competition.Competition
 import be.swsb.effit.competition.CompetitionId
 import be.swsb.effit.competition.CreateCompetition
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
@@ -42,19 +42,18 @@ class CreatingCompetitionsScenarioTest {
         val competitionId = createNewCompetition(competition, challengeToBeCreated)
 
         // Competition 1's Challenge1 id should be different from the createdChallenge
-        assertThat(retrieveCompetition(competitionId).challenges)
-                .extracting<String> { it.id.toString() }
-                .doesNotContain(createdChallengeLocation)
+        retrieveCompetition(competitionId)
+                .andExpect(MockMvcResultMatchers.jsonPath("$['challenges'][*]",
+                        not(empty<String>())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$['challenges'][*]['id']",
+                        not(hasItemInArray(createdChallengeLocation))))
     }
 
-    private fun retrieveCompetition(competitionId: CompetitionId): Competition {
-        val mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", competitionId.id)
+    private fun retrieveCompetition(competitionId: CompetitionId): ResultActions {
+        return mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", competitionId.id)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn()
-
-        return objectMapper.readValue(mvcResult.response.contentAsString, Competition::class.java)
     }
 
     private fun createNewCompetition(competition: CreateCompetition, selectedChallenge: Challenge) : CompetitionId {

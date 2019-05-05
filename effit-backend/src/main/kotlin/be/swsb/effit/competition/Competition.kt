@@ -20,7 +20,6 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @Embedded
     private var competitionIdentifier: CompetitionId
 
-    @get:JsonIgnore
     val challenges: List<Challenge>
         get() = _challenges
 
