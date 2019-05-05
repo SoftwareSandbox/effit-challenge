@@ -1,3 +1,35 @@
+## 2019/05/05 - @get:JsonIgnore Fixes deserialization error 
+Exception I was getting during the CreatingCompetition Scenario test:
+
+```
+com.fasterxml.jackson.databind.JsonMappingException: Operation is not supported for read-only collection (through reference chain: be.swsb.effit.competition.Competition["challenges"]->kotlin.collections.EmptyList[0])
+
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:394)
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:365)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:302)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:27)
+	at com.fasterxml.jackson.databind.deser.impl.SetterlessProperty.deserializeAndSet(SetterlessProperty.java:133)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:252)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer._deserializeUsingPropertyBased(BeanDeserializer.java:441)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1287)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:326)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:159)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4013)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3004)
+	at be.swsb.effit.scenariotests.CreatingCompetitionsScenarioTest.retrieveCompetition(CreatingCompetitionsScenarioTest.kt:57)
+	at be.swsb.effit.scenariotests.CreatingCompetitionsScenarioTest.Challenges should get copied when being added to a Competition(CreatingCompetitionsScenarioTest.kt:45)
+	...
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
+Caused by: java.lang.UnsupportedOperationException: Operation is not supported for read-only collection
+	at kotlin.collections.EmptyList.add(Collections.kt)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:290)
+	... 50 more
+```
+
+This would occur at run-time if we'd try to POST a Competition **with** Challenges, which in reality we never do, so...
+
+Fixed and documented!
+
 ## 2019/05/05 - Decided not to deal with broken encapsulation of Challenges when adding them to a Competition
 POST'ing to : `/api/competition/{competitionId}/addChallenges`, with Challenges that happen to already exist in the database, would in fact override the existing Challenges.
 

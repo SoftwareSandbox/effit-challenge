@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.util.RestApiExposed
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
@@ -19,6 +20,7 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @Embedded
     private var competitionIdentifier: CompetitionId
 
+    @get:JsonIgnore
     val challenges: List<Challenge>
         get() = _challenges
 
