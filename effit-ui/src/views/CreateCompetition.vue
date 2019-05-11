@@ -35,10 +35,22 @@
                 v-model="showSnackbar"
                 top
                 color="cyan darken-2"
-                :timeout="snackbarTimeout"
+                :timeout="3000"
         >
             {{ snackbarMessage }}
             <v-btn dark flat @click="closeSnackbar()">Close</v-btn>
+        </v-snackbar>
+
+        <v-snackbar
+                v-model="showErrorSnackbar"
+                top
+                color="red darken-2"
+                :timeout="6000"
+                :vertical="true"
+                :multi-line="true"
+        >
+            {{ errorSnackbarMessage }}
+            <v-btn dark flat @click="closeErrorSnackbar()">Close</v-btn>
         </v-snackbar>
     </v-layout>
 </template>
@@ -71,7 +83,10 @@
         // snackbar stuff
         protected showSnackbar = false;
         protected snackbarMessage = '';
-        protected snackbarTimeout = 3000;
+
+        // ErrorSnackbar stuff
+        protected showErrorSnackbar = false;
+        protected errorSnackbarMessage = '';
 
         private mounted() {
             this.$axios.get(`/api/challenge`)
@@ -91,7 +106,11 @@
                     this.snackbarMessage = `Successfully created your new Competition!`;
                     this.showSnackbar = true;
                 })
-                .then(() => this.resetForm());
+                .then(() => this.resetForm())
+                .catch((error) => {
+                    this.errorSnackbarMessage = error.response.data.message;
+                    this.showErrorSnackbar = true;
+                });
         }
 
         private selectedChallenges() {
@@ -109,6 +128,11 @@
         private closeSnackbar() {
             this.showSnackbar = false;
             this.snackbarMessage = '';
+        }
+
+        private closeErrorSnackbar() {
+            this.showErrorSnackbar = false;
+            this.errorSnackbarMessage = '';
         }
     }
 </script>
