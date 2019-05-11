@@ -3,6 +3,7 @@ package be.swsb.effit.competition
 import be.swsb.effit.challenge.Challenge
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.hibernate.exception.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -96,5 +97,17 @@ class CompetitionRepositoryIntegrationTest {
 
         val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
         assertThat(updatedCompetition.challenges).containsExactly(someChallenge)
+    }
+
+    @Test
+    fun `Uniqueness on CompetitionId`() {
+        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        testEntityManager.persist(snowCase2018)
+
+        val competitionWithSameCompetitionId = Competition.competition("SnowCase2018", LocalDate.of(2019, 3, 19), LocalDate.of(2019, 3, 29))
+        assertThatThrownBy {
+            competitionRepository.save(competitionWithSameCompetitionId)
+            testEntityManager.flush()
+        }.hasCauseInstanceOf(ConstraintViolationException::class.java)
     }
 }
