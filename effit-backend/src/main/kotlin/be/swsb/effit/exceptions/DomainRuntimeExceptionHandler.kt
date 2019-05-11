@@ -20,7 +20,7 @@ class DomainRuntimeExceptionHandler: ResponseEntityExceptionHandler() {
 
     private fun statusFrom(httpStatusCode: HttpStatusCode): HttpStatus {
         return when(httpStatusCode) {
-            HttpStatusCode.`403` -> HttpStatus.BAD_REQUEST
+            HttpStatusCode.`400` -> HttpStatus.BAD_REQUEST
             HttpStatusCode.`404` -> HttpStatus.NOT_FOUND
         }
     }
