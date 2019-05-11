@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.exceptions.EffitError
 import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
@@ -88,6 +89,30 @@ class CompetitionControllerTest: ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isCreated)
                 .andExpect(header().string(HttpHeaders.LOCATION, createdCompetition.competitionId.id))
+    }
+
+    @Test
+    fun `POST api competition should throw CompetitionAlreadyExistsException when CompetitionId already exists`() {
+        val createCompetition = CreateCompetition(name = "Snowcase 2018",
+                startDate = LocalDate.of(2018,3,15),
+                endDate = LocalDate.of(2018,3,25))
+        val competitionToCreate = Competition.competition(name = "Snowcase 2018",
+                startDate = LocalDate.of(2018,3,15),
+                endDate = LocalDate.of(2018,3,25))
+
+        val competitionIdThatAlreadyExists = competitionToCreate.competitionId
+        val expectedError = EffitError("Sorry, there's already a competition that has a generated CompetitionId of ${competitionIdThatAlreadyExists.id}. Try entering a (slightly) different name.")
+
+        Mockito.`when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(competitionIdThatAlreadyExists))
+                .thenReturn(Competition.competitionWithoutEndDate(name = "Snowcase 2018", startDate = LocalDate.of(2018,3,1)))
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
+                .content(createCompetition.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().json(expectedError.toJson(objectMapper), true))
     }
 
     @Test

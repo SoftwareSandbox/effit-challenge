@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.exceptions.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -31,8 +32,10 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping
     fun createCompetition(@RequestBody createCompetition: CreateCompetition): ResponseEntity<Any> {
+        val competitionToBeCreated = competitionCreator.from(createCompetition)
+        competitionRepository.findByCompetitionIdentifier(competitionToBeCreated.competitionId)
+                ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
         try {
-            val competitionToBeCreated = competitionCreator.from(createCompetition)
             val createdCompetition = competitionRepository.save(competitionToBeCreated)
             return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
         } catch (e: Exception) {

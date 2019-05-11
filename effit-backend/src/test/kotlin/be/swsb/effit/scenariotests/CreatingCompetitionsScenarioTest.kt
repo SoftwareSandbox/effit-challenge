@@ -32,6 +32,25 @@ class CreatingCompetitionsScenarioTest {
     lateinit var objectMapper: ObjectMapper
 
     @Test
+    fun `Competition that ends up having an already existing CompetitionId should not be created`() {
+        val competition = CreateCompetition(name = "Dummy%Competition",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val competitionWithIdThatAlreadyExists = CreateCompetition(name = "Dummy Competition",
+                startDate = LocalDate.of(2019, 1, 17),
+                endDate = LocalDate.of(2019, 1, 27))
+
+        createNewCompetition(competition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
+                .content(competitionWithIdThatAlreadyExists.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+                .andReturn()
+    }
+
+    @Test
     fun `Challenges should get copied when being added to a Competition`() {
         val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
         val createdChallengeLocation = createNewChallenge(challengeToBeCreated)
@@ -56,7 +75,7 @@ class CreatingCompetitionsScenarioTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
     }
 
-    private fun createNewCompetition(competition: CreateCompetition, selectedChallenge: Challenge) : CompetitionId {
+    private fun createNewCompetition(competition: CreateCompetition, selectedChallenge: Challenge? = null) : CompetitionId {
         val mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(competition.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -64,7 +83,7 @@ class CreatingCompetitionsScenarioTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated)
                 .andReturn()
         val competitionId = CompetitionId(mvcResult.response.getHeader(HttpHeaders.LOCATION)!!)
-        addChallenges(competitionId, listOf(selectedChallenge))
+        selectedChallenge?.let { addChallenges(competitionId, listOf(it))}
         return competitionId
     }
 
