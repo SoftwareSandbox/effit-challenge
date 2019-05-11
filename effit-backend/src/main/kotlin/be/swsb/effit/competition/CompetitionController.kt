@@ -35,12 +35,8 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         val competitionToBeCreated = competitionCreator.from(createCompetition)
         competitionRepository.findByCompetitionIdentifier(competitionToBeCreated.competitionId)
                 ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
-        try {
-            val createdCompetition = competitionRepository.save(competitionToBeCreated)
-            return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went horribly wrong", e)
-        }
+        val createdCompetition = competitionRepository.save(competitionToBeCreated)
+        return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
     }
 
     @PostMapping("{competitionId}/addChallenges")
