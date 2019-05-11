@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 
 @ControllerAdvice
-class DomainRuntimeExceptionHandler: ResponseEntityExceptionHandler() {
+class DomainRuntimeExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(value = [DomainRuntimeException::class])
     fun handleDomainException(ex: DomainRuntimeException, request: WebRequest): ResponseEntity<Any> {
@@ -18,8 +18,15 @@ class DomainRuntimeExceptionHandler: ResponseEntityExceptionHandler() {
         return handleExceptionInternal(ex, bodyOfResponse, HttpHeaders(), statusFrom(ex.httpStatusCode), request)
     }
 
+    @ExceptionHandler(value = [Exception::class])
+    fun handleOtherException(ex: Exception, request: WebRequest): ResponseEntity<Any> {
+        this.logger.error("Unspecified exception occurred", ex)
+        val bodyOfResponse = EffitError("Oops. Something went wrong.")
+        return handleExceptionInternal(ex, bodyOfResponse, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request)
+    }
+
     private fun statusFrom(httpStatusCode: HttpStatusCode): HttpStatus {
-        return when(httpStatusCode) {
+        return when (httpStatusCode) {
             HttpStatusCode.`400` -> HttpStatus.BAD_REQUEST
             HttpStatusCode.`404` -> HttpStatus.NOT_FOUND
         }
