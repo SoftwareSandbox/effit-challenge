@@ -40,18 +40,6 @@
             {{ snackbarMessage }}
             <v-btn dark flat @click="closeSnackbar()">Close</v-btn>
         </v-snackbar>
-
-        <v-snackbar
-                v-model="showErrorSnackbar"
-                top
-                color="red darken-2"
-                :timeout="6000"
-                :vertical="true"
-                :multi-line="true"
-        >
-            {{ errorSnackbarMessage }}
-            <v-btn dark flat @click="closeErrorSnackbar()">Close</v-btn>
-        </v-snackbar>
     </v-layout>
 </template>
 
@@ -84,10 +72,6 @@
         protected showSnackbar = false;
         protected snackbarMessage = '';
 
-        // ErrorSnackbar stuff
-        protected showErrorSnackbar = false;
-        protected errorSnackbarMessage = '';
-
         private mounted() {
             this.$axios.get(`/api/challenge`)
                 .then(({data}: {data: Challenge[]}) => this.challenges = data.map(this.expandWithSelectedProperty));
@@ -108,8 +92,7 @@
                 })
                 .then(() => this.resetForm())
                 .catch((error) => {
-                    this.errorSnackbarMessage = error.response.data.message;
-                    this.showErrorSnackbar = true;
+                    //noop, is already handled by interceptor in Main
                 });
         }
 
@@ -128,11 +111,6 @@
         private closeSnackbar() {
             this.showSnackbar = false;
             this.snackbarMessage = '';
-        }
-
-        private closeErrorSnackbar() {
-            this.showErrorSnackbar = false;
-            this.errorSnackbarMessage = '';
         }
     }
 </script>
