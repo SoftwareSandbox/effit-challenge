@@ -33,10 +33,10 @@ class CreatingCompetitionsScenarioTest {
 
     @Test
     fun `Competition that ends up having an already existing CompetitionId should not be created`() {
-        val competition = CreateCompetition(name = "Dummy%Competition",
+        val competition = CreateCompetition(name = "Thundercats%Competition",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
-        val competitionWithIdThatAlreadyExists = CreateCompetition(name = "Dummy Competition",
+        val competitionWithIdThatAlreadyExists = CreateCompetition(name = "Thundercats Competition",
                 startDate = LocalDate.of(2019, 1, 17),
                 endDate = LocalDate.of(2019, 1, 27))
 
