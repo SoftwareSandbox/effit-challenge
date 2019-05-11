@@ -48,8 +48,8 @@
     import DateField from '@/components/DateField.vue';
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import ChallengeCard from '@/components/ChallengeCard.vue';
+    import {Challenge} from '@/model/Challenge';
 
-    type Challenge = {name: string, points: number, description: string};
     type SelectableChallenge = Challenge & {selected: boolean};
 
     @Component({
@@ -91,9 +91,7 @@
                     this.showSnackbar = true;
                 })
                 .then(() => this.resetForm())
-                .catch((error) => {
-                    //noop, is already handled by interceptor in Main
-                });
+                .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private selectedChallenges() {
