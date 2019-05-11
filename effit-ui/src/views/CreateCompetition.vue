@@ -62,7 +62,7 @@
             endDate: new Date().toISOString().substr(0, 10),
         };
         protected successfullyCreatedCompetitionId: string = '';
-        protected challenges: Array<SelectableChallenge> = [];
+        protected challenges: SelectableChallenge[] = [];
 
         // data iterator stuff
         protected rowsPerPageItems = [4, 8, 12];
@@ -75,7 +75,7 @@
 
         private mounted() {
             this.$axios.get(`/api/challenge`)
-                .then(({data}: {data: Array<Challenge>}) => this.challenges = data.map(this.expandWithSelectedProperty));
+                .then(({data}: {data: Challenge[]}) => this.challenges = data.map(this.expandWithSelectedProperty));
         }
 
         private expandWithSelectedProperty(challenge: Challenge) {
@@ -85,7 +85,8 @@
         private submit() {
             this.$axios.post(`/api/competition`, this.competition)
                 .then((res) => this.successfullyCreatedCompetitionId = res.headers.location)
-                .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.selectedChallenges()))
+                .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`,
+                    this.selectedChallenges()))
                 .then(() => {
                     this.snackbarMessage = `Successfully created your new Competition!`;
                     this.showSnackbar = true;
@@ -94,7 +95,7 @@
         }
 
         private selectedChallenges() {
-            return this.challenges.filter(c => c.selected);
+            return this.challenges.filter((c) => c.selected);
         }
 
         private resetForm() {
