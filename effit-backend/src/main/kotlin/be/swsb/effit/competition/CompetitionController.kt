@@ -56,4 +56,11 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return ResponseEntity.accepted().build()
     }
 
+    @PostMapping("{competitionId}/complete/{challengeId}")
+    fun completeChallenge(@PathVariable("competitionId") competitionId: String,
+                          @PathVariable("challengeId") challengeId: String,
+                          @RequestBody competitorName: CompetitorName) : ResponseEntity<Any> {
+        return ResponseEntity.accepted().build()
+    }
+
 }

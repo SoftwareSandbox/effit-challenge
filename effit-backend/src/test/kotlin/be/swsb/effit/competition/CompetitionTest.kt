@@ -66,4 +66,14 @@ class CompetitionTest {
 
         assertThat(someCompetition.challenges).contains(picassoChallenge)
     }
+
+    @Test
+    fun `A Competition without Competitors still can have Competitors added to it`() {
+        val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,4,9))
+
+        val snarf = CompetitorName("Snarf")
+        someCompetition.addCompetitor(snarf)
+
+        assertThat(someCompetition.competitors).contains(snarf)
+    }
 }

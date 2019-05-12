@@ -187,4 +187,70 @@ class CompetitionControllerTest: ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
     }
+
+    @Test
+    fun `POST api competition compId complete challengeId should return 404 when no competition was found`() {
+        val givenCompetitionId = "SnowCase2018"
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+
+        val expectedError = EffitError("Competition with id $givenCompetitionId not found")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}", givenCompetitionId, "challengeId")
+                .content(CompetitorName("Snarf").toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+                .andExpect(content().json(expectedError.toJson(objectMapper), true))
+    }
+
+    @Test
+    fun `POST api competition compId complete challengeId should return 404 when no challenge was found`() {
+        val givenCompetitionId = "Thundercats"
+        val givenChallengeId = UUID.randomUUID().toString()
+
+        val thundercatsComp = Competition.competitionWithoutEndDate("Thundercats", LocalDate.now())
+        thundercatsComp.addChallenge(Challenge(id = UUID.randomUUID(),name = "FirstChallenge", points = 3, description = "1st"))
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
+
+        val expectedError = EffitError("Challenge with id $givenChallengeId not found in competition $givenCompetitionId")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
+                givenCompetitionId, givenChallengeId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(CompetitorName("Snarf").toJson(objectMapper))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+                .andExpect(content().json(expectedError.toJson(objectMapper), true))
+    }
+
+    @Test
+    fun `POST api competition compId complete challengeId should add given CompetitorName to Competitions' Competitors`() {
+        val givenCompetitionId = "Thundercats"
+        val givenChallengeId = UUID.randomUUID()
+
+        val thundercatsComp = Competition.competitionWithoutEndDate("Thundercats", LocalDate.now())
+        thundercatsComp.addChallenge(Challenge(id = givenChallengeId, name = "FirstChallenge", points = 3, description = "1st"))
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
+
+        val snarf = CompetitorName("Snarf")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
+                givenCompetitionId, givenChallengeId.toString())
+                .content(snarf.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isAccepted)
+
+        assertThat(thundercatsComp.competitors).containsExactly(snarf)
+    }
+
+    @Test
+    fun `POST api competition compId complete challengeId should add challenge score to given Competitors total score`() {
+
+    }
+
+    @Test
+    fun `POST api competition compId complete challengeId should return 400 when Competitor already finished given challenge`() {
+
+    }
 }

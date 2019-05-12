@@ -6,6 +6,9 @@ import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
 
+//TODO Competitor should also have total points?
+typealias Competitor = CompetitorName
+
 @Entity
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val name: String,
@@ -16,17 +19,27 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @JoinColumn(name = "FK_COMPETITION_ID")
     private var _challenges: List<Challenge> = emptyList()
 
+
+    private var _competitors: List<Competitor> = emptyList()
+
     @Embedded
     private var competitionIdentifier: CompetitionId
 
     val challenges: List<Challenge>
         get() = _challenges
 
+    val competitors: List<Competitor>
+        get() = _competitors
+
     val competitionId: CompetitionId
         get() = competitionIdentifier
 
     fun addChallenge(challenge: Challenge) {
         _challenges = _challenges + challenge
+    }
+
+    fun addCompetitor(competitor: Competitor) {
+        _competitors = _competitors + competitor
     }
 
     init {
