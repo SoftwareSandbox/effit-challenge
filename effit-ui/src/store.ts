@@ -14,7 +14,7 @@ export default new Vuex.Store({
   state: {
     snackShow: false,
     snackMessage: '',
-    snackColor: '',
+    snackColor: 'cyan',
     title: 'EFFIT',
   },
   mutations: {
