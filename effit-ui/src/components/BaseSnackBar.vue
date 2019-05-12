@@ -21,15 +21,15 @@
     export default class BaseSnackBar extends Vue {
 
         get color() {
-            return this.$store.state.snackColor;
+            return this.$store.state.snackbar.snackColor;
         }
 
         get snackbarMessage() {
-            return this.$store.state.snackMessage;
+            return this.$store.state.snackbar.snackMessage;
         }
 
         get showSnackbar() {
-            return this.$store.state.snackShow;
+            return this.$store.state.snackbar.snackShow;
         }
 
         set showSnackbar(bool: boolean) {

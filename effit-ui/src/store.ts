@@ -6,31 +6,31 @@ Vue.use(Vuex);
 type SnackColor = 'cyan' | 'red';
 
 interface UpdateSnackCommand {
-  message: string;
-  color: SnackColor;
+    message: string;
+    color: SnackColor;
 }
 
 export default new Vuex.Store({
-  state: {
-    snackShow: false,
-    snackMessage: '',
-    snackColor: 'cyan',
-    title: 'EFFIT',
-  },
-  mutations: {
-    showSnackMessage(state, snack: UpdateSnackCommand) {
-      state.snackShow = !!snack.message;
-      state.snackMessage = snack.message || '';
-      state.snackColor = snack.color || 'cyan';
+    state: {
+        snackbar: {
+            snackShow: false,
+            snackMessage: '',
+            snackColor: 'cyan',
+        },
+        title: 'EFFIT',
     },
-    showSnackbar(state, updatedVisibility: boolean) {
-      state.snackShow = updatedVisibility;
+    mutations: {
+        showSnackMessage(state, snack: UpdateSnackCommand) {
+            state.snackbar.snackShow = !!snack.message;
+            state.snackbar.snackMessage = snack.message || '';
+            state.snackbar.snackColor = snack.color || 'cyan';
+        },
+        showSnackbar(state, updatedVisibility: boolean) {
+            state.snackbar.snackShow = updatedVisibility;
+        },
+        updateTitle(state, currentViewTitle) {
+            state.title = currentViewTitle;
+        },
     },
-    updateTitle(state, currentViewTitle) {
-      state.title = currentViewTitle;
-    },
-  },
-  actions: {
-
-  },
+    actions: {},
 });
