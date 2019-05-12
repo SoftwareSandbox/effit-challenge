@@ -57,7 +57,8 @@
                     this.snackbarMessage = `Successfully created your new Challenge!`;
                     this.showSnackbar = true;
                 })
-                .then(() => this.resetForm());
+                .then(() => this.resetForm())
+                .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private resetForm() {
