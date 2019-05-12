@@ -31,15 +31,8 @@
             <v-btn @click="submit">submit</v-btn>
         </v-form>
 
-        <v-snackbar
-                v-model="showSnackbar"
-                top
-                color="cyan darken-2"
-                :timeout="3000"
-        >
-            {{ snackbarMessage }}
-            <v-btn dark flat @click="closeSnackbar()">Close</v-btn>
-        </v-snackbar>
+        <base-snack-bar></base-snack-bar>
+
     </v-layout>
 </template>
 
@@ -49,11 +42,12 @@
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import ChallengeCard from '@/components/ChallengeCard.vue';
     import {Challenge} from '@/model/Challenge';
+    import BaseSnackBar from '@/components/BaseSnackBar.vue';
 
     type SelectableChallenge = Challenge & {selected: boolean};
 
     @Component({
-        components: {ChallengeCard, ChallengesTable, DateField},
+        components: {BaseSnackBar, ChallengeCard, ChallengesTable, DateField},
     })
     export default class CreateCompetition extends Vue {
         protected competition = {
@@ -67,10 +61,6 @@
         // data iterator stuff
         protected rowsPerPageItems = [4, 8, 12];
         protected pagination = { rowsPerPage: 4 };
-
-        // snackbar stuff
-        protected showSnackbar = false;
-        protected snackbarMessage = '';
 
         private mounted() {
             this.$axios.get(`/api/challenge`)
@@ -87,32 +77,24 @@
                 .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`,
                     this.selectedChallenges()))
                 .then(() => {
-                    this.snackbarMessage = `Successfully created your new Competition!`;
-                    this.showSnackbar = true;
+                    this.showSnackBar(`Successfully created your new Competition!`);
                 })
-                .then(() => this.navigateToCreatedCompetition())
+                // .then(() => this.navigateToCreatedCompetition())
                 .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private selectedChallenges() {
             return this.challenges.filter((c) => c.selected);
         }
+        //
+        // private navigateToCreatedCompetition() {
+        //     this.$router.push(`/competitions/${this.successfullyCreatedCompetitionId}`);
+        // }
 
-        private resetForm() {
-            this.competition = {
-                name: '',
-                startDate: new Date().toISOString().substr(0, 10),
-                endDate: new Date().toISOString().substr(0, 10),
-            };
+        private showSnackBar(message: string) {
+            this.$store.commit('snack', message);
         }
 
-        private closeSnackbar() {
-            this.showSnackbar = false;
-            this.snackbarMessage = '';
-        }
 
-        private navigateToCreatedCompetition() {
-            this.$router.push(`/competitions/${this.successfullyCreatedCompetitionId}`);
-        }
     }
 </script>
