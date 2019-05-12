@@ -45,7 +45,7 @@
     type SelectableChallenge = Challenge & {selected: boolean};
 
     @Component({
-        components: {BaseSnackBar, ChallengeCard, ChallengesTable, DateField},
+        components: {ChallengeCard, ChallengesTable, DateField},
     })
     export default class CreateCompetition extends Vue {
         protected competition = {
@@ -77,17 +77,17 @@
                 .then(() => {
                     this.showSnackBar(`Successfully created your new Competition!`);
                 })
-                // .then(() => this.navigateToCreatedCompetition())
+                .then(() => this.navigateToCreatedCompetition())
                 .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private selectedChallenges() {
             return this.challenges.filter((c) => c.selected);
         }
-        //
-        // private navigateToCreatedCompetition() {
-        //     this.$router.push(`/competitions/${this.successfullyCreatedCompetitionId}`);
-        // }
+
+        private navigateToCreatedCompetition() {
+            this.$router.push(`/competitions/${this.successfullyCreatedCompetitionId}`);
+        }
 
         private showSnackBar(message: string) {
             this.$store.commit('snack', message);
