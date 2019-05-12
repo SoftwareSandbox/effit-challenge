@@ -90,7 +90,7 @@
         }
 
         private showSnackBar(message: string) {
-            this.$store.commit('snack', message);
+            this.$store.commit('snack', {message});
         }
 
 

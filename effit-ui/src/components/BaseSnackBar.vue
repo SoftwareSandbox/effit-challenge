@@ -2,7 +2,7 @@
     <v-snackbar
             v-model="showSnackbar"
             top
-            color="cyan darken-2"
+            :color="color"
             :timeout="3000"
     >
         {{ snackbarMessage }}
@@ -18,6 +18,10 @@
     })
     export default class BaseSnackBar extends Vue {
 
+        get color() {
+            return this.$store.state.snackColor;
+        }
+
         get snackbarMessage() {
             return this.$store.state.snack;
         }
@@ -27,7 +31,7 @@
         }
 
         private closeSnackbar() {
-            this.$store.commit('snack', '');
+            this.$store.commit('snack', {message: ''});
         }
     }
 </script>
