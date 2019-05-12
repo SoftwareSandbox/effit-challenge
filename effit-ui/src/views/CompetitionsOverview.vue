@@ -1,6 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout align-start justify-start column fill-height>
-        <h2>Competitions</h2>
         <v-data-table
                 :headers="headers"
                 :items="competitions"
@@ -35,6 +34,7 @@
         public competitions: any[] = [];
 
         public mounted() {
+            this.$store.commit('routerViewWasSwitched', 'Competitions');
             this.$axios
                 .get('/api/competition')
                 .then(({data}) => this.competitions = data);

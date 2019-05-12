@@ -1,6 +1,6 @@
 <template>
     <v-layout align-start justify-start column fill-height>
-        <h2>{{competition.name}} : {{competition.startDate}} - {{competition.endDate}}</h2>
+        <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
         <challenges-table :challenges="competition.challenges"></challenges-table>
     </v-layout>
 </template>
@@ -18,7 +18,8 @@
 
         private mounted() {
             this.$axios.get(`/api/competition/${this.competitionId}`)
-                .then(({data}) => this.competition = data);
+                .then(({data}) => this.competition = data)
+                .then(() => this.$store.commit('routerViewWasSwitched', `${this.competition.name}`));
         }
     }
 </script>

@@ -79,7 +79,6 @@
 
     @Component({components: {BaseSnackBar}})
     export default class App extends Vue {
-        protected title = 'EFFIT';
         protected drawer = null;
 
         private mounted() {
@@ -92,6 +91,10 @@
 
         private showError(message: string) {
             this.$store.commit('showSnackMessage', {message, color: 'red'});
+        }
+
+        get title() {
+            return this.$store.state.title;
         }
     }
 </script>

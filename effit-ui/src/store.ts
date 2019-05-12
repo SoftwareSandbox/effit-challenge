@@ -15,6 +15,7 @@ export default new Vuex.Store({
     snackShow: false,
     snackMessage: '',
     snackColor: '',
+    title: 'EFFIT',
   },
   mutations: {
     showSnackMessage(state, snack: UpdateSnackCommand) {
@@ -24,7 +25,10 @@ export default new Vuex.Store({
     },
     showSnackbar(state, updatedVisibility: boolean) {
       state.snackShow = updatedVisibility;
-    }
+    },
+    routerViewWasSwitched(state, currentViewTitle) {
+      state.title = currentViewTitle;
+    },
   },
   actions: {
 

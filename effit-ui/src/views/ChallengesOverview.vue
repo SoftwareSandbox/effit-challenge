@@ -1,6 +1,5 @@
 <template>
     <v-layout align-start justify-start column fill-height>
-        <h2>Challenges</h2>
         <challenges-table :challenges="challenges"></challenges-table>
     </v-layout>
 </template>
@@ -13,9 +12,11 @@
         components: {ChallengesTable},
     })
     export default class ChallengesOverview extends Vue {
+        private title = 'Challenges';
         private challenges: any[] = [];
 
         public mounted() {
+            this.$store.commit('routerViewWasSwitched', this.title);
             this.$axios
                 .get('/api/challenge')
                 .then(({data}) => this.challenges = data);

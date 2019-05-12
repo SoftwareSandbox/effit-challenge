@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import CompetitionsOverview from './components/CompetitionsOverview.vue';
+import CompetitionsOverview from './views/CompetitionsOverview.vue';
 import ChallengesOverview from './views/ChallengesOverview.vue';
 import CompetitionDetail from './views/CompetitionDetail.vue';
 import CreateChallenge from './views/CreateChallenge.vue';

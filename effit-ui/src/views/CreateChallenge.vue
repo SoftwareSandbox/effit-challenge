@@ -1,6 +1,5 @@
 <template>
     <v-layout align-start justify-start column fill-height>
-        <h2>Creating a new Challenge are we?</h2>
         <v-form>
             <v-text-field
                     v-model="challenge.name"
@@ -49,6 +48,10 @@
         protected showSnackbar = false;
         protected snackbarMessage = '';
         protected snackbarTimeout = 3000;
+
+        private mounted() {
+            this.$store.commit('routerViewWasSwitched', 'New Challenge');
+        }
 
         private submit() {
             this.$axios.post(`/api/challenge`, this.challenge)
