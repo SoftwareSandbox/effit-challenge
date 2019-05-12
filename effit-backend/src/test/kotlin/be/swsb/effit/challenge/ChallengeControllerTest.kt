@@ -1,14 +1,13 @@
 package be.swsb.effit.challenge
 
+import be.swsb.effit.exceptions.EffitError
 import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
@@ -29,6 +28,33 @@ class ChallengeControllerTest: ControllerTest() {
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(expectedChallenges.toJson(objectMapper), true))
+    }
+
+    @Test
+    fun `GET api challenge id should return no challenge found for given id when challenge does not exist`() {
+        val givenId = UUID.randomUUID()
+
+        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.empty())
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(EffitError("Challenge with id $givenId not found").toJson(objectMapper), true))
+    }
+
+    @Test
+    fun `GET api challenge id should return specific Challenge for given id`() {
+        val givenId = UUID.randomUUID()
+        val expectedChallenge = Challenge(id = givenId, name = "Playboy", points = 7, description = "ride down a slope with exposed torso")
+
+        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.of(expectedChallenge))
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(expectedChallenge.toJson(objectMapper), true))
     }
 
     @Test
