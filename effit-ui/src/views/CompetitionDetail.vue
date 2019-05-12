@@ -23,7 +23,7 @@
         private mounted() {
             this.$axios.get(`/api/competition/${this.competitionId}`)
                 .then(({data}) => this.competition = data)
-                .then(() => this.$store.commit('routerViewWasSwitched', `${this.competition.name}`));
+                .then(() => this.$store.commit('updateTitle', `${this.competition.name}`));
         }
 
         private navigateToMarkAsCompleted(challenge: Challenge) {

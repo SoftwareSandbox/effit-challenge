@@ -50,7 +50,7 @@
         protected snackbarTimeout = 3000;
 
         private mounted() {
-            this.$store.commit('routerViewWasSwitched', 'New Challenge');
+            this.$store.commit('updateTitle', 'New Challenge');
         }
 
         private submit() {

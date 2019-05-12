@@ -16,7 +16,7 @@
         private challenges: any[] = [];
 
         public mounted() {
-            this.$store.commit('routerViewWasSwitched', this.title);
+            this.$store.commit('updateTitle', this.title);
             this.$axios
                 .get('/api/challenge')
                 .then(({data}) => this.challenges = data);

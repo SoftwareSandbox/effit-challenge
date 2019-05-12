@@ -26,7 +26,7 @@ export default new Vuex.Store({
     showSnackbar(state, updatedVisibility: boolean) {
       state.snackShow = updatedVisibility;
     },
-    routerViewWasSwitched(state, currentViewTitle) {
+    updateTitle(state, currentViewTitle) {
       state.title = currentViewTitle;
     },
   },

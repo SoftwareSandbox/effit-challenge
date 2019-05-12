@@ -60,7 +60,7 @@
         protected pagination = {rowsPerPage: 4};
 
         private mounted() {
-            this.$store.commit('routerViewWasSwitched', 'New Competition');
+            this.$store.commit('updateTitle', 'New Competition');
             this.$axios.get(`/api/challenge`)
                 .then(({data}: { data: Challenge[] }) => this.challenges = data.map(this.expandWithSelectedProperty));
         }

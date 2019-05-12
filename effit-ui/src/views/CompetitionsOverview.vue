@@ -34,7 +34,7 @@
         public competitions: any[] = [];
 
         public mounted() {
-            this.$store.commit('routerViewWasSwitched', 'Competitions');
+            this.$store.commit('updateTitle', 'Competitions');
             this.$axios
                 .get('/api/competition')
                 .then(({data}) => this.competitions = data);

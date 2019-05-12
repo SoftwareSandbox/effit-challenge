@@ -27,7 +27,7 @@
         private mounted() {
             this.$axios.get(`/api/challenge/${this.challengeId}`)
                 .then(({data}) => this.challenge = data)
-                .then(() => this.$store.commit('routerViewWasSwitched', `Who completed ${this.challenge.name}?`))
+                .then(() => this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`))
                 .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
     }
