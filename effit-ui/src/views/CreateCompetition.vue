@@ -90,7 +90,7 @@
                     this.snackbarMessage = `Successfully created your new Competition!`;
                     this.showSnackbar = true;
                 })
-                .then(() => this.resetForm())
+                .then(() => this.navigateToCreatedCompetition())
                 .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
@@ -109,6 +109,10 @@
         private closeSnackbar() {
             this.showSnackbar = false;
             this.snackbarMessage = '';
+        }
+
+        private navigateToCreatedCompetition() {
+            this.$router.push(`/competitions/${this.successfullyCreatedCompetitionId}`);
         }
     }
 </script>
