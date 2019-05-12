@@ -31,8 +31,6 @@
             <v-btn @click="submit">submit</v-btn>
         </v-form>
 
-        <base-snack-bar></base-snack-bar>
-
     </v-layout>
 </template>
 

@@ -80,13 +80,16 @@
             {{ errorSnackbarMessage }}
             <v-btn dark flat @click="closeErrorSnackbar()">Close</v-btn>
         </v-snackbar>
+
+        <base-snack-bar></base-snack-bar>
     </v-app>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import BaseSnackBar from '@/components/BaseSnackBar.vue';
 
-    @Component({})
+    @Component({components: {BaseSnackBar}})
     export default class App extends Vue {
         protected title = 'EFFIT';
         protected drawer = null;
