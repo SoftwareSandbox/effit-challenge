@@ -6,7 +6,7 @@
             align top
     >
         <template v-slot:items="props">
-            <tr @click="rowHandler(props.item)">
+            <tr @click="handleRow(props.item)">
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-right">{{ props.item.points }}</td>
                 <td class="text-xs-left">{{ props.item.description }}</td>
@@ -31,5 +31,11 @@
 
         @Prop({type: Array}) private challenges !: Challenge[];
         @Prop({type: Function}) private rowHandler !: (challenge: Challenge) => void;
+
+        private handleRow(challenge: Challenge) {
+            if (this.rowHandler !== undefined) {
+                return this.rowHandler(challenge);
+            }
+        }
     }
 </script>
