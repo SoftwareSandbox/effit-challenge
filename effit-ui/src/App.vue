@@ -69,18 +69,6 @@
             <span>&copy; 2019</span>
         </v-footer>
 
-        <v-snackbar
-                v-model="showErrorSnackbar"
-                top
-                color="red darken-2"
-                :timeout="6000"
-                :vertical="true"
-                :multi-line="true"
-        >
-            {{ errorSnackbarMessage }}
-            <v-btn dark flat @click="closeErrorSnackbar()">Close</v-btn>
-        </v-snackbar>
-
         <base-snack-bar></base-snack-bar>
     </v-app>
 </template>
@@ -94,22 +82,16 @@
         protected title = 'EFFIT';
         protected drawer = null;
 
-        // ErrorSnackbar stuff
-        protected showErrorSnackbar = false;
-        protected errorSnackbarMessage = '';
-
         private mounted() {
             this.$axios.interceptors.response.use(
                 (response) => response,
                 (error) => {
-                    this.errorSnackbarMessage = error.response.data.message;
-                    this.showErrorSnackbar = true;
+                    this.showError(error.response.data.message);
                 });
         }
 
-        private closeErrorSnackbar() {
-            this.showErrorSnackbar = false;
-            this.errorSnackbarMessage = '';
+        private showError(message: string) {
+            this.$store.commit('showSnackMessage', {message, color: 'red'});
         }
     }
 </script>

@@ -3,7 +3,9 @@
             v-model="showSnackbar"
             top
             :color="color"
-            :timeout="3000"
+            :timeout="6000"
+            :vertical="true"
+            :multi-line="true"
     >
         {{ snackbarMessage }}
         <v-btn dark flat @click="closeSnackbar()">Close</v-btn>
@@ -23,15 +25,19 @@
         }
 
         get snackbarMessage() {
-            return this.$store.state.snack;
+            return this.$store.state.snackMessage;
         }
 
         get showSnackbar() {
-            return !!this.snackbarMessage;
+            return this.$store.state.snackShow;
+        }
+
+        set showSnackbar(bool: boolean) {
+            this.$store.commit('showSnackbar', bool);
         }
 
         private closeSnackbar() {
-            this.$store.commit('snack', {message: ''});
+            this.$store.commit('showSnackbar', false);
         }
     }
 </script>

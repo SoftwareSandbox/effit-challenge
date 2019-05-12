@@ -12,14 +12,19 @@ interface UpdateSnackCommand {
 
 export default new Vuex.Store({
   state: {
-    snack: '',
+    snackShow: false,
+    snackMessage: '',
     snackColor: '',
   },
   mutations: {
-    snack(state, snack: UpdateSnackCommand) {
-      state.snack = snack.message || '';
+    showSnackMessage(state, snack: UpdateSnackCommand) {
+      state.snackShow = !!snack.message;
+      state.snackMessage = snack.message || '';
       state.snackColor = snack.color || 'cyan';
     },
+    showSnackbar(state, updatedVisibility: boolean) {
+      state.snackShow = updatedVisibility;
+    }
   },
   actions: {
 
