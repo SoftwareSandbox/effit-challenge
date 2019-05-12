@@ -5,6 +5,7 @@ import ChallengesOverview from './views/ChallengesOverview.vue';
 import CompetitionDetail from './views/CompetitionDetail.vue';
 import CreateChallenge from './views/CreateChallenge.vue';
 import CreateCompetition from './views/CreateCompetition.vue';
+import CompleteChallenge from './views/CompleteChallenge.vue';
 
 Vue.use(Router);
 
@@ -36,6 +37,12 @@ export default new Router({
       name: 'competitionDetail',
       path: '/competitions/:competitionId',
       component: CompetitionDetail,
+      props: true,
+    },
+    {
+      name: 'completeChallenge',
+      path: '/competitions/:competitionId/complete/:challengeId',
+      component: CompleteChallenge,
       props: true,
     },
     {

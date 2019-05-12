@@ -78,8 +78,7 @@
                     this.showSnackBar(`Successfully created your new Competition!`);
                 })
                 .then(() => this.navigateToCreatedCompetition())
-                .catch(() => {/* noop, is already handled by interceptor in Main*/
-                });
+                .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private selectedChallenges() {
