@@ -29,6 +29,10 @@ out/
 
 # Gradle
 .gradle/
+build/
 
 # Kotlin-test
 .kotlintest/
+
+# OSX
+.DS_Store
