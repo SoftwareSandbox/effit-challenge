@@ -55,15 +55,11 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return ResponseEntity.accepted().build()
     }
 
-    @PostMapping("{competitionId}/complete/{challengeId}")
+    @PostMapping("{competitionId}/addCompetitor")
     fun completeChallenge(@PathVariable("competitionId") competitionId: String,
-                          @PathVariable("challengeId") challengeId: String,
                           @RequestBody competitor: Competitor) : ResponseEntity<Any> {
         val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
-
-        competition.challenges.singleOrNull { it.id == UUID.fromString(challengeId) }
-                ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found in competition $competitionId")
 
         competition.addCompetitor(competitor)
 
