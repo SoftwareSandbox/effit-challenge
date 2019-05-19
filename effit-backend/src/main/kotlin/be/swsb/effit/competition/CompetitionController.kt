@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.exceptions.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
@@ -14,6 +15,7 @@ import java.util.*
 @RequestMapping("/api/competition",
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 class CompetitionController(private val competitionRepository: CompetitionRepository,
+                            private val competitorRepository: CompetitorRepository,
                             private val challengeRepository: ChallengeRepository,
                             private val competitionCreator: CompetitionCreator) {
 
@@ -56,12 +58,13 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     @PostMapping("{competitionId}/addCompetitor")
-    fun completeChallenge(@PathVariable("competitionId") competitionId: String,
-                          @RequestBody competitor: Competitor) : ResponseEntity<Any> {
+    fun addCompetitor(@PathVariable("competitionId") competitionId: String,
+                      @RequestBody competitor: Competitor) : ResponseEntity<Any> {
         val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
 
-        competition.addCompetitor(competitor)
+        competition.addCompetitor(competitorRepository.save(competitor))
+        competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()
     }

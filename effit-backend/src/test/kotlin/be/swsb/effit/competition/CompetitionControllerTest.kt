@@ -2,12 +2,14 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.exceptions.EffitError
 import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.InOrder
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -22,6 +24,8 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Autowired
     lateinit var competitionRepositoryMock: CompetitionRepository
+    @Autowired
+    lateinit var competitorRepositoryMock: CompetitorRepository
     @Autowired
     lateinit var challengeRepositoryMock: ChallengeRepository
 
@@ -212,6 +216,9 @@ class CompetitionControllerTest : ControllerTest() {
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
 
         val snarf = Competitor(name = "Snarf", totalScore = 0)
+
+        Mockito.`when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
                 .content(snarf.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -221,6 +228,10 @@ class CompetitionControllerTest : ControllerTest() {
         assertThat(thundercatsComp.competitors)
                 .usingElementComparatorIgnoringFields("id")
                 .containsExactly(Competitor(name = "Snarf", totalScore = 0))
+
+        val inOrder = Mockito.inOrder(competitorRepositoryMock, competitionRepositoryMock)
+        inOrder.verify(competitorRepositoryMock).save(snarf)
+        inOrder.verify(competitionRepositoryMock).save(thundercatsComp)
     }
 
     @Test
