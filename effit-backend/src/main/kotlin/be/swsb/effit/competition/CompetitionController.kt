@@ -4,11 +4,9 @@ import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.exceptions.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import java.net.URI
 import java.util.*
 
@@ -60,14 +58,14 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping("{competitionId}/complete/{challengeId}")
     fun completeChallenge(@PathVariable("competitionId") competitionId: String,
                           @PathVariable("challengeId") challengeId: String,
-                          @RequestBody competitorName: CompetitorName) : ResponseEntity<Any> {
+                          @RequestBody competitor: Competitor) : ResponseEntity<Any> {
         val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
 
         competition.challenges.singleOrNull { it.id == UUID.fromString(challengeId) }
                 ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found in competition $competitionId")
 
-        competition.addCompetitor(Competitor(name = competitorName.name))
+        competition.addCompetitor(competitor)
 
         return ResponseEntity.accepted().build()
     }
