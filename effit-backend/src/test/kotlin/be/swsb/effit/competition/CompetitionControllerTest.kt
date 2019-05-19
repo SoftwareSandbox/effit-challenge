@@ -29,7 +29,7 @@ class CompetitionControllerTest : ControllerTest() {
     lateinit var competitionCreatorMock: CompetitionCreator
 
     @Test
-    fun `GET api competition should return all Competitions`() {
+    fun `GET api_competition should return all Competitions`() {
         val expectedCompetitions = listOf(Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10)))
 
         Mockito.`when`(competitionRepositoryMock.findAll()).thenReturn(expectedCompetitions)
@@ -42,7 +42,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `GET api competition name should return the competition with matching competition id`() {
+    fun `GET api_competition_name should return the competition with matching competition id`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
         val expectedCompetitionWithChallenges = Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10))
         expectedCompetitionWithChallenges.addChallenge(Challenge(name = "Picasso", points = 3, description = "snarf"))
@@ -57,7 +57,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `GET api competition name should return 404 when no matching Competition found for given name`() {
+    fun `GET api_competition_name should return 404 when no matching Competition found for given name`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
@@ -68,7 +68,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition, should be able to create a new Competition and save it`() {
+    fun `POST api_competition, should be able to create a new Competition and save it`() {
         val createCompetition = CreateCompetition(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
@@ -92,7 +92,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition should throw CompetitionAlreadyExistsException when CompetitionId already exists`() {
+    fun `POST api_competition should throw CompetitionAlreadyExistsException when CompetitionId already exists`() {
         val createCompetition = CreateCompetition(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
@@ -116,7 +116,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition should return 500 when competition was unable to be created`() {
+    fun `POST api_competition should return 500 when competition was unable to be created`() {
         val createCompetition = CreateCompetition(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
@@ -131,7 +131,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition should return 500 when competition was unable to be saved`() {
+    fun `POST api_competition should return 500 when competition was unable to be saved`() {
         val createCompetition = CreateCompetition(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
@@ -150,7 +150,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition addChallenges should add given Challenges to the given Competition`() {
+    fun `POST api_competition_addChallenges should add given Challenges to the given Competition`() {
         val challenge1 = Challenge(name = "FirstChallenge", points = 3, description = "1st")
         val challenge2 = Challenge(name = "SecondChallenge", points = 4, description = "2nd")
         val givenChallenges = listOf(challenge1, challenge2)
@@ -176,7 +176,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition addChallenges should return 404 when no matching Competition found for given CompetitionId`() {
+    fun `POST api_competition_addChallenges should return 404 when no matching Competition found for given CompetitionId`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
@@ -189,7 +189,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition compId complete challengeId should return 404 when no competition was found`() {
+    fun `POST api_competition_compId should return 404 when no competition was found`() {
         val givenCompetitionId = "SnowCase2018"
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
@@ -204,7 +204,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition compId complete challengeId should return 404 when no challenge was found`() {
+    fun `POST api_competition_compId_complete_challengeId should return 404 when no challenge was found`() {
         val givenCompetitionId = "Thundercats"
         val givenChallengeId = UUID.randomUUID().toString()
 
@@ -224,7 +224,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition compId complete challengeId should add given CompetitorName to Competitions' Competitors`() {
+    fun `POST api_competition_compId_complete_challengeId should add given CompetitorName to Competitions' Competitors`() {
         val givenCompetitionId = "Thundercats"
         val givenChallengeId = UUID.randomUUID()
 
@@ -247,12 +247,17 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api competition compId complete challengeId should add challenge score to given Competitors total score`() {
+    fun `POST api_competition_compId_complete_challengeId should add challenge score to given Competitors total score`() {
 
     }
 
     @Test
-    fun `POST api competition compId complete challengeId should return 400 when Competitor already finished given challenge`() {
+    fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
 
     }
+
+    //`POST api_competition_compId_complete_challengeId should return 404 when no challenge was found`
+    //`POST api_competition_compId_complete_challengeId should add given CompetitorName to Competitions' Competitors`
+    //`POST api_competition_compId_complete_challengeId should add challenge score to given Competitors total score`
+    //`POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`
 }
