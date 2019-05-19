@@ -46,9 +46,11 @@
         }
 
         private submit() {
-            // this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`, {competitorName: this.competitorName})
+            // this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`,
+            // {competitorName: this.competitorName})
             //     .then(() => this.$router.push(`/competitions/${this.competitionId}`))
-            //     .then(() => this.$store.commit('showSnackMessage', {message: `Congrats to ${this.competitorName} on completing a challenge!`}))
+            //     .then(() => this.$store.commit('showSnackMessage',
+            //     {message: `Congrats to ${this.competitorName} on completing a challenge!`}))
             //     .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
     }
