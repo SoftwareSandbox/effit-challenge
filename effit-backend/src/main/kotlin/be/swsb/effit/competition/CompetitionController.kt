@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
+import java.util.*
 
 @RestController
 @RequestMapping("/api/competition",
@@ -60,6 +61,14 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     fun completeChallenge(@PathVariable("competitionId") competitionId: String,
                           @PathVariable("challengeId") challengeId: String,
                           @RequestBody competitorName: CompetitorName) : ResponseEntity<Any> {
+        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
+
+        competition.challenges.singleOrNull { it.id == UUID.fromString(challengeId) }
+                ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found in competition $competitionId")
+
+        competition.addCompetitor(Competitor(name = competitorName.name))
+
         return ResponseEntity.accepted().build()
     }
 
