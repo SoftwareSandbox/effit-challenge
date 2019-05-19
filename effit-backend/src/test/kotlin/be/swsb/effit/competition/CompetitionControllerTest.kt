@@ -234,15 +234,6 @@ class CompetitionControllerTest : ControllerTest() {
         inOrder.verify(competitionRepositoryMock).save(thundercatsComp)
     }
 
-    @Test
-    fun `POST api_competition_compId_complete_challengeId should add challenge score to given Competitors total score`() {
-
-    }
-
-    @Test
-    fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
-
-    }
 
     //`POST api_competition_compId_complete_challengeId should return 404 when no challenge was found`
     //`POST api_competition_compId_complete_challengeId should add given CompetitorName to Competitions' Competitors`
