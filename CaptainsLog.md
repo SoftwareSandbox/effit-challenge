@@ -1,3 +1,9 @@
+## 2019/05/19 - Controller mock tests insights
+My controllers are acting as a service layer, and I am feeling the pain of using mocks, because my test are tightly coupled with my implementation.
+
+It might be better to **only** test erroneous cases (like 404's and such), and write integration tests for actual behavior.
+
+
 ## 2019/05/05 - Returning proper error messages on backend exceptions
 ### Use a SpringBoot ExceptionHandler
 Pros:
