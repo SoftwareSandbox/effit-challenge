@@ -241,7 +241,9 @@ class CompetitionControllerTest: ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(thundercatsComp.competitors).containsExactly(snarf)
+        assertThat(thundercatsComp.competitors)
+                .usingElementComparatorIgnoringFields("id")
+                .containsExactly(Competitor(name = "Snarf"))
     }
 
     @Test

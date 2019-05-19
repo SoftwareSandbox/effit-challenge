@@ -6,9 +6,6 @@ import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
 
-//TODO Competitor should also have total points?
-typealias Competitor = CompetitorName
-
 @Entity
 class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val name: String,
@@ -19,7 +16,8 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @JoinColumn(name = "FK_COMPETITION_ID")
     private var _challenges: List<Challenge> = emptyList()
 
-
+    @OneToMany
+    @JoinColumn(name = "FK_COMPETITION_ID")
     private var _competitors: List<Competitor> = emptyList()
 
     @Embedded
