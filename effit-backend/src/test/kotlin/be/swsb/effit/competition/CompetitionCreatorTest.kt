@@ -4,7 +4,6 @@ import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import java.lang.IllegalStateException
 import java.time.LocalDate
 
 class CompetitionCreatorTest {

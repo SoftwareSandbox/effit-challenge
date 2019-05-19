@@ -76,7 +76,6 @@ class CompetitionRepositoryIntegrationTest {
 
         val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
         assertThat(updatedCompetition.challenges).doesNotContain(someUnpersistedChallenge)
-
     }
 
     @Test
@@ -97,6 +96,26 @@ class CompetitionRepositoryIntegrationTest {
 
         val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
         assertThat(updatedCompetition.challenges).containsExactly(someChallenge)
+    }
+
+    @Test
+    fun `saving a Competition with persisted Competitors`() {
+        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        testEntityManager.persist(snowCase2018)
+        testEntityManager.flush()
+
+        val snarf = Competitor(name = "snarf", totalScore = 0)
+        testEntityManager.persist(snarf)
+        testEntityManager.flush()
+
+        snowCase2018.addCompetitor(snarf)
+
+        competitionRepository.save(snowCase2018)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        assertThat(testEntityManager.find(Competition::class.java, snowCase2018.id).competitors)
+                .containsExactly(snarf)
     }
 
     @Test

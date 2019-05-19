@@ -196,7 +196,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}", givenCompetitionId, "challengeId")
-                .content(Competitor(name = "Snarf").toJson(objectMapper))
+                .content(Competitor(name = "Snarf", totalScore = 0).toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
@@ -217,7 +217,7 @@ class CompetitionControllerTest : ControllerTest() {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
                 givenCompetitionId, givenChallengeId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Competitor(name = "Snarf").toJson(objectMapper))
+                .content(Competitor(name = "Snarf", totalScore = 0).toJson(objectMapper))
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
                 .andExpect(content().json(expectedError.toJson(objectMapper), true))
@@ -233,7 +233,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
 
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor(name = "Snarf", totalScore = 0)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
                 givenCompetitionId, givenChallengeId.toString())
                 .content(snarf.toJson(objectMapper))
@@ -243,7 +243,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         assertThat(thundercatsComp.competitors)
                 .usingElementComparatorIgnoringFields("id")
-                .containsExactly(Competitor(name = "Snarf"))
+                .containsExactly(Competitor(name = "Snarf", totalScore = 0))
     }
 
     @Test

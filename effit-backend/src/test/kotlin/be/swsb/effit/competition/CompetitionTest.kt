@@ -71,7 +71,7 @@ class CompetitionTest {
     fun `A Competition without Competitors still can have Competitors added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,4,9))
 
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor(name = "Snarf", totalScore = 0)
         someCompetition.addCompetitor(snarf)
 
         assertThat(someCompetition.competitors).contains(snarf)

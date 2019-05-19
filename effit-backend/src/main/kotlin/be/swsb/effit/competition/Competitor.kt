@@ -5,7 +5,12 @@ import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 
-//TODO Competitor should also have total points?
 @Entity
 data class Competitor(@Id val id: UUID = UUID.randomUUID(),
-                      val name: String): RestApiExposed
+                      val name: String,
+                      var totalScore: Int): RestApiExposed {
+
+    fun awardPoints(points: Int) {
+        totalScore += points
+    }
+}
