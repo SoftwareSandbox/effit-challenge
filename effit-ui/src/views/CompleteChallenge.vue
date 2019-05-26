@@ -47,12 +47,12 @@
         }
 
         private submit() {
-            // this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`,
-            // {competitorName: this.competitorName})
-            //     .then(() => this.$router.push(`/competitions/${this.competitionId}`))
-            //     .then(() => this.$store.commit('showSnackMessage',
-            //     {message: `Congrats to ${this.competitorName} on completing a challenge!`}))
-            //     .catch(() => {/* noop, is already handled by interceptor in Main*/});
+            this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`,
+                {competitorId: this.selectedCompetitor.id})
+                .then(() => this.$router.push(`/competitions/${this.competitionId}`))
+                .then(() => this.$store.commit('showSnackMessage',
+                {message: `Congrats to ${this.selectedCompetitor.name} on completing a challenge!`}))
+                .catch(() => {/* noop, is already handled by interceptor in Main*/});
         }
 
         private async fetchCompetitors() {
