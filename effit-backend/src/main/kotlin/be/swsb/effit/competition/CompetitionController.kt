@@ -3,6 +3,7 @@ package be.swsb.effit.competition
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.competitor.CompetitorRepository
+import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.exceptions.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
@@ -59,7 +60,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/addCompetitor")
     fun addCompetitor(@PathVariable("competitionId") competitionId: String,
-                      @RequestBody competitor: Competitor) : ResponseEntity<Any> {
+                      @RequestBody competitor: Competitor): ResponseEntity<Any> {
         val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
 
@@ -67,6 +68,27 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()
+    }
+
+    @PostMapping("{competitionId}/complete/{challengeId}")
+    fun completeChallenge(@PathVariable("competitionId") competitionId: String,
+                          @PathVariable("challengeId") challengeId: UUID,
+                          @RequestBody completerId: CompleterId): ResponseEntity<Any> {
+        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
+
+        competition.challenges.find { it.id == challengeId }
+                ?.let { awardPoints(competition, it, completerId.competitorId) }
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
+
+        competitionRepository.save(competition)
+
+        return ResponseEntity.accepted().build()
+    }
+
+    fun awardPoints(competition: Competition, challenge: Challenge, competitorId: UUID) {
+        competition.competitors.find { it.id == competitorId }
+                ?.awardPoints(challenge.points)
     }
 
 }
