@@ -86,7 +86,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return ResponseEntity.accepted().build()
     }
 
-    fun awardPoints(competition: Competition, challenge: Challenge, competitorId: UUID) {
+    private fun awardPoints(competition: Competition, challenge: Challenge, competitorId: UUID) {
         competition.competitors.find { it.id == competitorId }
                 ?.awardPoints(challenge.points)
     }
