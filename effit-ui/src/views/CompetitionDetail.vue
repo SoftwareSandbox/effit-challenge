@@ -19,7 +19,7 @@
                     required
             ></v-text-field>
 
-            <v-btn type="submit">add competitor</v-btn>
+            <v-btn type="submit" :disabled="!this.competitorName">add competitor</v-btn>
         </v-form>
     </v-layout>
 </template>

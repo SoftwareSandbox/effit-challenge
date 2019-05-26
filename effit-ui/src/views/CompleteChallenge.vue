@@ -44,7 +44,6 @@
             this.challenge = (await this.$axios.get(`/api/challenge/${this.challengeId}`)).data;
             await this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`);
             await this.fetchCompetitors();
-
         }
 
         private submit() {
