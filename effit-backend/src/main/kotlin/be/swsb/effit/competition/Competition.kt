@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.util.RestApiExposed
+import com.fasterxml.jackson.annotation.JsonSetter
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
@@ -14,10 +15,12 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
 
     @OneToMany
     @JoinColumn(name = "FK_COMPETITION_ID")
+    @JsonSetter("challenges")
     private var _challenges: List<Challenge> = emptyList()
 
     @OneToMany
     @JoinColumn(name = "FK_COMPETITION_ID")
+    @JsonSetter("competitors")
     private var _competitors: List<Competitor> = emptyList()
 
     @Embedded

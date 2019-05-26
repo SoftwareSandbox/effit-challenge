@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
@@ -297,6 +298,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .andExpect(status().isAccepted)
 
         assertThat(compWithChallenges.competitors.find { it.id == competitorId }?.totalScore).isEqualTo(3)
+        verify(competitionRepositoryMock).save(compWithChallenges)
     }
 //
 //    @Test

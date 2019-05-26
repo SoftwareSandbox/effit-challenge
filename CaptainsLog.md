@@ -1,3 +1,19 @@
+## 2019/05/26 - Added @JsonSetter to private props to fix `Operation is not supported for read-only collection`
+Since I want to encapsulate adding Challenges or Competitors to a Competition's respective relations, I provided immutable getter functions.
+
+Jackson, however, thinks it needs to use those getter functions to **set** array values when reading from a JSON string.
+
+Fixed by adding `@JsonSetter` to the private props:
+
+```
+@JsonSetter("challenges")
+    private var _challenges: List<Challenge> = emptyList()
+@JsonSetter("competitors")
+    private var _competitors: List<Competitor> = emptyList()
+```
+
+By doing that, I was able to finally get rid of jsonPath expressions in the ScenarioTests!!!!!!!!!!!!!!
+
 ## 2019/05/19 - Controller mock tests insights
 My controllers are acting as a service layer, and I am feeling the pain of using mocks, because my test are tightly coupled with my implementation.
 

@@ -1,0 +1,64 @@
+package be.swsb.effit.scenariotests
+
+import be.swsb.effit.EffitApplication
+import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.competition.Competitor
+import be.swsb.effit.competition.CreateCompetition
+import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.web.servlet.MockMvc
+import java.time.LocalDate
+
+@ExtendWith(SpringExtension::class)
+@SpringBootTest(classes = [EffitApplication::class])
+@AutoConfigureMockMvc
+class CompletingChallengesScenarioTest {
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
+    private lateinit var scenarios: Scenarios
+
+    @BeforeEach
+    fun setUp() {
+        scenarios = Scenarios(mockMvc, objectMapper)
+    }
+
+    @Test
+    fun `Snarf completes the whinge challenge and gets awarded 4 points`() {
+        val whingeChallenge = Challenge(name = "Whinge", points = 4, description = "Whinge at any point during the day")
+        scenarios.createNewChallenge(whingeChallenge)
+
+        val competition = CreateCompetition(name = "ThundercatsCompetition 2019",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val competitionId = scenarios.createNewCompetition(competition)
+
+        scenarios.addChallenges(competitionId, listOf(whingeChallenge))
+
+        val snarfId = scenarios.addCompetitor("Snarf", competitionId)
+
+        val whingeChallengeId = scenarios.getCompetition(competitionId).challenges
+                .find { it.name == whingeChallenge.name }
+                ?.id
+                ?: throw EntityNotFoundDomainRuntimeException("Challenge ${whingeChallenge.name} not found in competition $competitionId")
+
+        scenarios.completeChallenge(competitionId, whingeChallengeId, snarfId)
+
+        val updatedThundercatsCompetition = scenarios.getCompetition(competitionId)
+
+        assertThat(updatedThundercatsCompetition.competitors)
+                .containsExactly(Competitor(id = snarfId, name="Snarf", totalScore = whingeChallenge.points))
+    }
+
+}
