@@ -4,12 +4,13 @@
         <p>Worth {{challenge.points}} point(s)</p>
 
         <v-form>
-            <v-text-field
-                    v-model="competitorName"
-                    :counter="50"
-                    label="Competitor Name"
-                    required
-            ></v-text-field>
+            <v-select
+                    v-model="selectedCompetitor"
+                    :items="competitors"
+                    item-text="name"
+                    return-object
+                    label="Competitor"
+            ></v-select>
 
             <v-btn @click="submit">submit</v-btn>
         </v-form>
@@ -18,8 +19,8 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import ChallengesTable from '@/components/ChallengesTable.vue';
     import {Challenge} from '@/model/Challenge';
+    import {Competitor} from '@/model/Competition';
 
     @Component({
         components: {},
@@ -33,16 +34,17 @@
             points: 0,
             description: '',
         };
-        protected competitorName: string = '';
+        protected selectedCompetitor: Competitor = {id: '', name: ''};
+        private competitors: Competitor[] = [];
 
-        private mounted() {
+        private async mounted() {
             // TODO: refactor this to also include the competition id,
             // TODO: to make it explicit that its not just any challenge,
             // TODO: but specifically the one belonging to this competitionId.
-            this.$axios.get(`/api/challenge/${this.challengeId}`)
-                .then(({data}) => this.challenge = data)
-                .then(() => this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`))
-                .catch(() => {/* noop, is already handled by interceptor in Main*/});
+            this.challenge = (await this.$axios.get(`/api/challenge/${this.challengeId}`)).data;
+            await this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`);
+            await this.fetchCompetitors();
+
         }
 
         private submit() {
@@ -52,6 +54,10 @@
             //     .then(() => this.$store.commit('showSnackMessage',
             //     {message: `Congrats to ${this.competitorName} on completing a challenge!`}))
             //     .catch(() => {/* noop, is already handled by interceptor in Main*/});
+        }
+
+        private async fetchCompetitors() {
+            this.competitors = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data.competitors;
         }
     }
 </script>
