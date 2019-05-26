@@ -5,6 +5,12 @@
                 :challenges="competition.challenges"
                 :rowHandler="navigateToMarkAsCompleted">
         </challenges-table>
+        <v-item-group>
+            Current competitors:
+            <v-item v-for="competitor in competitors" :key="competitor.id" :disabled="true">
+                <em>{{competitor.name}}, </em>
+            </v-item>
+        </v-item-group>
         <v-form @submit.prevent="addCompetitor">
             <v-text-field
                     v-model="competitorName"
@@ -23,28 +29,43 @@
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import {Challenge} from '@/model/Challenge';
     import {noop} from 'vue-class-component/lib/util';
+    import {Competition} from '@/model/Competition';
 
     @Component({
         components: {ChallengesTable},
     })
     export default class CompetitionDetail extends Vue {
         @Prop({type: String}) protected competitionId!: string;
-        protected competition = {name: '', startDate: '', endDate: ''};
-        protected competitorName : string = '';
+        protected competition: Competition = {
+            name: '',
+            startDate: '',
+            endDate: '',
+            competitors: [],
+        };
+        protected competitorName: string = '';
 
-        private mounted() {
-            this.$axios.get(`/api/competition/${this.competitionId}`)
-                .then(({data}) => this.competition = data)
-                .then(() => this.$store.commit('updateTitle', `${this.competition.name}`));
+        private async mounted() {
+            await this.refreshCompetition();
+            this.$store.commit('updateTitle', `${this.competition.name}`);
+        }
+
+        private async refreshCompetition() {
+            this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
         }
 
         private navigateToMarkAsCompleted(challenge: Challenge) {
             this.$router.push(`/competitions/${this.competitionId}/complete/${challenge.id}`);
         }
 
-        private addCompetitor() {
-            this.$axios.post(`/api/competition/${this.competitionId}/addCompetitor`, {name: this.competitorName})
+        private async addCompetitor() {
+            await this.$axios.post(`/api/competition/${this.competitionId}/addCompetitor`, {name: this.competitorName})
                 .catch(noop);
+            this.competitorName = '';
+            await this.refreshCompetition();
+        }
+
+        private get competitors() {
+            return this.competition.competitors;
         }
     }
 </script>
