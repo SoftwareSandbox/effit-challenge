@@ -10,14 +10,14 @@ import javax.persistence.ManyToMany
 
 @Entity
 data class Competitor(@Id val id: UUID = UUID.randomUUID(),
-                      val name: String): RestApiExposed {
+                      val name: String,
+                      @ManyToMany
+                      @JsonSetter("completedChallenges")
+                      private var _completedChallenges: List<Challenge> = emptyList()
+                      ): RestApiExposed {
 
     val totalScore: Int
         get() = _completedChallenges.sumBy { it.points }
-
-    @ManyToMany
-    @JsonSetter("completedChallenges")
-    private var _completedChallenges: List<Challenge> = emptyList()
 
     val completedChallenges: List<Challenge>
         get() = _completedChallenges

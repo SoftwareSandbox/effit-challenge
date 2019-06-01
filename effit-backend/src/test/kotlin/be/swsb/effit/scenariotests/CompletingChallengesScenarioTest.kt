@@ -48,17 +48,18 @@ class CompletingChallengesScenarioTest {
 
         val snarfId = scenarios.addCompetitor("Snarf", competitionId)
 
-        val whingeChallengeId = scenarios.getCompetition(competitionId).challenges
+        val fetchedWhingeChallenge = scenarios.getCompetition(competitionId).challenges
                 .find { it.name == whingeChallenge.name }
-                ?.id
                 ?: throw EntityNotFoundDomainRuntimeException("Challenge ${whingeChallenge.name} not found in competition $competitionId")
 
-        scenarios.completeChallenge(competitionId, whingeChallengeId, snarfId)
+        scenarios.completeChallenge(competitionId, fetchedWhingeChallenge.id, snarfId)
 
         val updatedThundercatsCompetition = scenarios.getCompetition(competitionId)
 
-        assertThat(updatedThundercatsCompetition.competitors)
-                .containsExactly(Competitor(id = snarfId, name="Snarf"))
+        val snarfWithCompletedChallenge = Competitor(id = snarfId, name = "Snarf")
+        snarfWithCompletedChallenge.completeChallenge(fetchedWhingeChallenge)
+
+        assertThat(updatedThundercatsCompetition.competitors).containsExactly(snarfWithCompletedChallenge)
     }
 
 }
