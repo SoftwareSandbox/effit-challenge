@@ -24,6 +24,9 @@ data class Competitor(@Id val id: UUID = UUID.randomUUID(),
         get() = _completedChallenges
 
     fun completeChallenge(challenge: Challenge) {
+        _completedChallenges.find { it == challenge }
+                ?.let { throw ChallengeAlreadyCompletedDomainException(challenge.name) }
+
         _completedChallenges = _completedChallenges + challenge
     }
 

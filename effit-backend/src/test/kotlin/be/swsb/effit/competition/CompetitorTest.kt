@@ -1,13 +1,27 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.competition.competitor.ChallengeAlreadyCompletedDomainException
 import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.exceptions.DomainRuntimeException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.assertj.core.internal.bytebuddy.utility.RandomString
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class CompetitorTest {
+
+    @Test
+    fun `Completing a Challenge that already was completed, throws an exception`() {
+        val competitor = Competitor(name = "Snarf")
+
+        val someChallenge = Challenge(id = UUID.randomUUID(), points = 4, name = "Picasso", description = RandomString.make())
+        competitor.completeChallenge(someChallenge)
+        assertThatExceptionOfType(ChallengeAlreadyCompletedDomainException::class.java)
+                .isThrownBy { competitor.completeChallenge(someChallenge) }
+                .withMessageContaining("This competitor already completed the ${someChallenge.name} challenge.")
+    }
 
     @Test
     fun `totalScore can be derived from the completedChallenges`() {

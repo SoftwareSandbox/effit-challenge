@@ -8,8 +8,8 @@ abstract class DomainRuntimeException(override val message: String?,
         }
 }
 
-class DomainValidationRuntimeException(message: String?): DomainRuntimeException(message, HttpStatusCode.`400`)
-class EntityNotFoundDomainRuntimeException(message: String?): DomainRuntimeException(message, HttpStatusCode.`404`)
+open class DomainValidationRuntimeException(message: String?): DomainRuntimeException(message, HttpStatusCode.`400`)
+open class EntityNotFoundDomainRuntimeException(message: String?): DomainRuntimeException(message, HttpStatusCode.`404`)
 
 sealed class HttpStatusCode {
     object `400`: HttpStatusCode()

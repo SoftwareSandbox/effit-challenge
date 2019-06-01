@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -303,10 +304,36 @@ class CompetitionControllerTest : ControllerTest() {
                 .containsExactly(picassoChallenge)
         verify(competitionRepositoryMock).save(compWithChallenges)
     }
-//
-//    @Test
-//    fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
+
+    @Test
+    fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
+        val competitorId = randomUUID()
+        val successfulCompetitor = CompleterId(competitorId)
+        val givenCompetitionId = "SnowCase2018"
+        val givenChallengeId = randomUUID()
+
+        val picassoChallenge = Challenge(id = givenChallengeId, name = "Picasso", points = 3, description = "snarfsnarf")
+        val snarf = Competitor(competitorId, "Snarf")
+        snarf.completeChallenge(picassoChallenge)
+
+        val compWithChallenges = Competition.competitionWithoutEndDate("ThunderComp", LocalDate.now())
+        compWithChallenges.addCompetitor(snarf)
+        compWithChallenges.addChallenge(picassoChallenge)
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
+
+        val expectedError = EffitError("This competitor already completed the ${picassoChallenge.name} challenge.")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
+                givenCompetitionId,
+                givenChallengeId.toString()
+        )
+                .content(successfulCompetitor.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().json(expectedError.toJson(objectMapper), true))
+
+        verify(competitionRepositoryMock, never()).save(compWithChallenges)
+    }
 
 }
