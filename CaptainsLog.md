@@ -1,3 +1,8 @@
+## 2019/06/01 - TIL about `In Component Navigation Guards`
+See this [helpful article](https://router.vuejs.org/guide/advanced/navigation-guards.html#in-component-guards).
+
+I used this to navigate to the 404 page, when a requested competition detail couldn't be found, from inside a component. Because the route `/competition/:competitionid/sub-page` would still get matched to a component.
+
 ## 2019/06/01 - TIL to actually throw an Error from an Axios interceptor on Reject
 Otherwise, the Promise chain won't be broken, and all `.then()`'s and `.catch()`'s will be called.
 
