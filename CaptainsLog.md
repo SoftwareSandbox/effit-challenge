@@ -1,3 +1,8 @@
+## 2019/06/01 - TIL to be careful with data class equality checks and private var's outside of constructor
+Because any property **outside** of the constructor won't be used in the equality check!
+
+This looks _duuuh_, but it's actually quite easy to make a mistake against this.
+
 ## 2019/05/26 - Added @JsonSetter to private props to fix `Operation is not supported for read-only collection`
 Since I want to encapsulate adding Challenges or Competitors to a Competition's respective relations, I provided immutable getter functions.
 
