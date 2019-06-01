@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.util.RestApiExposed
+import com.fasterxml.jackson.annotation.JsonSetter
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -15,6 +16,7 @@ data class Competitor(@Id val id: UUID = UUID.randomUUID(),
         get() = _completedChallenges.sumBy { it.points }
 
     @ManyToMany
+    @JsonSetter("completedChallenges")
     private var _completedChallenges: List<Challenge> = emptyList()
 
     val completedChallenges: List<Challenge>
