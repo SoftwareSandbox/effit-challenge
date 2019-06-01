@@ -9,8 +9,10 @@ import javax.persistence.ManyToMany
 
 @Entity
 data class Competitor(@Id val id: UUID = UUID.randomUUID(),
-                      val name: String,
-                      var totalScore: Int): RestApiExposed {
+                      val name: String): RestApiExposed {
+
+    val totalScore: Int
+        get() = _completedChallenges.sumBy { it.points }
 
     @ManyToMany
     private var _completedChallenges: List<Challenge> = emptyList()
@@ -22,7 +24,4 @@ data class Competitor(@Id val id: UUID = UUID.randomUUID(),
         _completedChallenges = _completedChallenges + challenge
     }
 
-    fun awardPoints(points: Int) {
-        totalScore += points
-    }
 }

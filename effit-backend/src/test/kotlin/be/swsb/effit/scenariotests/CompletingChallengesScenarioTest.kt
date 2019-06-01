@@ -58,7 +58,7 @@ class CompletingChallengesScenarioTest {
         val updatedThundercatsCompetition = scenarios.getCompetition(competitionId)
 
         assertThat(updatedThundercatsCompetition.competitors)
-                .containsExactly(Competitor(id = snarfId, name="Snarf", totalScore = whingeChallenge.points))
+                .containsExactly(Competitor(id = snarfId, name="Snarf"))
     }
 
 }

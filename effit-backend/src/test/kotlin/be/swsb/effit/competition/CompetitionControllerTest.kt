@@ -201,7 +201,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
-                .content(Competitor(name = "Snarf", totalScore = 0).toJson(objectMapper))
+                .content(Competitor(name = "Snarf").toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
@@ -216,7 +216,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
 
-        val snarf = Competitor(name = "Snarf", totalScore = 0)
+        val snarf = Competitor(name = "Snarf")
 
         Mockito.`when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
 
@@ -228,7 +228,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         assertThat(thundercatsComp.competitors)
                 .usingElementComparatorIgnoringFields("id")
-                .containsExactly(Competitor(name = "Snarf", totalScore = 0))
+                .containsExactly(Competitor(name = "Snarf"))
 
         val inOrder = Mockito.inOrder(competitorRepositoryMock, competitionRepositoryMock)
         inOrder.verify(competitorRepositoryMock).save(snarf)
@@ -276,15 +276,16 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition_compId_complete_challengeId should add challenge score to given Competitors total score`() {
+    fun `POST api_competition_compId_complete_challengeId should add challenge given Competitors completedChallenges`() {
         val competitorId = randomUUID()
         val successfulCompetitor = CompleterId(competitorId)
         val givenCompetitionId = "SnowCase2018"
         val givenChallengeId = randomUUID()
 
         val compWithChallenges = Competition.competitionWithoutEndDate("ThunderComp", LocalDate.now())
-        compWithChallenges.addCompetitor(Competitor(competitorId, "Snarf", 0))
-        compWithChallenges.addChallenge(Challenge(id = givenChallengeId, name = "Picasso", points = 3, description = "snarfsnarf"))
+        compWithChallenges.addCompetitor(Competitor(competitorId, "Snarf"))
+        val picassoChallenge = Challenge(id = givenChallengeId, name = "Picasso", points = 3, description = "snarfsnarf")
+        compWithChallenges.addChallenge(picassoChallenge)
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
 
@@ -297,7 +298,8 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(compWithChallenges.competitors.find { it.id == competitorId }?.totalScore).isEqualTo(3)
+        assertThat(compWithChallenges.competitors.find { it.id == competitorId }?.completedChallenges)
+                .containsExactly(picassoChallenge)
         verify(competitionRepositoryMock).save(compWithChallenges)
     }
 //

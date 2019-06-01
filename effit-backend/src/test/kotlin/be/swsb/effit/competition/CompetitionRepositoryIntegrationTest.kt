@@ -104,7 +104,7 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.persist(snowCase2018)
         testEntityManager.flush()
 
-        val snarf = Competitor(name = "snarf", totalScore = 0)
+        val snarf = Competitor(name = "snarf")
         testEntityManager.persist(snarf)
         testEntityManager.flush()
 

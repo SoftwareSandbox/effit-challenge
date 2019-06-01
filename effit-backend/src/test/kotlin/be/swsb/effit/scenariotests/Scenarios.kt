@@ -8,7 +8,6 @@ import be.swsb.effit.competition.CreateCompetition
 import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -61,7 +60,7 @@ class Scenarios(val mockMvc: MockMvc,
     }
 
     fun addCompetitor(competitorName: String, competitionId: CompetitionId): UUID {
-        val addedCompetitor = Competitor(name = competitorName, totalScore = 0)
+        val addedCompetitor = Competitor(name = competitorName)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", competitionId.id)
                 .content(addedCompetitor.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
