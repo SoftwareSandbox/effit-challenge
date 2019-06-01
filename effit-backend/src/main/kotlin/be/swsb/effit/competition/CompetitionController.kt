@@ -5,7 +5,6 @@ import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.competition.competitor.CompleterId
-import be.swsb.effit.exceptions.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

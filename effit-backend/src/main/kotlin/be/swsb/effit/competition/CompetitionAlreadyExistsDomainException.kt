@@ -1,6 +1,7 @@
-package be.swsb.effit.exceptions
+package be.swsb.effit.competition
 
-import be.swsb.effit.competition.CompetitionId
+import be.swsb.effit.exceptions.DomainRuntimeException
+import be.swsb.effit.exceptions.HttpStatusCode
 
 class CompetitionAlreadyExistsDomainException(competitionId: CompetitionId) :
         DomainRuntimeException(status = HttpStatusCode.`400`,
