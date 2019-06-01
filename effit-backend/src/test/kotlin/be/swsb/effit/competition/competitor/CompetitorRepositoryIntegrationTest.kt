@@ -30,7 +30,8 @@ class CompetitorRepositoryIntegrationTest {
         testEntityManager.flush()
         testEntityManager.clear()
 
-        assertThat(testEntityManager.find(Competitor::class.java, snarf.id)).isEqualTo(snarf)
+        assertThat(testEntityManager.find(Competitor::class.java, snarf.id))
+                .isEqualToIgnoringGivenFields(snarf, "_completedChallenges")
     }
 
     @Test
