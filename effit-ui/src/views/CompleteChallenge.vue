@@ -47,12 +47,19 @@
         }
 
         private submit() {
-            this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`,
-                {competitorId: this.selectedCompetitor.id})
-                .then(() => this.$router.push(`/competitions/${this.competitionId}`))
-                .then(() => this.$store.commit('showSnackMessage',
-                {message: `Congrats to ${this.selectedCompetitor.name} on completing a challenge!`}))
-                .catch(() => {/* noop, is already handled by interceptor in Main*/});
+            const competitor = {competitorId: this.selectedCompetitor.id};
+            this.$axios.post(`/api/competition/${this.competitionId}/complete/${this.challengeId}`, competitor)
+                .then(() => this.showSnackBar(`Congrats to ${this.selectedCompetitor.name} on completing a challenge!`))
+                .then(() => this.navigateToCompetition())
+                .catch(() => {/* noop, is already handled by interceptor in App.vue*/});
+        }
+
+        private showSnackBar(message: string) {
+            this.$store.commit('showSnackMessage', {message});
+        }
+
+        private navigateToCompetition() {
+            this.$router.push(`/competitions/${this.competitionId}`);
         }
 
         private async fetchCompetitors() {

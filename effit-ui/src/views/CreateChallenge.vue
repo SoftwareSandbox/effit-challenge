@@ -61,7 +61,7 @@
                     this.showSnackbar = true;
                 })
                 .then(() => this.resetForm())
-                .catch(() => {/* noop, is already handled by interceptor in Main*/});
+                .catch(() => {/* noop, is already handled by interceptor in App.vue*/});
         }
 
         private resetForm() {

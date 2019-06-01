@@ -86,7 +86,12 @@
                 (response) => response,
                 (error) => {
                     this.showError(error.response.data.message);
+                    this.throwErrorToMakeSureThePromiseChainIsBroken(error);
                 });
+        }
+
+        private throwErrorToMakeSureThePromiseChainIsBroken(error: any) {
+            throw new Error(error.response.data.message);
         }
 
         private showError(message: string) {

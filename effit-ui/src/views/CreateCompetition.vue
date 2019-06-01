@@ -74,11 +74,9 @@
                 .then((res) => this.successfullyCreatedCompetitionId = res.headers.location)
                 .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`,
                     this.selectedChallenges()))
-                .then(() => {
-                    this.showSnackBar(`Successfully created your new Competition!`);
-                })
+                .then(() => this.showSnackBar(`Successfully created your new Competition!`))
                 .then(() => this.navigateToCreatedCompetition())
-                .catch(() => {/* noop, is already handled by interceptor in Main*/});
+                .catch(() => {/* noop, is already handled by interceptor in App.vue*/});
         }
 
         private selectedChallenges() {
