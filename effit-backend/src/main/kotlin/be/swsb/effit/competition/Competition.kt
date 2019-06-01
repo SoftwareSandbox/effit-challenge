@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.time.LocalDate

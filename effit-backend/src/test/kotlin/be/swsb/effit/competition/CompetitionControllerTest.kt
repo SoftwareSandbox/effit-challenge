@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.exceptions.EffitError

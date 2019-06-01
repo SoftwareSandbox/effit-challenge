@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.competition.competitor.Competitor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException

@@ -1,4 +1,4 @@
-package be.swsb.effit.competition
+package be.swsb.effit.competition.competitor
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.util.RestApiExposed
