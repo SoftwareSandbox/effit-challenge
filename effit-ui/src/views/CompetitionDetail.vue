@@ -30,27 +30,37 @@
     import {Challenge} from '@/model/Challenge';
     import {noop} from 'vue-class-component/lib/util';
     import {Competition} from '@/model/Competition';
+    import {Route} from 'vue-router';
+
+    function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
+        return next((vm: CompetitionDetail) => {
+            return vm.$axios.get(`/api/competition/${vm.competitionId}`)
+                .then(() => to)
+                .catch(() => vm.$router.push('/404'));
+        });
+    }
 
     @Component({
         components: {ChallengesTable},
+        beforeRouteEnter: beforeRouteEnterNavGuard,
     })
     export default class CompetitionDetail extends Vue {
-        @Prop({type: String}) protected competitionId!: string;
+        @Prop({type: String}) public competitionId!: string;
+        protected competitorName: string = '';
         protected competition: Competition = {
             name: '',
             startDate: '',
             endDate: '',
             competitors: [],
         };
-        protected competitorName: string = '';
+
+        public async refreshCompetition() {
+            this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
+        }
 
         private async mounted() {
             await this.refreshCompetition();
             this.$store.commit('updateTitle', `${this.competition.name}`);
-        }
-
-        private async refreshCompetition() {
-            this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
         }
 
         private navigateToMarkAsCompleted(challenge: Challenge) {

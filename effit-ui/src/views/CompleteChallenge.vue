@@ -21,12 +21,22 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Challenge} from '@/model/Challenge';
     import {Competitor} from '@/model/Competition';
+    import {Route} from 'vue-router';
+
+    function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
+        return next((vm: CompleteChallenge) => {
+            return vm.$axios.get(`/api/competition/${vm.competitionId}`)
+                .then(() => to)
+                .catch(() => vm.$router.push('/404'));
+        });
+    }
 
     @Component({
         components: {},
+        beforeRouteEnter: beforeRouteEnterNavGuard,
     })
     export default class CompleteChallenge extends Vue {
-        @Prop({type: String}) protected competitionId!: string;
+        @Prop({type: String}) public competitionId!: string;
         @Prop({type: String}) protected challengeId!: string;
         protected challenge: Challenge = {
             id: '',
@@ -42,7 +52,7 @@
             // TODO: to make it explicit that its not just any challenge,
             // TODO: but specifically the one belonging to this competitionId.
             this.challenge = (await this.$axios.get(`/api/challenge/${this.challengeId}`)).data;
-            await this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`);
+            this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`);
             await this.fetchCompetitors();
         }
 

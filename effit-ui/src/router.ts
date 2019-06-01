@@ -6,6 +6,7 @@ import CompetitionDetail from './views/CompetitionDetail.vue';
 import CreateChallenge from './views/CreateChallenge.vue';
 import CreateCompetition from './views/CreateCompetition.vue';
 import CompleteChallenge from './views/CompleteChallenge.vue';
+import FourOhFour from '@/views/FourOhFour.vue';
 
 Vue.use(Router);
 
@@ -52,6 +53,15 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+    },
+    {
+      name: '404',
+      path: '/404',
+      component: FourOhFour,
+    },
+    {
+      path: '*',
+      redirect: '/404',
     },
   ],
 });
