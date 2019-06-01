@@ -36,6 +36,25 @@ class CompetitorTest {
         assertThat(snarf3).isNotEqualTo(snarf1)
         assertThat(snarf3).isNotEqualTo(snarf2)
         assertThat(snarf2).isNotEqualTo(snarf3)
+
+        assertThat(listOf(snarf1))
+                .containsExactly(snarf1)
+                .containsExactly(snarf2)
+                .doesNotContain(snarf3)
+    }
+
+    @Test
+    fun `Two Competitors are equal when their id, name AND both have empty completedChallenges`() {
+        val snarfId = UUID.randomUUID()
+        val snarf1 = Competitor(id = snarfId, name = "Snarf", _completedChallenges = emptyList())
+        val snarf2 = Competitor(id = snarfId, name = "Snarf", _completedChallenges = emptyList())
+
+        assertThat(snarf1).isEqualTo(snarf2)
+        assertThat(snarf2).isEqualTo(snarf1)
+
+        assertThat(listOf(snarf1))
+                .containsExactly(snarf1)
+                .containsExactly(snarf2)
     }
 
     private fun challengeWithPoints(points: Int): Challenge {

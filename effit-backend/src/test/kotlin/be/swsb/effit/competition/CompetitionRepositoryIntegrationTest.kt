@@ -101,12 +101,13 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `saving a Competition with persisted Competitors`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
-        testEntityManager.persist(snowCase2018)
-        testEntityManager.flush()
-
         val snarf = Competitor(name = "snarf")
         testEntityManager.persist(snarf)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        testEntityManager.persist(snowCase2018)
         testEntityManager.flush()
 
         snowCase2018.addCompetitor(snarf)
@@ -115,8 +116,10 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.flush()
         testEntityManager.clear()
 
-        assertThat(testEntityManager.find(Competition::class.java, snowCase2018.id).competitors)
-                .containsExactly(snarf)
+        val persistedSnarf = testEntityManager.find(Competitor::class.java, snarf.id)
+
+        val fetchedSnowcase = testEntityManager.find(Competition::class.java, snowCase2018.id)
+        assertThat(fetchedSnowcase.competitors).usingFieldByFieldElementComparator().containsExactly(persistedSnarf)
     }
 
     @Test

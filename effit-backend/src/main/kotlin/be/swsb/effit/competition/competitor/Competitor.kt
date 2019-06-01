@@ -5,6 +5,7 @@ import be.swsb.effit.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.util.*
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.ManyToMany
 
