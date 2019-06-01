@@ -1,3 +1,16 @@
+## 2019/06/01 - TIL to actually throw an Error from an Axios interceptor on Reject
+Otherwise, the Promise chain won't be broken, and all `.then()`'s and `.catch()`'s will be called.
+
+I noticed this when I wasn't getting the expected error message when completing a challenge twice for the same competitor.
+
+VueX was helpful in showing that there were actually two showSnackbar events, but the error got overridden with the success message.
+
+This was working accidentally in the CreateCompetition.vue, because I was doing something with the response's location header.  
+Which doesn't exist on an error http status, and runtime would explode, causing the error to be thrown, and interrupting the Promise chain from the CreateCompetition component, instead of from the Interceptor.
+
+Fixed it by throwing an error from the Interceptor.
+
+
 ## 2019/06/01 - TIL to be careful with data class equality checks and private var's outside of constructor
 Because any property **outside** of the constructor won't be used in the equality check!
 
