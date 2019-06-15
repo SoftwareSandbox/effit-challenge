@@ -150,6 +150,30 @@ class CompetitionRepositoryIntegrationTest {
     }
 
     @Test
+    fun `deleting a Competition, also deletes its Competitors`() {
+        val snarf = Competitor(name = "snarf")
+        val lionO = Competitor(name = "Lion-O")
+        testEntityManager.persist(snarf)
+        testEntityManager.persist(lionO)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val competition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, lionO))
+        competitionRepository.save(competition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val retrievedCompetition = competitionRepository.getOne(competition.id)
+        competitionRepository.delete(retrievedCompetition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
+        assertThat(competitorRepository.findByIdOrNull(snarf.id)).isNull()
+        assertThat(competitionRepository.findByIdOrNull(competition.id)).isNull()
+    }
+
+    @Test
     fun `Uniqueness on CompetitionId`() {
         val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
         testEntityManager.persist(snowCase2018)
