@@ -10,7 +10,7 @@
             <v-chip v-for="competitor in competitors"
                     close
                     :key="competitor.id"
-                    @input="removeCompetitor(competitor.id)">
+                    @input="removeCompetitor(competitor)">
                 {{competitor.name}}
             </v-chip>
         </v-item-group>
@@ -66,6 +66,10 @@
             this.$store.commit('updateTitle', `${this.competition.name}`);
         }
 
+        private get competitors() {
+            return this.competition.competitors;
+        }
+
         private navigateToMarkAsCompleted(challenge: Challenge) {
             this.$router.push(`/competitions/${this.competitionId}/complete/${challenge.id}`);
         }
@@ -77,13 +81,11 @@
             await this.refreshCompetition();
         }
 
-        private get competitors() {
-            return this.competition.competitors;
-        }
-
-        private removeCompetitor(competitorToRemove: String) {
-            const indexOfCompetitorToRemove = this.competition.competitors.findIndex((comp) => comp.id === competitorToRemove);
-            this.competition.competitors.splice(indexOfCompetitorToRemove, 1);
+        private async removeCompetitor(competitorToRemove: Competitor) {
+            const foundCompetitorToRemove = this.competition.competitors.find((comp) => comp.id === competitorToRemove.id);
+            await this.$axios.post(`/api/competition/${this.competitionId}/removeCompetitor`, foundCompetitorToRemove)
+                .catch(noop);
+            await this.refreshCompetition();
         }
     }
 </script>

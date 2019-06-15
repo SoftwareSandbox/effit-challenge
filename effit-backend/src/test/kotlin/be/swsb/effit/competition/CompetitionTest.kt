@@ -2,10 +2,10 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.exceptions.DomainRuntimeException
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
+import java.util.*
 
 class CompetitionTest {
 
@@ -86,17 +86,17 @@ class CompetitionTest {
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
 
         assertThatExceptionOfType(CompetitorNotFoundOnCompetitionDomainException::class.java)
-                .isThrownBy { someCompetition.removeCompetitor(Competitor(name = "WilyKat")) }
+                .isThrownBy { someCompetition.removeCompetitor(UUID.randomUUID()) }
     }
 
     @Test
     fun `removeCompetitor when matching competitor is found, remove it from the Competition`() {
-        val snarf = Competitor(name = "Snarf")
         val liono = Competitor(name = "Lion-O")
+        val snarf = Competitor(name = "Snarf")
 
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
 
-        someCompetition.removeCompetitor(liono)
+        someCompetition.removeCompetitor(liono.id)
 
         assertThat(someCompetition.competitors).containsExactly(snarf)
     }

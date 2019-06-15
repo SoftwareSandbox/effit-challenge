@@ -49,10 +49,10 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _competitors = _competitors + competitor
     }
 
-    fun removeCompetitor(competitorToBeRemoved: Competitor) {
-        _competitors.find { it.id == competitorToBeRemoved.id }
-                ?: throw CompetitorNotFoundOnCompetitionDomainException(competitorToBeRemoved)
-        _competitors = _competitors - competitorToBeRemoved
+    fun removeCompetitor(competitorIdToBeRemoved: UUID) {
+        _competitors.find { it.id == competitorIdToBeRemoved }
+                ?. let { _competitors = _competitors - it }
+                ?: throw CompetitorNotFoundOnCompetitionDomainException()
     }
 
     companion object {

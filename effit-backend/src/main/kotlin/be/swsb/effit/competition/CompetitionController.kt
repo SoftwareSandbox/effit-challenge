@@ -71,10 +71,10 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/removeCompetitor")
     fun removeCompetitor(@PathVariable("competitionId") competitionId: String,
-                      @RequestBody competitorToBeRemoved: Competitor): ResponseEntity<Any> {
+                         @RequestBody competitorToBeRemoved: Competitor): ResponseEntity<Any> {
         val competition = findCompetitionOrThrow(competitionId)
 
-        competition.removeCompetitor(competitorToBeRemoved)
+        competition.removeCompetitor(competitorToBeRemoved.id)
         competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()
