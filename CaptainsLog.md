@@ -1,3 +1,11 @@
+## 2019/06/15 - Made competitors into a MutableList because of Hibernate
+
+`private var _competitors: MutableList<Competitor> = mutableListOf()`
+
+Because Hibernate will lose its reference to the `_competitors` if you do `_competitors = _competitors - competitorToBeRemoved` instead of `_competitors.remove(competitorToBeRemoved)`.
+
+It's still OK (I guess), because it only remains mutable within `Competition`.
+
 ## 2019/06/01 - TIL about `In Component Navigation Guards`
 See this [helpful article](https://router.vuejs.org/guide/advanced/navigation-guards.html#in-component-guards).
 

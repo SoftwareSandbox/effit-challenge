@@ -17,12 +17,12 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @OneToMany
     @JoinColumn(name = "FK_COMPETITION_ID")
     @JsonSetter("challenges")
-    private var _challenges: List<Challenge> = emptyList()
+    private var _challenges: MutableList<Challenge> = mutableListOf()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "FK_COMPETITION_ID")
     @JsonSetter("competitors")
-    private var _competitors: List<Competitor> = emptyList()
+    private var _competitors: MutableList<Competitor> = mutableListOf()
 
     @Embedded
     private var competitionIdentifier: CompetitionId
@@ -42,16 +42,16 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun addChallenge(challenge: Challenge) {
-        _challenges = _challenges + challenge
+        _challenges.add(challenge)
     }
 
     fun addCompetitor(competitor: Competitor) {
-        _competitors = _competitors + competitor
+        _competitors.add(competitor)
     }
 
     fun removeCompetitor(competitorIdToBeRemoved: UUID) {
         _competitors.find { it.id == competitorIdToBeRemoved }
-                ?. let { _competitors = _competitors - it }
+                ?. let { _competitors.remove(it) }
                 ?: throw CompetitorNotFoundOnCompetitionDomainException()
     }
 

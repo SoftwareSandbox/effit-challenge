@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.competition.competitor.CompetitorRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDate
 
@@ -21,6 +23,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Autowired
     lateinit var competitionRepository: CompetitionRepository
+    @Autowired
+    lateinit var competitorRepository: CompetitorRepository
     @Autowired
     lateinit var testEntityManager: TestEntityManager
 
@@ -120,6 +124,29 @@ class CompetitionRepositoryIntegrationTest {
 
         val fetchedSnowcase = testEntityManager.find(Competition::class.java, snowCase2018.id)
         assertThat(fetchedSnowcase.competitors).usingFieldByFieldElementComparator().containsExactly(persistedSnarf)
+    }
+
+    @Test
+    fun `removing Competitor, also cleans up the table`() {
+        val snarf = Competitor(name = "snarf")
+        val lionO = Competitor(name = "Lion-O")
+        testEntityManager.persist(snarf)
+        testEntityManager.persist(lionO)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val competition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, lionO))
+        competitionRepository.save(competition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val retrievedCompetition = competitionRepository.getOne(competition.id)
+        retrievedCompetition.removeCompetitor(lionO.id)
+        competitionRepository.save(retrievedCompetition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
     }
 
     @Test
