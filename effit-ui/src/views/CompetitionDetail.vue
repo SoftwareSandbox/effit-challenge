@@ -7,9 +7,12 @@
         </challenges-table>
         <v-item-group>
             Current competitors:
-            <v-item v-for="competitor in competitors" :key="competitor.id" :disabled="true">
-                <em>{{competitor.name}}, </em>
-            </v-item>
+            <v-chip v-for="competitor in competitors"
+                    close
+                    :key="competitor.id"
+                    @input="removeCompetitor(competitor.id)">
+                {{competitor.name}}
+            </v-chip>
         </v-item-group>
         <v-form @submit.prevent="addCompetitor">
             <v-text-field
@@ -29,7 +32,7 @@
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import {Challenge} from '@/model/Challenge';
     import {noop} from 'vue-class-component/lib/util';
-    import {Competition} from '@/model/Competition';
+    import {Competition, Competitor} from '@/model/Competition';
     import {Route} from 'vue-router';
 
     function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
@@ -76,6 +79,11 @@
 
         private get competitors() {
             return this.competition.competitors;
+        }
+
+        private removeCompetitor(competitorToRemove: String) {
+            const indexOfCompetitorToRemove = this.competition.competitors.findIndex((comp) => comp.id === competitorToRemove);
+            this.competition.competitors.splice(indexOfCompetitorToRemove, 1);
         }
     }
 </script>
