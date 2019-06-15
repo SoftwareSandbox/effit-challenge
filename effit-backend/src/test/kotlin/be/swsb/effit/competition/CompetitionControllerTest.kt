@@ -12,8 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
@@ -232,7 +231,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .usingElementComparatorIgnoringFields("id")
                 .containsExactly(Competitor(name = "Snarf"))
 
-        val inOrder = Mockito.inOrder(competitorRepositoryMock, competitionRepositoryMock)
+        val inOrder = inOrder(competitorRepositoryMock, competitionRepositoryMock)
         inOrder.verify(competitorRepositoryMock).save(snarf)
         inOrder.verify(competitionRepositoryMock).save(thundercatsComp)
     }
@@ -336,4 +335,58 @@ class CompetitionControllerTest : ControllerTest() {
         verify(competitionRepositoryMock, never()).save(compWithChallenges)
     }
 
+    @Test
+    fun `POST api_competition_compId_removeCompetitor should remove the given competitor id`() {
+        val givenCompetitionId = "SnowCase2018"
+
+        val snarf = Competitor(name="Snarf")
+        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
+
+        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
+                .content(snarf.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isAccepted)
+
+        assertThat(someCompetition.competitors).isEmpty()
+
+        verify(competitionRepositoryMock).save(someCompetition)
+    }
+
+    @Test
+    fun `POST api_competition_compId_removeCompetitor should return 400 when no competitor found for given id`() {
+        val givenCompetitionId = "SnowCase2018"
+
+        val snarf = Competitor(name="Snarf")
+        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
+
+        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
+                .content(Competitor(name="Lion-O").toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest)
+
+        assertThat(someCompetition.competitors).containsExactly(snarf)
+
+        verify(competitionRepositoryMock, never()).save(ArgumentMatchers.any(Competition::class.java))
+    }
+
+    @Test
+    fun `POST api_competition_compId_removeCompetitor should return 404 when no competition found for given competition id`() {
+        val givenCompetitionId = "SnowCase2018"
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+
+        val expectedError = EffitError("Competition with id $givenCompetitionId not found")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
+                .content(Competitor(name = "Snarf").toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+                .andExpect(content().json(expectedError.toJson(objectMapper), true))
+    }
 }

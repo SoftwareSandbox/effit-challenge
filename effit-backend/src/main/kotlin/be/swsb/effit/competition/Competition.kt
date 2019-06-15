@@ -36,6 +36,11 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     val competitionId: CompetitionId
         get() = competitionIdentifier
 
+    init {
+        if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
+        competitionIdentifier = CompetitionId(name)
+    }
+
     fun addChallenge(challenge: Challenge) {
         _challenges = _challenges + challenge
     }
@@ -44,9 +49,10 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _competitors = _competitors + competitor
     }
 
-    init {
-        if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
-        competitionIdentifier = CompetitionId(name)
+    fun removeCompetitor(competitorToBeRemoved: Competitor) {
+        _competitors.find { it.id == competitorToBeRemoved.id }
+                ?: throw CompetitorNotFoundOnCompetitionDomainException(competitorToBeRemoved)
+        _competitors = _competitors - competitorToBeRemoved
     }
 
     companion object {

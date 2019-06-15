@@ -61,10 +61,20 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping("{competitionId}/addCompetitor")
     fun addCompetitor(@PathVariable("competitionId") competitionId: String,
                       @RequestBody competitor: Competitor): ResponseEntity<Any> {
-        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
+        val competition = findCompetitionOrThrow(competitionId)
 
         competition.addCompetitor(competitorRepository.save(competitor))
+        competitionRepository.save(competition)
+
+        return ResponseEntity.accepted().build()
+    }
+
+    @PostMapping("{competitionId}/removeCompetitor")
+    fun removeCompetitor(@PathVariable("competitionId") competitionId: String,
+                      @RequestBody competitorToBeRemoved: Competitor): ResponseEntity<Any> {
+        val competition = findCompetitionOrThrow(competitionId)
+
+        competition.removeCompetitor(competitorToBeRemoved)
         competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()
@@ -84,6 +94,11 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()
+    }
+
+    private fun findCompetitionOrThrow(competitionId: String): Competition {
+        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
     }
 
     private fun completeChallenge(competition: Competition, challenge: Challenge, competitorId: UUID) {
