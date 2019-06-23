@@ -30,8 +30,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `findAll retrieves all Competitions`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
-        val snowCase2019 = Competition.competition("SnowCase2019", LocalDate.of(2019, 3, 18), LocalDate.of(2019, 3, 28))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
+        val snowCase2019 = Competition.defaultCompetitionForTest(name = "SnowCase2019")
         testEntityManager.persist(snowCase2018)
         testEntityManager.persist(snowCase2019)
 
@@ -42,8 +42,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `findByCompetitionId, Competition with given CompetitionId exists, retrieves that exact Competition`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
-        val snowCase2019 = Competition.competition("SnowCase2019", LocalDate.of(2019, 3, 18), LocalDate.of(2019, 3, 28))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
+        val snowCase2019 = Competition.defaultCompetitionForTest(name = "SnowCase2019")
         testEntityManager.persist(snowCase2018)
         testEntityManager.persist(snowCase2019)
 
@@ -54,7 +54,7 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `findByCompetitionId, Competition with given CompetitionId does not exist, returns null`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
 
         val actual = competitionRepository.findByCompetitionIdentifier(CompetitionId("snarf"))
@@ -64,7 +64,7 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `save does not cascade Challenges of a Competition`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
@@ -85,7 +85,7 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `saving a Competition with persisted Challenges`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
@@ -110,7 +110,7 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.flush()
         testEntityManager.clear()
 
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
         testEntityManager.flush()
 
@@ -175,10 +175,10 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `Uniqueness on CompetitionId`() {
-        val snowCase2018 = Competition.competition("SnowCase2018", LocalDate.of(2018, 3, 19), LocalDate.of(2018, 3, 29))
+        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
 
-        val competitionWithSameCompetitionId = Competition.competition("SnowCase2018", LocalDate.of(2019, 3, 19), LocalDate.of(2019, 3, 29))
+        val competitionWithSameCompetitionId = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         assertThatThrownBy {
             competitionRepository.save(competitionWithSameCompetitionId)
             testEntityManager.flush()
