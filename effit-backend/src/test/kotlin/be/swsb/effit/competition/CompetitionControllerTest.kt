@@ -36,7 +36,7 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `GET api_competition should return all Competitions`() {
-        val expectedCompetitions = listOf(Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10)))
+        val expectedCompetitions = listOf(Competition.defaultCompetitionForTest())
 
         Mockito.`when`(competitionRepositoryMock.findAll()).thenReturn(expectedCompetitions)
 
