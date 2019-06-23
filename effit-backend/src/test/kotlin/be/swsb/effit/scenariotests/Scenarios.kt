@@ -6,6 +6,7 @@ import be.swsb.effit.competition.CompetitionId
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.CreateCompetition
 import be.swsb.effit.competition.competitor.CompleterId
+import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -60,7 +61,7 @@ class Scenarios(val mockMvc: MockMvc,
     }
 
     fun addCompetitor(competitorName: String, competitionId: CompetitionId): UUID {
-        val addedCompetitor = Competitor(name = competitorName)
+        val addedCompetitor = Competitor.defaultCompetitorForTest(name = competitorName)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", competitionId.id)
                 .content(addedCompetitor.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

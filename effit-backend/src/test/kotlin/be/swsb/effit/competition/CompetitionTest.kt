@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -72,7 +73,7 @@ class CompetitionTest {
     fun `A Competition without Competitors still can have Competitors added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019, 4, 9))
 
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         someCompetition.addCompetitor(snarf)
 
         assertThat(someCompetition.competitors).contains(snarf)
@@ -80,8 +81,8 @@ class CompetitionTest {
 
     @Test
     fun `removeCompetitor when no matching competitor is found, throw DomainException`() {
-        val snarf = Competitor(name = "Snarf")
-        val liono = Competitor(name = "Lion-O")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
 
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
 
@@ -91,8 +92,8 @@ class CompetitionTest {
 
     @Test
     fun `removeCompetitor when matching competitor is found, remove it from the Competition`() {
-        val liono = Competitor(name = "Lion-O")
-        val snarf = Competitor(name = "Snarf")
+        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
 
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
 

@@ -24,7 +24,7 @@ class CompetitorRepositoryIntegrationTest {
 
     @Test
     fun `A Competitor can be persisted and retrieved`() {
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
 
         competitorRepository.save(snarf)
         testEntityManager.flush()
@@ -41,7 +41,7 @@ class CompetitorRepositoryIntegrationTest {
         val anotherChallenge = Challenge(name = "whinge", points = 4, description = "different challenge")
         testEntityManager.persistAndFlush(anotherChallenge)
 
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         competitorRepository.save(snarf)
         testEntityManager.flush()
         testEntityManager.clear()
@@ -61,7 +61,7 @@ class CompetitorRepositoryIntegrationTest {
     fun `A Competitor can not have a non-persisted Challenge as a completed Challenge`() {
         val challenge = Challenge(name = "whinge", points = 4, description = "whatevs")
 
-        val snarf = Competitor(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         competitorRepository.save(snarf)
         testEntityManager.flush()
         testEntityManager.clear()

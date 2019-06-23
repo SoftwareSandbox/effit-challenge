@@ -30,4 +30,6 @@ data class Competitor(@Id val id: UUID = UUID.randomUUID(),
         _completedChallenges = _completedChallenges + challenge
     }
 
+    companion object
+
 }

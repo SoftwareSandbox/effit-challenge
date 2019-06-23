@@ -3,6 +3,7 @@ package be.swsb.effit.competition
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
+import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException
@@ -105,7 +106,7 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `saving a Competition with persisted Competitors`() {
-        val snarf = Competitor(name = "snarf")
+        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
         testEntityManager.persist(snarf)
         testEntityManager.flush()
         testEntityManager.clear()
@@ -128,8 +129,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `removing Competitor, also cleans up the table`() {
-        val snarf = Competitor(name = "snarf")
-        val lionO = Competitor(name = "Lion-O")
+        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
+        val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
         testEntityManager.persist(snarf)
         testEntityManager.persist(lionO)
         testEntityManager.flush()
@@ -151,8 +152,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `deleting a Competition, also deletes its Competitors`() {
-        val snarf = Competitor(name = "snarf")
-        val lionO = Competitor(name = "Lion-O")
+        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
+        val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
         testEntityManager.persist(snarf)
         testEntityManager.persist(lionO)
         testEntityManager.flush()

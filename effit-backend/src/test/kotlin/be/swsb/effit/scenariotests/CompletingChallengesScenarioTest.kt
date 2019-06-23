@@ -4,6 +4,7 @@ import be.swsb.effit.EffitApplication
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.CreateCompetition
+import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -56,7 +57,7 @@ class CompletingChallengesScenarioTest {
 
         val updatedThundercatsCompetition = scenarios.getCompetition(competitionId)
 
-        val snarfWithCompletedChallenge = Competitor(id = snarfId, name = "Snarf")
+        val snarfWithCompletedChallenge = Competitor.defaultCompetitorForTest(id = snarfId, name = "Snarf")
         snarfWithCompletedChallenge.completeChallenge(fetchedWhingeChallenge)
 
         assertThat(updatedThundercatsCompetition.competitors).containsExactly(snarfWithCompletedChallenge)
