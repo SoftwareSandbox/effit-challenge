@@ -1,6 +1,7 @@
 package be.swsb.effit.competition.competitor
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.defaultChallengeForTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
@@ -36,9 +37,9 @@ class CompetitorRepositoryIntegrationTest {
 
     @Test
     fun `A Competitor can have completed Challenges`() {
-        val challenge = Challenge(name = "whinge", points = 4, description = "whatevs")
+        val challenge = Challenge.defaultChallengeForTest()
         testEntityManager.persistAndFlush(challenge)
-        val anotherChallenge = Challenge(name = "whinge", points = 4, description = "different challenge")
+        val anotherChallenge = Challenge.defaultChallengeForTest()
         testEntityManager.persistAndFlush(anotherChallenge)
 
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
@@ -59,7 +60,7 @@ class CompetitorRepositoryIntegrationTest {
 
     @Test
     fun `A Competitor can not have a non-persisted Challenge as a completed Challenge`() {
-        val challenge = Challenge(name = "whinge", points = 4, description = "whatevs")
+        val challenge = Challenge.defaultChallengeForTest()
 
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         competitorRepository.save(snarf)

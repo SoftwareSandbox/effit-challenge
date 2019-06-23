@@ -19,7 +19,7 @@ class ChallengeControllerTest: ControllerTest() {
 
     @Test
     fun `GET api challenge should return all Challenges`() {
-        val expectedChallenges = listOf(Challenge(name = "Playboy", points = 7, description = "ride down a slope with exposed torso"))
+        val expectedChallenges = listOf(Challenge.defaultChallengeForTest())
 
         Mockito.`when`(challengeRepositoryMock.findAll()).thenReturn(expectedChallenges)
 
@@ -46,7 +46,7 @@ class ChallengeControllerTest: ControllerTest() {
     @Test
     fun `GET api challenge id should return specific Challenge for given id`() {
         val givenId = UUID.randomUUID()
-        val expectedChallenge = Challenge(id = givenId, name = "Playboy", points = 7, description = "ride down a slope with exposed torso")
+        val expectedChallenge = Challenge.defaultChallengeForTest(id = givenId)
 
         Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.of(expectedChallenge))
 

@@ -1,9 +1,9 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.defaultChallengeForTest
 import be.swsb.effit.competition.competitor.ChallengeAlreadyCompletedDomainException
 import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.exceptions.DomainRuntimeException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.assertj.core.internal.bytebuddy.utility.RandomString
@@ -16,8 +16,9 @@ class CompetitorTest {
     fun `Completing a Challenge that already was completed, throws an exception`() {
         val competitor = Competitor(name = "Snarf")
 
-        val someChallenge = Challenge(id = UUID.randomUUID(), points = 4, name = "Picasso", description = RandomString.make())
+        val someChallenge = Challenge.defaultChallengeForTest()
         competitor.completeChallenge(someChallenge)
+
         assertThatExceptionOfType(ChallengeAlreadyCompletedDomainException::class.java)
                 .isThrownBy { competitor.completeChallenge(someChallenge) }
                 .withMessageContaining("This competitor already completed the ${someChallenge.name} challenge.")
@@ -27,8 +28,8 @@ class CompetitorTest {
     fun `totalScore can be derived from the completedChallenges`() {
         val competitor = Competitor(name = "Snarf")
 
-        competitor.completeChallenge(challengeWithPoints(4))
-        competitor.completeChallenge(challengeWithPoints(8))
+        competitor.completeChallenge(Challenge.defaultChallengeForTest(points = 4))
+        competitor.completeChallenge(Challenge.defaultChallengeForTest(points = 8))
 
         assertThat(competitor.totalScore).isEqualTo(12)
     }
@@ -40,10 +41,10 @@ class CompetitorTest {
         val snarf2 = Competitor(id = snarfId, name = "Snarf")
         val snarf3 = Competitor(id = snarfId, name = "Snarf")
 
-        val someChallenge = challengeWithPoints(4)
+        val someChallenge = Challenge.defaultChallengeForTest(points = 4)
         snarf1.completeChallenge(someChallenge)
         snarf2.completeChallenge(someChallenge)
-        snarf3.completeChallenge(challengeWithPoints(4))
+        snarf3.completeChallenge(Challenge.defaultChallengeForTest(points = 4))
 
         assertThat(snarf1).isEqualTo(snarf2)
         assertThat(snarf2).isEqualTo(snarf1)
@@ -71,7 +72,4 @@ class CompetitorTest {
                 .containsExactly(snarf2)
     }
 
-    private fun challengeWithPoints(points: Int): Challenge {
-        return Challenge(points = points, name = RandomString.make(), description = RandomString.make())
-    }
 }

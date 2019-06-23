@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
+import be.swsb.effit.challenge.defaultChallengeForTest
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.competition.competitor.CompleterId
@@ -52,7 +53,7 @@ class CompetitionControllerTest : ControllerTest() {
     fun `GET api_competition_name should return the competition with matching competition id`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
         val expectedCompetitionWithChallenges = Competition.defaultCompetitionForTest(
-                challenges = listOf(Challenge(name = "Picasso", points = 3, description = "snarf"))
+                challenges = listOf(Challenge.defaultChallengeForTest())
         )
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetitionWithChallenges)
@@ -159,8 +160,8 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_addChallenges should add given Challenges to the given Competition`() {
-        val challenge1 = Challenge(name = "FirstChallenge", points = 3, description = "1st")
-        val challenge2 = Challenge(name = "SecondChallenge", points = 4, description = "2nd")
+        val challenge1 = Challenge.defaultChallengeForTest(name = "FirstChallenge")
+        val challenge2 = Challenge.defaultChallengeForTest(name = "SecondChallenge")
         val givenChallenges = listOf(challenge1, challenge2)
         val persistedChallenge1 = challenge1.copy(id = randomUUID())
         val persistedChallenge2 = challenge2.copy(id = randomUUID())
@@ -190,7 +191,7 @@ class CompetitionControllerTest : ControllerTest() {
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addChallenges", requestedCompetitionIdAsString)
-                .content(listOf(Challenge(name = "FirstChallenge", points = 3, description = "1st")).toJson(objectMapper))
+                .content(listOf(Challenge.defaultChallengeForTest(name = "FirstChallenge", points = 3, description = "1st")).toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
@@ -204,7 +205,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
-                .content(Competitor.defaultCompetitorForTest(name = "Snarf").toJson(objectMapper))
+                .content(Competitor.defaultCompetitorForTest().toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
@@ -219,7 +220,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
 
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest()
 
         Mockito.`when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
 
@@ -231,7 +232,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         assertThat(thundercatsComp.competitors)
                 .usingElementComparatorIgnoringFields("id")
-                .containsExactly(Competitor.defaultCompetitorForTest(name = "Snarf"))
+                .containsExactly(snarf)
 
         val inOrder = inOrder(competitorRepositoryMock, competitionRepositoryMock)
         inOrder.verify(competitorRepositoryMock).save(snarf)
@@ -285,10 +286,10 @@ class CompetitionControllerTest : ControllerTest() {
         val givenCompetitionId = "SnowCase2018"
         val givenChallengeId = randomUUID()
 
-        val picassoChallenge = Challenge(id = givenChallengeId, name = "Picasso", points = 3, description = "snarfsnarf")
+        val picassoChallenge = Challenge.defaultChallengeForTest(id = givenChallengeId)
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
-                competitors = listOf(Competitor.defaultCompetitorForTest(id = competitorId, name = "Snarf")),
+                competitors = listOf(Competitor.defaultCompetitorForTest(id = competitorId)),
                 challenges = listOf(picassoChallenge))
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
@@ -314,9 +315,8 @@ class CompetitionControllerTest : ControllerTest() {
         val givenCompetitionId = "SnowCase2018"
         val givenChallengeId = randomUUID()
 
-        val picassoChallenge = Challenge(id = givenChallengeId, name = "Picasso", points = 3, description = "snarfsnarf")
-        val snarf = Competitor.defaultCompetitorForTest(competitorId, "Snarf")
-        snarf.completeChallenge(picassoChallenge)
+        val picassoChallenge = Challenge.defaultChallengeForTest(id = givenChallengeId)
+        val snarf = Competitor.defaultCompetitorForTest(id = competitorId, completedChallenges = listOf(picassoChallenge))
 
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
@@ -344,7 +344,7 @@ class CompetitionControllerTest : ControllerTest() {
     fun `POST api_competition_compId_removeCompetitor should remove the given competitor id`() {
         val givenCompetitionId = "SnowCase2018"
 
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest()
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
 
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
@@ -364,13 +364,13 @@ class CompetitionControllerTest : ControllerTest() {
     fun `POST api_competition_compId_removeCompetitor should return 400 when no competitor found for given id`() {
         val givenCompetitionId = "SnowCase2018"
 
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val snarf = Competitor.defaultCompetitorForTest()
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
 
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
-                .content(Competitor.defaultCompetitorForTest(name = "Lion-O").toJson(objectMapper))
+                .content(Competitor.defaultCompetitorForTest().toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest)
@@ -388,7 +388,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
-                .content(Competitor.defaultCompetitorForTest(name = "Snarf").toJson(objectMapper))
+                .content(Competitor.defaultCompetitorForTest().toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)

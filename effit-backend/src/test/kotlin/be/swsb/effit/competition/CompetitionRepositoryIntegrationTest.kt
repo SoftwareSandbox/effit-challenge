@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.defaultChallengeForTest
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
@@ -70,7 +71,7 @@ class CompetitionRepositoryIntegrationTest {
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
 
-        val someUnpersistedChallenge = Challenge(name = "Picasso", points = 3, description = "picasso yo")
+        val someUnpersistedChallenge = Challenge.defaultChallengeForTest()
         assertThat(testEntityManager.entityManager.find(Challenge::class.java, someUnpersistedChallenge.id)).isNull()
 
         existingCompetition.addChallenge(someUnpersistedChallenge)
@@ -91,7 +92,7 @@ class CompetitionRepositoryIntegrationTest {
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
 
-        val someChallenge = Challenge(name = "Picasso", points = 3, description = "picasso yo")
+        val someChallenge = Challenge.defaultChallengeForTest()
         testEntityManager.persist(someChallenge)
         testEntityManager.flush()
 

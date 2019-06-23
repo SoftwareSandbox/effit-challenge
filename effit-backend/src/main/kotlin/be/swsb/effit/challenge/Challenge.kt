@@ -15,4 +15,6 @@ data class Challenge(@Id val id: UUID = UUID.randomUUID(),
         if (points < 0) throw IllegalStateException("Cannot create a Challenge with negative points")
         if (points == 0) throw IllegalStateException("Cannot create a Challenge with 0 points")
     }
+
+    companion object
 }
