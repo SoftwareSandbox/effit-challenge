@@ -36,3 +36,8 @@ build/
 
 # OSX
 .DS_Store
+
+# Floobits
+
+.floo
+.flooignore
