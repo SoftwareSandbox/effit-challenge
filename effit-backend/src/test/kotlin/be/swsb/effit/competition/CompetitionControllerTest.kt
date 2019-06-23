@@ -50,8 +50,9 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `GET api_competition_name should return the competition with matching competition id`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
-        val expectedCompetitionWithChallenges = Competition.competition("SnowCase2018", LocalDate.now(), LocalDate.now().plusDays(10))
-        expectedCompetitionWithChallenges.addChallenge(Challenge(name = "Picasso", points = 3, description = "snarf"))
+        val expectedCompetitionWithChallenges = Competition.defaultCompetitionForTest(
+                challenges = listOf(Challenge(name = "Picasso", points = 3, description = "snarf"))
+        )
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetitionWithChallenges)
 
