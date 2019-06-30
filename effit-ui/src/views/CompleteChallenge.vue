@@ -44,7 +44,7 @@
             points: 0,
             description: '',
         };
-        protected selectedCompetitor: Competitor = {id: '', name: ''};
+        protected selectedCompetitor: Competitor = {id: '', name: '', totalScore: 0};
         private competitors: Competitor[] = [];
 
         private async mounted() {

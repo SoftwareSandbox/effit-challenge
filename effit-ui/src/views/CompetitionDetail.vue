@@ -74,11 +74,11 @@
         };
 
         protected scoreTableHeaders = [
-            {text: '#', sortable: false, width: "4%"},
+            {text: '#', sortable: false, width: '4%'},
             {text: 'Name', value: 'name', sortable: false},
-            {text: 'Points', value: 'points', sortable: false}
+            {text: 'Points', value: 'points', sortable: false},
         ];
-        protected rowsPerPageItems = [10,25,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}];
+        protected rowsPerPageItems = [10, 25, {text: '$vuetify.dataIterator.rowsPerPageAll', value: -1}];
 
         public async refreshCompetition() {
             this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
@@ -112,7 +112,7 @@
         }
 
         private byTotalScore(items: Competitor[], index: number): Competitor[] {
-            return items.sort((a,b) => b.totalScore - a.totalScore);
+            return items.sort((a, b) => b.totalScore - a.totalScore);
         }
     }
 </script>
