@@ -46,7 +46,8 @@ export default new Router({
       path: '/competitions/:competitionId/complete',
       component: CompetitionChallenges,
       props: true,
-    },{
+    },
+    {
       name: 'completeChallenge',
       path: '/competitions/:competitionId/complete/:challengeId',
       component: CompleteChallenge,

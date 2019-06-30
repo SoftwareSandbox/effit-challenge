@@ -12,8 +12,7 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import {Challenge} from '@/model/Challenge';
-    import {noop} from 'vue-class-component/lib/util';
-    import {Competition, Competitor} from '@/model/Competition';
+    import {Competition} from '@/model/Competition';
     import {Route} from 'vue-router';
 
     function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
