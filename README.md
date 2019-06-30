@@ -1,4 +1,6 @@
-# effit-challenge web app [![](https://travis-ci.org/SoftwareSandbox/effit-challenge.svg?branch=master)](https://travis-ci.org/SoftwareSandbox/effit-challenge)
+LiveCoding sessions left until Snowcase 2020: **37**
+
+# Effit-challenge web app [![](https://travis-ci.org/SoftwareSandbox/effit-challenge.svg?branch=master)](https://travis-ci.org/SoftwareSandbox/effit-challenge)
 Web application for the PHUCIT Challenge:  
 A week filled with challenges to make your Snowcase holiday even more memorable.
 
