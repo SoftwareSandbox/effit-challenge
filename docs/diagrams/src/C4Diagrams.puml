@@ -1,0 +1,18 @@
+@startuml C4_ContainerDiagram
+!include ../style/C4_container.puml
+
+Person(peter, "Peter", "Initial creator of a Competition")
+Person(tim, "Tim", "Participant")
+System_Boundary(effit, "Effit Web App") {
+    Container(springBootUi, "Effit Web App", "SpringBoot", "VueJS hosted in static folder")
+    Container(springBootRest, "Effit REST API", "SpringBoot")
+    Container(db, "Effit DB", "Postgres")
+}
+
+Rel(peter, tim, "Friends")
+Rel(peter, springBootUi, "Create and manage Competition", "https")
+Rel(tim, springBootUi, "Complete Challenges", "https")
+Rel(springBootRest, db, "Persist Competition", "jdbc")
+Rel(springBootUi, springBootRest, "Perform rest calls", "http")
+
+@enduml
