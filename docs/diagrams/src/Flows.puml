@@ -1,0 +1,44 @@
+@startuml Flows
+!include ../style/C4_component.puml
+
+Container_Boundary(creatingComp, "Creating a Competition initially") {
+    Component(competitionNameFilledIn, "Competition name filled in", "by Peter")
+    Component(competitionDateRangeFilledIn, "Competition Date range selected", "by Peter")
+    Component(competitionChallengesSelected, "Competition Challenges selected", "by Peter")
+    Component(emailFilledIn, "Recovery email filled in", "by Peter")
+    Component(competitionCreated, "Competition Created", "by Peter")
+}
+
+Container_Boundary(managingParticipants, "Managing competitors before Competition starts") {
+    Component(competitorAdded, "Competitor added (Tim)", "by Peter")
+    Component(linkShared, "Link was shared", "to Tim")
+    Component(anotherCompetitorAdded, "Another Competitor added (Sander)", "by Peter")
+    Component(linkShared2, "Link was shared", "to Sander")
+}
+
+Container_Boundary(completingChallenges, "Completing Challenges") {
+    Component(challengeCompleted, "Challenge Completed", "by Tim")
+    Component(timsTotalScoreUpdated, "Tim's total score was updated", "by Effit")
+    Component(anotherChallengeCompleted, "Challenge Completed", "by Tim")
+    Component(timsTotalScoreUpdated2, "Tim's total score was updated", "by Effit")
+}
+
+Rel(competitionNameFilledIn, competitionDateRangeFilledIn, "next")
+Rel(competitionDateRangeFilledIn, competitionChallengesSelected, "next")
+Rel(competitionChallengesSelected, emailFilledIn, "next")
+Rel(emailFilledIn, competitionCreated, "next")
+
+Rel(competitionCreated, competitorAdded, "next")
+
+Rel(competitorAdded, linkShared, "next")
+Rel(linkShared, anotherCompetitorAdded, "next")
+Rel(anotherCompetitorAdded, linkShared2, "next")
+
+
+Rel(linkShared2, challengeCompleted, "next")
+
+Rel(challengeCompleted, timsTotalScoreUpdated, "next")
+Rel(timsTotalScoreUpdated, anotherChallengeCompleted, "next")
+Rel(anotherChallengeCompleted, timsTotalScoreUpdated2, "next")
+
+@enduml
