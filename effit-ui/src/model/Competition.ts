@@ -1,6 +1,7 @@
 export interface Competitor {
     id: string;
     name: string;
+    totalScore: number;
 }
 
 export interface Competition {

@@ -1,7 +1,25 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout align-start justify-start column fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
+
+        <h3>Scoreboard</h3>
+        <v-data-table
+                :headers="scoreTableHeaders"
+                :custom-sort="byTotalScore"
+                :items="competitors"
+                class="elevation-1"
+        >
+            <template v-slot:items="props">
+                <tr>
+                    <td class="text-xs-right">{{ props.index + 1 }}</td>
+                    <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-right">{{ props.item.totalScore }}</td>
+                </tr>
+            </template>
+        </v-data-table>
+
         <v-btn @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
+
         <v-item-group>
             Current competitors:
             <v-chip v-for="competitor in competitors"
@@ -52,6 +70,11 @@
             endDate: '',
             competitors: [],
         };
+        protected scoreTableHeaders = [
+            {text: '#', sortable: false, width: "4%"},
+            {text: 'Name', value: 'name', sortable: false},
+            {text: 'Points', value: 'points', sortable: false}
+        ];
 
         public async refreshCompetition() {
             this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
@@ -82,6 +105,10 @@
             await this.$axios.post(`/api/competition/${this.competitionId}/removeCompetitor`, foundCompetitorToRemove)
                 .catch(noop);
             await this.refreshCompetition();
+        }
+
+        private byTotalScore(items: Competitor[], index: number): Competitor[] {
+            return items.sort((a,b) => b.totalScore - a.totalScore);
         }
     }
 </script>
