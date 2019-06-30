@@ -1,4 +1,4 @@
-LiveCoding sessions left until Snowcase 2020: **37**
+**37** LiveCoding sessions left until Snowcase 2020 
 
 # Effit-challenge web app [![](https://travis-ci.org/SoftwareSandbox/effit-challenge.svg?branch=master)](https://travis-ci.org/SoftwareSandbox/effit-challenge)
 Web application for the PHUCIT Challenge:  
