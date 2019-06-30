@@ -11,6 +11,9 @@ I will mostly be live-coding my working on this project. You can follow along an
 * Learn new stuff (about Kotlin, Vue, other testing frameworks maybe, ...)
 * Prove to myself that I can incrementally _architect_ from a monolith to hexagonal (because I have the tendency to over design architectures)
 
+## Functional stuff
+Check out [the diagrams](docs/diagrams.md).
+
 ## Stack
 Backend will be a SpringBoot web application built in Kotlin.
 
