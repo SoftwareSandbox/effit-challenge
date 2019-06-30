@@ -2,11 +2,14 @@
     <v-layout align-start justify-start column fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
 
+        <v-btn @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
+
         <h3>Scoreboard</h3>
         <v-data-table
                 :headers="scoreTableHeaders"
                 :custom-sort="byTotalScore"
                 :items="competitors"
+                :rows-per-page-items="rowsPerPageItems"
                 class="elevation-1"
         >
             <template v-slot:items="props">
@@ -17,8 +20,6 @@
                 </tr>
             </template>
         </v-data-table>
-
-        <v-btn @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <v-item-group>
             Current competitors:
@@ -39,6 +40,7 @@
 
             <v-btn type="submit" :disabled="!this.competitorName">add competitor</v-btn>
         </v-form>
+
     </v-layout>
 </template>
 
@@ -70,11 +72,13 @@
             endDate: '',
             competitors: [],
         };
+
         protected scoreTableHeaders = [
             {text: '#', sortable: false, width: "4%"},
             {text: 'Name', value: 'name', sortable: false},
             {text: 'Points', value: 'points', sortable: false}
         ];
+        protected rowsPerPageItems = [10,25,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}];
 
         public async refreshCompetition() {
             this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
