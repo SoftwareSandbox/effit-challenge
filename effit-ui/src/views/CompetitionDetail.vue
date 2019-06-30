@@ -1,7 +1,7 @@
 <template>
     <v-layout align-start justify-start column fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
-        <router-link :to="`/competitions/${this.competitionId}/complete`">Complete Challenges</router-link>
+        <v-btn @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
         <v-item-group>
             Current competitors:
             <v-chip v-for="competitor in competitors"
@@ -26,7 +26,6 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import ChallengesTable from '@/components/ChallengesTable.vue';
     import {Challenge} from '@/model/Challenge';
     import {noop} from 'vue-class-component/lib/util';
     import {Competition, Competitor} from '@/model/Competition';
@@ -41,7 +40,7 @@
     }
 
     @Component({
-        components: {ChallengesTable},
+        components: {},
         beforeRouteEnter: beforeRouteEnterNavGuard,
     })
     export default class CompetitionDetail extends Vue {
@@ -67,8 +66,8 @@
             return this.competition.competitors;
         }
 
-        private navigateToMarkAsCompleted(challenge: Challenge) {
-            this.$router.push(`/competitions/${this.competitionId}/complete/${challenge.id}`);
+        private navigateToCompleteChallenges(challenge: Challenge) {
+            this.$router.push(`/competitions/${this.competitionId}/complete`);
         }
 
         private async addCompetitor() {
