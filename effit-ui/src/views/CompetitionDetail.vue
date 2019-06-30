@@ -1,10 +1,7 @@
 <template>
     <v-layout align-start justify-start column fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
-        <challenges-table
-                :challenges="competition.challenges"
-                :rowHandler="navigateToMarkAsCompleted">
-        </challenges-table>
+        <router-link :to="`/competitions/${this.competitionId}/complete`">Complete Challenges</router-link>
         <v-item-group>
             Current competitors:
             <v-chip v-for="competitor in competitors"

@@ -6,6 +6,7 @@ import CompetitionDetail from './views/CompetitionDetail.vue';
 import CreateChallenge from './views/CreateChallenge.vue';
 import CreateCompetition from './views/CreateCompetition.vue';
 import CompleteChallenge from './views/CompleteChallenge.vue';
+import CompetitionChallenges from './views/CompetitionChallenges.vue';
 import FourOhFour from '@/views/FourOhFour.vue';
 
 Vue.use(Router);
@@ -41,6 +42,11 @@ export default new Router({
       props: true,
     },
     {
+      name: 'competitionChallenges',
+      path: '/competitions/:competitionId/complete',
+      component: CompetitionChallenges,
+      props: true,
+    },{
       name: 'completeChallenge',
       path: '/competitions/:competitionId/complete/:challengeId',
       component: CompleteChallenge,
