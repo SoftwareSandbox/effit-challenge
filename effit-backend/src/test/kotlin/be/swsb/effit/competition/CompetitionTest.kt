@@ -61,6 +61,13 @@ class CompetitionTest {
     }
 
     @Test
+    fun `when a Competition is created, it's not started`() {
+        val actual = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,1,1))
+
+        assertThat(actual.started).isFalse()
+    }
+
+    @Test
     fun `A Competition without Challenges still can have Challenges added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019, 4, 9))
 
