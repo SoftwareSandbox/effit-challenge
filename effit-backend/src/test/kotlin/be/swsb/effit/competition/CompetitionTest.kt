@@ -88,6 +88,22 @@ class CompetitionTest {
     }
 
     @Test
+    fun `A Competition that is started cannot have Competitors added to it`() {
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val someCompetition = Competition.defaultCompetitionForTest(
+                started = true,
+                competitors = listOf(snarf)
+        )
+
+        val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
+
+        assertThatExceptionOfType(UnableToAddCompetitorToStartedCompetitionDomainException::class.java)
+                .isThrownBy { someCompetition.addCompetitor(lionO) }
+
+        assertThat(someCompetition.competitors).contains(snarf).doesNotContain(lionO)
+    }
+
+    @Test
     fun `removeCompetitor when no matching competitor is found, throw DomainException`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")

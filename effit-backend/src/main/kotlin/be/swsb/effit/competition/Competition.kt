@@ -53,6 +53,9 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun addCompetitor(competitor: Competitor) {
+        if (_started) {
+            throw UnableToAddCompetitorToStartedCompetitionDomainException()
+        }
         _competitors.add(competitor)
     }
 

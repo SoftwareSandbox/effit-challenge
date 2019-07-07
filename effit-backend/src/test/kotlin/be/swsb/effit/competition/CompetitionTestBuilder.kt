@@ -9,10 +9,14 @@ fun Competition.Companion.defaultCompetitionForTest(
         startDate: LocalDate = LocalDate.of(2019, 4, 1),
         endDate: LocalDate = LocalDate.of(2019, 4, 11),
         competitors: List<Competitor> = emptyList(),
-        challenges: List<Challenge> = emptyList())
+        challenges: List<Challenge> = emptyList(),
+        started: Boolean = false)
         : Competition {
     val competition = competition(name = name, startDate = startDate, endDate = endDate)
     competitors.forEach { competition.addCompetitor(it) }
     challenges.forEach { competition.addChallenge(it) }
+    if (started) {
+        competition.markAsStarted()
+    }
     return competition
 }
