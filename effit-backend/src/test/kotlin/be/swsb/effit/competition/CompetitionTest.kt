@@ -115,6 +115,17 @@ class CompetitionTest {
     }
 
     @Test
+    fun `removeCompetitor when no Competition is starte, throw DomainException`() {
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
+
+        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono), started = true)
+
+        assertThatExceptionOfType(UnableToRemoveCompetitorOfAStartedCompetitionDomainException::class.java)
+                .isThrownBy { someCompetition.removeCompetitor(snarf.id) }
+    }
+
+    @Test
     fun `removeCompetitor when matching competitor is found, remove it from the Competition`() {
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")

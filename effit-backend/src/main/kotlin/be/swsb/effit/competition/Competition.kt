@@ -60,6 +60,9 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun removeCompetitor(competitorIdToBeRemoved: UUID) {
+        if (_started) {
+            throw UnableToRemoveCompetitorOfAStartedCompetitionDomainException()
+        }
         _competitors.find { it.id == competitorIdToBeRemoved }
                 ?. let { _competitors.remove(it) }
                 ?: throw CompetitorNotFoundOnCompetitionDomainException()
