@@ -8,6 +8,7 @@ import CreateCompetition from './views/CreateCompetition.vue';
 import CompleteChallenge from './views/CompleteChallenge.vue';
 import CompetitionChallenges from './views/CompetitionChallenges.vue';
 import FourOhFour from '@/views/FourOhFour.vue';
+import About from '@/views/About.vue';
 
 Vue.use(Router);
 
@@ -56,10 +57,7 @@ export default new Router({
     {
       name: 'about',
       path: '/about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      component: About,
     },
     {
       name: '404',
@@ -68,7 +66,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/404',
+      redirect: '/about',
     },
   ],
 });
