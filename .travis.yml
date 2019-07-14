@@ -15,4 +15,16 @@ after_success:
     docker build ./ops/webapp -t swsb/effitchallenge;
     docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/web;
     docker push registry.heroku.com/effit-challenge/web;
+    docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/release;
+    docker push registry.heroku.com/effit-challenge/release;
+    heroku container:release web;
     fi
+
+#deploy:
+#  provider: heroku
+#  api_key:
+#    secure: $HEROKU_AUTH_TOKEN
+#  on:
+#    branch: prod
+#  app:
+#    prod: effit-challenge
