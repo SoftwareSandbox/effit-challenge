@@ -18,7 +18,6 @@ after_success:
 #    export WEB_DOCKER_IMAGE_ID="$(docker inspect swsb/effitchallenge --format={{.Id}})";
 #    ./heroku-release.sh;
     fi
-
 deploy:
   provider: heroku
   api_key:
@@ -28,4 +27,4 @@ deploy:
   app:
     prod: effit-challenge
   run:
-    - container:release web
+    - release web
