@@ -26,5 +26,4 @@ deploy:
     branch: prod
   app:
     prod: effit-challenge
-  run:
-    - release web
+
