@@ -12,6 +12,7 @@ cache:
 after_success:
   - if [ "$TRAVIS_BRANCH" == "prod" ]; then
     docker login --email=$HEROKU_USERNAME --username=$HEROKU_USERNAME --password=$HEROKU_AUTH_TOKEN registry.heroku.com;
+    docker build ./ops/webapp -t swsb/effitchallenge;
     docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/web;
     docker push registry.heroku.com/effit-challenge/web;
     fi
