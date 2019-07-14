@@ -10,30 +10,12 @@ cache:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
 
-before_deploy:
+after_success:
   - if [ "$TRAVIS_BRANCH" == "prod" ]; then
     echo "$HEROKU_AUTH_TOKEN" | docker login --username="$HEROKU_USERNAME" --password-stdin registry.heroku.com;
     docker build ./ops/webapp -t swsb/effitchallenge;
     docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/web;
     docker push registry.heroku.com/effit-challenge/web;
+    docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/release;
+    docker push registry.heroku.com/effit-challenge/release;
     fi
-
-deploy:
-  provider: heroku
-  api_key:
-    secure: $HEROKU_AUTH_TOKEN
-  on:
-    branch: prod
-  app:
-    prod: effit-challenge
-  run:
-    - release web
-#after_success:
-#  - if [ "$TRAVIS_BRANCH" == "prod" ]; then
-#    echo "$HEROKU_AUTH_TOKEN" | docker login --username="$HEROKU_USERNAME" --password-stdin registry.heroku.com;
-#    docker build ./ops/webapp -t swsb/effitchallenge;
-#    docker tag swsb/effitchallenge registry.heroku.com/effit-challenge/web;
-#    docker push registry.heroku.com/effit-challenge/web;
-#    export WEB_DOCKER_IMAGE_ID="$(docker inspect swsb/effitchallenge --format={{.Id}})";
-#    ./heroku-release.sh;
-#    fi

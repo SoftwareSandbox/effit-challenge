@@ -1,5 +1,4 @@
 
-export WEB_DOCKER_IMAGE_ID=
 curl -n -X PATCH https://api.heroku.com/apps/effit-challenge/formation \
   -d '{
   "updates": [
