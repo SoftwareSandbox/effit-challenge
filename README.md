@@ -29,3 +29,27 @@ See [CaptainsLog](CaptainsLog.md) for more [Lightweight ADR's](https://adr.githu
 ## Frontend requirements
 Needs to run on mobile devices, no plans on compiling for native devices.
  
+## _CI/CD Deployment pipeline_
+In quotes because it's not exactly a proper pipeline, I guess.
+
+After successful build:
+1) `git merge prod`
+1) `git checkout prod`
+1) `git merge master`
+1) `git push`
+
+This will trigger a TravisCI build for the `prod` branch, which will then 
+
+1) create a docker image, 
+1) push it to the heroku docker registry,
+1) and execute heroku's release phase via the _Heroku API_ (aka a curl command)
+
+### Property passing is a thing
+
+All Heroku properties are accessible as environment variables in the docker container.
+
+* `$DATABASE_URL`: supplied by Heroku when you use the postgres add-on. Contains weird looking url (which isn't a jdbc url). So we parse it (in [execJava.sh](ops/webapp/execJava.sh))
+* `$PORT`: you **need** to have the springboot app use this variable, otherwise Heroku won't be able to forward http requests to it (and it'll actually crash).
+
+## Locally checking Heroku server logs
+`heroku logs -a effit-challenge --tail`

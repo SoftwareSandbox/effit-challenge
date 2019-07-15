@@ -1,3 +1,29 @@
+## 2019/07/15 - FINALLY was able to use TravisCI to deploy our webapp :tada:
+
+This didn't go as easy as I planned. Most important thing that changed since last time I deployed a docker container on Heroku is the _Release Phase_ they added.
+
+### Problem the first: Executing release phase on TravisCI
+Where before I could just push a docker image to the Heroku registry, and Heroku would just start that one up, now it needs extra motivation.
+
+The only way to give Heroku that motivation is to tell it to actually release, by either:
+
+`heroku container:release web -a effit-challenge`
+
+or by using the so called _API_, which is what we're using on a successful `prod branch` build on TravisCI.
+
+See the `after_success:` step in the [.travis.yml](.travis.yml) file.
+
+### Problem the second: parsing the `$DATABASE_URL` string that Heroku passes to the container
+Heroku is able to pass `$SPRING_DATASOURCE_URL` stuff, but **only** when it's able to identify the app is running springboot, which it can't when it's a docker container...
+
+So instead, I needed to parse the `$DATABASE_URL` environment variable. Luckily, somebody else also experience my misery and [fixed his](https://gist.github.com/wwerner/66ee4b1050bd5824dcfd9a5e0cd07f12#file-heroku-db-url-to-spring-boot-sh-L18).
+
+See [execJava.sh](ops/webapp/execJava.sh)'s contents on how that parsing actually happens.
+
+### Locally checking Heroku server logs
+`heroku logs -a effit-challenge --tail`
+
+
 ## 2019/06/15 - Made competitors into a MutableList because of Hibernate
 
 `private var _competitors: MutableList<Competitor> = mutableListOf()`
