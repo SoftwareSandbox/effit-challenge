@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
@@ -27,6 +28,7 @@ class EffitApplication {
     }
 }
 
+@Profile("local")
 @Component
 class AppStartupRunner(private val challengeRepository: ChallengeRepository,
                        private val competitionRepository: CompetitionRepository,
