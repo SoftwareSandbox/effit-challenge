@@ -35,6 +35,7 @@
             startDate: '',
             endDate: '',
             competitors: [],
+            started: false,
         };
 
         public async refreshCompetition() {

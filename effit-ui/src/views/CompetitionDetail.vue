@@ -2,7 +2,9 @@
     <v-layout align-start justify-start column fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
 
-        <v-btn @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
+        <v-btn v-if="!competition.started" @click="startCompetition">Start Competition</v-btn>
+        <v-btn v-if="competition.started" @click="unstartCompetition">Unstart Competition</v-btn>
+        <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <h3>Scoreboard</h3>
         <v-data-table
@@ -71,6 +73,7 @@
             startDate: '',
             endDate: '',
             competitors: [],
+            started: false,
         };
 
         protected scoreTableHeaders = [
@@ -82,6 +85,16 @@
 
         public async refreshCompetition() {
             this.competition = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
+        }
+
+        public async startCompetition() {
+            await this.$axios.post(`/api/competition/${this.competitionId}/start`).catch(noop);
+            await this.refreshCompetition();
+        }
+
+        public async unstartCompetition() {
+            await this.$axios.post(`/api/competition/${this.competitionId}/unstart`).catch(noop);
+            await this.refreshCompetition();
         }
 
         private async mounted() {

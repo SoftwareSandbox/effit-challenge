@@ -9,4 +9,5 @@ export interface Competition {
     startDate: string;
     endDate: string;
     competitors: Competitor[];
+    started: boolean;
 }
