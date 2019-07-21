@@ -159,6 +159,42 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
+    fun `POST api_competition_competitionId_start should start a Competition`() {
+        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition")
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
+                .thenReturn(existingCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "ThundercatsCompetition")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isAccepted)
+
+        assertThat(existingCompetition.started).isTrue()
+    }
+
+    @Test
+    fun `POST api_competition_competitionId_start should return 202 when Competition was already started`() {
+        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition", started = true)
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
+                .thenReturn(existingCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "ThundercatsCompetition")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isAccepted)
+    }
+
+    @Test
+    fun `POST api_competition_competitionId_start should return 404 when no matching Competition found for given CompetitionId`() {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "NonExistingCompetitionId")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+    }
+
+    @Test
     fun `POST api_competition_addChallenges should add given Challenges to the given Competition`() {
         val challenge1 = Challenge.defaultChallengeForTest(name = "FirstChallenge")
         val challenge2 = Challenge.defaultChallengeForTest(name = "SecondChallenge")
