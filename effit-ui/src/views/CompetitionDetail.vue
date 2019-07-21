@@ -3,7 +3,6 @@
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
 
         <v-btn v-if="!competition.started" @click="startCompetition">Start Competition</v-btn>
-        <v-btn v-if="competition.started" @click="unstartCompetition">Unstart Competition</v-btn>
         <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <h3>Scoreboard</h3>
