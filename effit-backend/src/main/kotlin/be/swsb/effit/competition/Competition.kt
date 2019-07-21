@@ -76,6 +76,11 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _started = false
     }
 
+    fun completeChallenge(challenge: Challenge, competitorId: UUID) {
+        this.competitors.find { it.id == competitorId }
+                ?.completeChallenge(challenge)
+    }
+
     companion object {
         fun competition(name: String = "MyCompetition", startDate: LocalDate, endDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = endDate)

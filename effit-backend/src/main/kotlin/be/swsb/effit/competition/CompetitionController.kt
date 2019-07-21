@@ -108,7 +108,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
 
         competition.challenges.find { it.id == challengeId }
-                ?.let { completeChallenge(competition, it, completerId.competitorId) }
+                ?.let { competition.completeChallenge(it, completerId.competitorId) }
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
 
         competitionRepository.save(competition)
@@ -129,11 +129,6 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     private fun findCompetitionOrThrow(competitionId: String): Competition {
         return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
-    }
-
-    private fun completeChallenge(competition: Competition, challenge: Challenge, competitorId: UUID) {
-        competition.competitors.find { it.id == competitorId }
-                ?.completeChallenge(challenge)
     }
 
 }
