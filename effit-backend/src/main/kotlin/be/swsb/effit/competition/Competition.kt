@@ -68,7 +68,7 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                 ?: throw CompetitorNotFoundOnCompetitionDomainException()
     }
 
-    fun markAsStarted() {
+    fun start() {
         _started = true
     }
 

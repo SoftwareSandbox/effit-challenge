@@ -117,7 +117,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     private fun startCompetition(competition: Competition) {
-        competition.markAsStarted()
+        competition.start()
         competitionRepository.save(competition)
     }
 

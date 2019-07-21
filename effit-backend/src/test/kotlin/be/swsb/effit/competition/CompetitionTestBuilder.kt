@@ -16,7 +16,7 @@ fun Competition.Companion.defaultCompetitionForTest(
     competitors.forEach { competition.addCompetitor(it) }
     challenges.forEach { competition.addChallenge(it) }
     if (started) {
-        competition.markAsStarted()
+        competition.start()
     }
     return competition
 }
