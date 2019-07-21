@@ -51,6 +51,16 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
                 ?: ResponseEntity.notFound().build()
     }
 
+    @PostMapping("{competitionId}/unstart")
+    fun unsstartCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
+        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?.let {
+                    unstartCompetition(it)
+                    return ResponseEntity.accepted().build()
+                }
+                ?: ResponseEntity.notFound().build()
+    }
+
     @PostMapping("{competitionId}/addChallenges")
     fun addChallenges(@PathVariable competitionId: String,
                       @RequestBody challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
@@ -108,6 +118,11 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     private fun startCompetition(competition: Competition) {
         competition.markAsStarted()
+        competitionRepository.save(competition)
+    }
+
+    private fun unstartCompetition(competition: Competition) {
+        competition.unstart()
         competitionRepository.save(competition)
     }
 

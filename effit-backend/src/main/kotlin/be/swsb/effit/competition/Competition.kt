@@ -72,6 +72,10 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _started = true
     }
 
+    fun unstart() {
+        _started = false
+    }
+
     companion object {
         fun competition(name: String = "MyCompetition", startDate: LocalDate, endDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = endDate)
