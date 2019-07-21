@@ -90,6 +90,10 @@
         public async startCompetition() {
             await this.$axios.post(`/api/competition/${this.competitionId}/start`).catch(noop);
             await this.refreshCompetition();
+            this.$store.commit('showSnackMessage', {
+                message: 'Competition started!',
+                undo: () => this.unstartCompetition(),
+            });
         }
 
         public async unstartCompetition() {
