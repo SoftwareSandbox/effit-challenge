@@ -115,7 +115,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeCompetitor when no Competition is starte, throw DomainException`() {
+    fun `removeCompetitor when no Competition is started, throw DomainException`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
 
