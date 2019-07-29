@@ -56,7 +56,7 @@
     import {noop} from 'vue-class-component/lib/util';
     import {Competition, Competitor} from '@/model/Competition';
     import {Route} from 'vue-router';
-    import ChallengesTable from "@/components/ChallengesTable.vue";
+    import ChallengesTable from '@/components/ChallengesTable.vue';
 
     function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
         return next((vm: CompetitionDetail) => {
