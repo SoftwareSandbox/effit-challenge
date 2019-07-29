@@ -1,4 +1,4 @@
-FROM postgres:10-alpine
+FROM postgres:11-alpine
 ENV POSTGRES_DB effitdb
 ENV POSTGRES_USER effit
 ENV POSTGRES_PASSWORD deveffit
