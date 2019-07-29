@@ -80,10 +80,12 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     fun completeChallenge(challenge: Challenge, competitorId: UUID) {
         if (this._started) {
             this.challenges.find { it == challenge }
-                ?: throw DomainValidationRuntimeException("Can't complete a challenge that's not part of this Competition")
+                ?: throw DomainValidationRuntimeException("Can't complete a challenge that's not part of this competition.")
             this.competitors.find { it.id == competitorId }
                 ?. completeChallenge(challenge)
-                ?: throw DomainValidationRuntimeException("Can't complete a challenge for a non existing competitor")
+                ?: throw DomainValidationRuntimeException("Can't complete a challenge for a non existing competitor.")
+        } else {
+            throw DomainValidationRuntimeException("Can't complete challenges on a competition that's not yet started.")
         }
     }
 

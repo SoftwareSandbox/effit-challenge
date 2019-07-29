@@ -5,6 +5,7 @@ import be.swsb.effit.challenge.defaultChallengeForTest
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.exceptions.DomainRuntimeException
+import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -139,21 +140,6 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge when competition is not yet started, shouldn't do anything`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        val someChallenge = Challenge.defaultChallengeForTest()
-
-        val someCompetition = Competition.defaultCompetitionForTest(
-                competitors = listOf(snarf),
-                challenges = listOf(someChallenge),
-                started = false)
-
-        someCompetition.completeChallenge(someChallenge,snarf.id)
-
-        assertThat(snarf.completedChallenges).isEmpty()
-    }
-
-    @Test
     fun `completeChallenge when competition is started, should complete the challenge of given Competitor`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
@@ -169,6 +155,22 @@ class CompetitionTest {
     }
 
     @Test
+    fun `completeChallenge when competition is not yet started, should throw an exception`() {
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val someChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultCompetitionForTest(
+                competitors = listOf(snarf),
+                challenges = listOf(someChallenge),
+                started = false)
+
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy{ someCompetition.completeChallenge(someChallenge, snarf.id) }
+
+        assertThat(snarf.completedChallenges).isEmpty()
+    }
+
+    @Test
     fun `completeChallenge when challenge not found on competition, should throw exception`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallengeOfAnotherCompetition = Challenge.defaultChallengeForTest()
@@ -177,7 +179,7 @@ class CompetitionTest {
                 competitors = listOf(snarf),
                 started = true)
 
-        assertThatExceptionOfType(DomainRuntimeException::class.java)
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy{ someCompetition.completeChallenge(someChallengeOfAnotherCompetition,snarf.id) }
     }
 
@@ -189,7 +191,7 @@ class CompetitionTest {
                 challenges = listOf(someChallenge),
                 started = true)
 
-        assertThatExceptionOfType(DomainRuntimeException::class.java)
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy{ someCompetition.completeChallenge(someChallenge, UUID.randomUUID()) }
     }
 }

@@ -362,7 +362,8 @@ class CompetitionControllerTest : ControllerTest() {
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
                 competitors = listOf(Competitor.defaultCompetitorForTest(id = competitorId)),
-                challenges = listOf(picassoChallenge))
+                challenges = listOf(picassoChallenge),
+                started = true)
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
 
@@ -393,7 +394,8 @@ class CompetitionControllerTest : ControllerTest() {
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
                 competitors = listOf(snarf),
-                challenges = listOf(picassoChallenge)
+                challenges = listOf(picassoChallenge),
+                started = true
         )
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
