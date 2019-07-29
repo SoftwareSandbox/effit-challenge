@@ -2,14 +2,14 @@
     <v-layout align-start justify-start column fill-height>
         <v-form>
             <v-text-field
-                    v-model="competition.name"
+                    v-model="name"
                     :counter="50"
                     label="Name"
                     required
             ></v-text-field>
 
-            <date-field label="Starts" v-model="competition.startDate"></date-field>
-            <date-field label="Ends" v-model="competition.endDate"></date-field>
+            <date-field label="Starts" v-model="startDate"></date-field>
+            <date-field label="Ends" v-model="endDate"></date-field>
 
             <v-data-iterator
                     :items="challenges"
@@ -47,11 +47,10 @@
         components: {ChallengeCard, ChallengesTable, DateField},
     })
     export default class CreateCompetition extends Vue {
-        protected competition = {
-            name: '',
-            startDate: new Date().toISOString().substr(0, 10),
-            endDate: new Date().toISOString().substr(0, 10),
-        };
+        protected name = '';
+        protected backedStartDate = new Date().toISOString().substr(0, 10);
+        protected endDate = new Date().toISOString().substr(0, 10);
+
         protected successfullyCreatedCompetitionId: string = '';
         protected challenges: SelectableChallenge[] = [];
 
@@ -70,10 +69,29 @@
         }
 
         private async submit() {
-            this.successfullyCreatedCompetitionId = (await this.$axios.post(`/api/competition`, this.competition)).headers.location;
-            await this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.selectedChallenges());
+            this.successfullyCreatedCompetitionId = (await this.$axios.post(`/api/competition`, this.competition))
+                .headers.location;
+            await this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`,
+                this.selectedChallenges());
             this.showSnackBar(`Successfully created your new Competition!`);
             this.navigateToCreatedCompetition();
+        }
+
+        set startDate(newDate: string) {
+            this.backedStartDate = new Date(newDate).toISOString().substr(0, 10);
+            this.endDate = new Date(newDate).toISOString().substr(0, 10);
+        }
+
+        get startDate() {
+            return this.backedStartDate;
+        }
+
+        get competition() {
+            return {
+                name: this.name,
+                startDate: this.startDate,
+                endDate: this.endDate,
+            };
         }
 
         private selectedChallenges() {
