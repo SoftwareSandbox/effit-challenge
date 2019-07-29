@@ -59,24 +59,21 @@
         protected rowsPerPageItems = [4, 8, 12];
         protected pagination = {rowsPerPage: 4};
 
-        private mounted() {
+        private async mounted() {
             this.$store.commit('updateTitle', 'New Competition');
-            this.$axios.get(`/api/challenge`)
-                .then(({data}: { data: Challenge[] }) => this.challenges = data.map(this.expandWithSelectedProperty));
+            this.challenges = (await this.$axios.get(`/api/challenge`)).data.map(this.expandWithSelectedProperty);
+            this.rowsPerPageItems.push(this.challenges.length);
         }
 
         private expandWithSelectedProperty(challenge: Challenge) {
             return {...challenge, ...{selected: false}};
         }
 
-        private submit() {
-            this.$axios.post(`/api/competition`, this.competition)
-                .then((res) => this.successfullyCreatedCompetitionId = res.headers.location)
-                .then(() => this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`,
-                    this.selectedChallenges()))
-                .then(() => this.showSnackBar(`Successfully created your new Competition!`))
-                .then(() => this.navigateToCreatedCompetition())
-                .catch(() => {/* noop, is already handled by interceptor in App.vue*/});
+        private async submit() {
+            this.successfullyCreatedCompetitionId = (await this.$axios.post(`/api/competition`, this.competition)).headers.location;
+            await this.$axios.post(`/api/competition/${this.successfullyCreatedCompetitionId}/addChallenges`, this.selectedChallenges());
+            this.showSnackBar(`Successfully created your new Competition!`);
+            this.navigateToCreatedCompetition();
         }
 
         private selectedChallenges() {
