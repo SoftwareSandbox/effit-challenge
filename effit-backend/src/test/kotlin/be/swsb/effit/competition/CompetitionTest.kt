@@ -140,6 +140,14 @@ class CompetitionTest {
     }
 
     @Test
+    fun `start should throw exception when no competitors were added to the competition`() {
+        val someCompetition = Competition.defaultCompetitionForTest(competitors = emptyList())
+
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy{ someCompetition.start() }
+    }
+
+    @Test
     fun `completeChallenge when competition is started, should complete the challenge of given Competitor`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
