@@ -53,6 +53,8 @@ class CompletingChallengesScenarioTest {
                 .find { it.name == whingeChallenge.name }
                 ?: throw EntityNotFoundDomainRuntimeException("Challenge ${whingeChallenge.name} not found in competition $competitionId")
 
+        scenarios.startCompetition(competitionId)
+
         scenarios.completeChallenge(competitionId, fetchedWhingeChallenge.id, snarfId)
 
         val updatedThundercatsCompetition = scenarios.getCompetition(competitionId)
