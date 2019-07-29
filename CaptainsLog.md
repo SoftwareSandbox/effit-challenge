@@ -1,3 +1,19 @@
+## 2019/07/29 - TIL to use computed getters and setters instead of watch expressions
+I used it to update the endDate when the startDate was updated in CreateCompetition:
+```
+set startDate(newDate: string) {
+    this.backedStartDate = new Date(newDate).toISOString().substr(0, 10);
+    this.endDate = new Date(newDate).toISOString().substr(0, 10);
+}
+
+get startDate() {
+    return this.backedStartDate;
+}
+```
+
+Also [read the docs](https://vuejs.org/v2/guide/computed.html#Computed-vs-Watched-Property).
+
+
 ## 2019/07/29 - Don't catch(noop) in axios.post
 Was fixed by throwing errors in the BaseSnackbar component.
 
