@@ -2,6 +2,7 @@ package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import be.swsb.effit.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.time.LocalDate
@@ -77,8 +78,13 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun completeChallenge(challenge: Challenge, competitorId: UUID) {
-        this.competitors.find { it.id == competitorId }
-                ?.completeChallenge(challenge)
+        if (this._started) {
+            this.challenges.find { it == challenge }
+                ?: throw DomainValidationRuntimeException("Can't complete a challenge that's not part of this Competition")
+            this.competitors.find { it.id == competitorId }
+                ?. completeChallenge(challenge)
+                ?: throw DomainValidationRuntimeException("Can't complete a challenge for a non existing competitor")
+        }
     }
 
     companion object {
