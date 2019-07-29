@@ -1,3 +1,8 @@
+## 2019/07/29 - Don't catch(noop) in axios.post
+Was fixed by throwing errors in the BaseSnackbar component.
+
+This actually caused success notifications to override the error notifications.
+
 ## 2019/07/15 - FINALLY was able to use TravisCI to deploy our webapp :tada:
 
 This didn't go as easy as I planned. Most important thing that changed since last time I deployed a docker container on Heroku is the _Release Phase_ they added.

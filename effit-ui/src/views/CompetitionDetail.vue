@@ -87,7 +87,7 @@
         }
 
         public async startCompetition() {
-            await this.$axios.post(`/api/competition/${this.competitionId}/start`).catch(noop);
+            await this.$axios.post(`/api/competition/${this.competitionId}/start`);
             await this.refreshCompetition();
             this.$store.commit('showSnackMessage', {
                 message: 'Competition started!',
@@ -96,7 +96,7 @@
         }
 
         public async unstartCompetition() {
-            await this.$axios.post(`/api/competition/${this.competitionId}/unstart`).catch(noop);
+            await this.$axios.post(`/api/competition/${this.competitionId}/unstart`);
             await this.refreshCompetition();
         }
 
@@ -114,16 +114,14 @@
         }
 
         private async addCompetitor() {
-            await this.$axios.post(`/api/competition/${this.competitionId}/addCompetitor`, {name: this.competitorName})
-                .catch(noop);
+            await this.$axios.post(`/api/competition/${this.competitionId}/addCompetitor`, {name: this.competitorName});
             this.competitorName = '';
             await this.refreshCompetition();
         }
 
         private async removeCompetitor(competitorToRemove: Competitor) {
             const foundCompetitorToRemove = this.competition.competitors.find((comp) => comp.id === competitorToRemove.id);
-            await this.$axios.post(`/api/competition/${this.competitionId}/removeCompetitor`, foundCompetitorToRemove)
-                .catch(noop);
+            await this.$axios.post(`/api/competition/${this.competitionId}/removeCompetitor`, foundCompetitorToRemove);
             await this.refreshCompetition();
         }
 
