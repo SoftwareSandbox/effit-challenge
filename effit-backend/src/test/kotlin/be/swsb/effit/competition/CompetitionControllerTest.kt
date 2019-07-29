@@ -160,7 +160,7 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_start should start a Competition`() {
-        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition")
+        val existingCompetition = Competition.defaultCompetitionWithChallengesAndCompetitorsForTest(name = "ThundercatsCompetition")
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
                 .thenReturn(existingCompetition)
@@ -175,7 +175,7 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_start should return 202 when Competition was already started`() {
-        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition", started = true)
+        val existingCompetition = Competition.defaultStartedCompetition(name = "ThundercatsCompetition")
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
                 .thenReturn(existingCompetition)
@@ -195,8 +195,8 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition_competitionId_unstart should UNstart(??) a Competition`() {
-        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition", started = true)
+    fun `POST api_competition_competitionId_unstart should undo starting a Competition`() {
+        val existingCompetition = Competition.defaultStartedCompetition(name = "ThundercatsCompetition")
 
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
                 .thenReturn(existingCompetition)
