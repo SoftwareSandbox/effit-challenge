@@ -5,43 +5,48 @@
         <v-btn v-if="!competition.started" @click="startCompetition">Start Competition</v-btn>
         <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
-        <h3>Scoreboard</h3>
-        <v-data-table
-                :headers="scoreTableHeaders"
-                :custom-sort="byTotalScore"
-                :items="competitors"
-                :rows-per-page-items="rowsPerPageItems"
-                class="elevation-1"
-        >
-            <template v-slot:items="props">
-                <tr>
-                    <td class="text-xs-right">{{ props.index + 1 }}</td>
-                    <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.totalScore }}</td>
-                </tr>
-            </template>
-        </v-data-table>
+        <div v-if="!competition.started">
+            <v-item-group>
+                Current competitors:
+                <v-chip v-for="competitor in competitors"
+                        close
+                        :key="competitor.id"
+                        @input="removeCompetitor(competitor)">
+                    {{competitor.name}}
+                </v-chip>
+            </v-item-group>
+            <v-form @submit.prevent="addCompetitor">
+                <v-text-field
+                        v-model="competitorName"
+                        :counter="50"
+                        label="Competitor to add"
+                        required
+                ></v-text-field>
 
-        <v-item-group>
-            Current competitors:
-            <v-chip v-for="competitor in competitors"
-                    close
-                    :key="competitor.id"
-                    @input="removeCompetitor(competitor)">
-                {{competitor.name}}
-            </v-chip>
-        </v-item-group>
-        <v-form @submit.prevent="addCompetitor">
-            <v-text-field
-                    v-model="competitorName"
-                    :counter="50"
-                    label="Competitor to add"
-                    required
-            ></v-text-field>
+                <v-btn type="submit" :disabled="!this.competitorName">add competitor</v-btn>
+            </v-form>
+        </div>
 
-            <v-btn type="submit" :disabled="!this.competitorName">add competitor</v-btn>
-        </v-form>
+        <challenges-table v-if="!competition.started" :challenges="competition.challenges"></challenges-table>
 
+        <div v-if="competition.started">
+            <h3>Scoreboard</h3>
+            <v-data-table
+                    :headers="scoreTableHeaders"
+                    :custom-sort="byTotalScore"
+                    :items="competitors"
+                    :rows-per-page-items="rowsPerPageItems"
+                    class="elevation-1"
+            >
+                <template v-slot:items="props">
+                    <tr>
+                        <td class="text-xs-right">{{ props.index + 1 }}</td>
+                        <td class="text-xs-left">{{ props.item.name }}</td>
+                        <td class="text-xs-right">{{ props.item.totalScore }}</td>
+                    </tr>
+                </template>
+            </v-data-table>
+        </div>
     </v-layout>
 </template>
 
@@ -51,6 +56,7 @@
     import {noop} from 'vue-class-component/lib/util';
     import {Competition, Competitor} from '@/model/Competition';
     import {Route} from 'vue-router';
+    import ChallengesTable from "@/components/ChallengesTable.vue";
 
     function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
         return next((vm: CompetitionDetail) => {
@@ -61,7 +67,7 @@
     }
 
     @Component({
-        components: {},
+        components: {ChallengesTable},
         beforeRouteEnter: beforeRouteEnterNavGuard,
     })
     export default class CompetitionDetail extends Vue {
