@@ -70,10 +70,21 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun start() {
+        `don't start competition when no competitors`()
+        `don't start competition when no challenges`()
+        _started = true
+    }
+
+    private fun `don't start competition when no competitors`() {
         if (competitors.isEmpty()) {
             throw DomainValidationRuntimeException("Starting a competition without competitors is kind of useless, don't you think?")
         }
-        _started = true
+    }
+
+    private fun `don't start competition when no challenges`() {
+        if (challenges.isEmpty()) {
+            throw DomainValidationRuntimeException("Starting a competition without challenges is kind of useless, don't you think?")
+        }
     }
 
     fun unstart() {
