@@ -8,7 +8,7 @@
             :multi-line="true"
     >
         {{ snackbarMessage }}
-        <v-btn dark flat @click="performUndo">Undo</v-btn>
+        <v-btn dark flat v-if="undoFunctionWasPassed" @click="performUndo">Undo</v-btn>
         <v-btn dark flat @click="closeSnackbar()">Close</v-btn>
     </v-snackbar>
 </template>
