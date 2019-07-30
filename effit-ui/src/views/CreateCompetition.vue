@@ -5,7 +5,7 @@
                     v-model="name"
                     :counter="50"
                     label="Name"
-                    required
+                    :rules="nameValidators"
             ></v-text-field>
 
             <date-field label="Starts" v-model="startDate"></date-field>
@@ -39,7 +39,6 @@
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import ChallengeCard from '@/components/ChallengeCard.vue';
     import {Challenge} from '@/model/Challenge';
-    import BaseSnackBar from '@/components/BaseSnackBar.vue';
 
     type SelectableChallenge = Challenge & { selected: boolean };
 
@@ -92,6 +91,10 @@
                 startDate: this.startDate,
                 endDate: this.endDate,
             };
+        }
+
+        get nameValidators(): [((value: any) => boolean | string)] {
+            return [(value) => !!value || 'Required.'];
         }
 
         private selectedChallenges() {
