@@ -104,15 +104,15 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     companion object {
-        fun competition(name: String = "MyCompetition", startDate: LocalDate, endDate: LocalDate): Competition {
+        fun competition(name: String, startDate: LocalDate, endDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = endDate)
         }
 
-        fun competitionWithoutStartDate(name: String = "MyCompetition", endDate: LocalDate): Competition {
+        fun competitionWithoutStartDate(name: String, endDate: LocalDate): Competition {
             return Competition(name = name, startDate = LocalDate.now(), endDate = endDate)
         }
 
-        fun competitionWithoutEndDate(name: String = "MyCompetition", startDate: LocalDate): Competition {
+        fun competitionWithoutEndDate(name: String, startDate: LocalDate): Competition {
             return Competition(name = name, startDate = startDate, endDate = startDate.plusDays(10))
         }
     }
@@ -132,6 +132,9 @@ class CompetitionId constructor(name: String) {
 
     init {
         _id = `remove characters considered ugly in a URL`(name)
+        if (_id.isBlank()) {
+            throw DomainValidationRuntimeException("Cannot create a CompetitionId from an empty name.")
+        }
     }
 
     private fun `remove characters considered ugly in a URL`(someString: String): String {
