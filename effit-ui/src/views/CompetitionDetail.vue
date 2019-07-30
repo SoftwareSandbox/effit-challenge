@@ -3,7 +3,6 @@
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
 
         <v-btn v-if="!competition.started" @click="startCompetition">Start Competition</v-btn>
-        <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <div v-if="!competition.started">
             <v-item-group>
@@ -27,7 +26,14 @@
             </v-form>
         </div>
 
-        <challenges-table v-if="!competition.started" :challenges="competition.challenges"></challenges-table>
+        <challenges-table
+                v-if="!competition.started"
+                :challenges="competition.challenges"
+                :isEditable="true"
+        ></challenges-table>
+
+        <!-- TODO: extract to nested route maybe? Based on competition.started in any case -->
+        <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <div v-if="competition.started">
             <h3>Scoreboard</h3>
@@ -53,7 +59,6 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Challenge} from '@/model/Challenge';
-    import {noop} from 'vue-class-component/lib/util';
     import {Competition, Competitor} from '@/model/Competition';
     import {Route} from 'vue-router';
     import ChallengesTable from '@/components/ChallengesTable.vue';
