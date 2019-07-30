@@ -1,10 +1,14 @@
 <template>
-    <v-layout align-start justify-start column fill-height>
+    <v-layout column align-start justify-start fill-height>
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
         <challenges-table
                 :challenges="competition.challenges"
                 :rowHandler="navigateToMarkAsCompleted">
         </challenges-table>
+
+        <router-link :to="`/competitions/${competitionId}`" tag="v-btn">
+            cancel
+        </router-link>
     </v-layout>
 </template>
 

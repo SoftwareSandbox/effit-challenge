@@ -13,6 +13,9 @@
             ></v-select>
 
             <v-btn @click="submit">submit</v-btn>
+            <router-link :to="`/competitions/${competitionId}`" tag="v-btn">
+                cancel
+            </router-link>
         </v-form>
     </v-layout>
 </template>
