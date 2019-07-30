@@ -5,14 +5,16 @@ import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.Competition
 import be.swsb.effit.competition.CompetitionRepository
 import be.swsb.effit.competition.competitor.CompetitorRepository
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.transaction.annotation.EnableTransactionManagement
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Profile
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.time.LocalDate
 
 

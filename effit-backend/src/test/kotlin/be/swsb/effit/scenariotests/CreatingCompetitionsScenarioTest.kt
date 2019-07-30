@@ -5,26 +5,28 @@ import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.CompetitionId
 import be.swsb.effit.competition.CreateCompetition
 import be.swsb.effit.util.toJson
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
-import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [EffitApplication::class])
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class CreatingCompetitionsScenarioTest {
 
     @Autowired
@@ -37,6 +39,25 @@ class CreatingCompetitionsScenarioTest {
     @BeforeEach
     fun setUp() {
         scenarios = Scenarios(mockMvc, objectMapper)
+    }
+
+    @Test
+    fun `Competition without a name should not be created`() {
+        val emptyStringAsNullFeature = objectMapper
+                .deserializationConfig
+                .isEnabled(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+        assertThat(emptyStringAsNullFeature).isTrue()
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
+                .content("{" +
+                        "\"name\": \"\"," +
+                        "\"startDate\": \"2018-03-16\"," +
+                        "\"endDate\": \"2018-03-16\"," +
+                        "}")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+                .andExpect(MockMvcResultMatchers.content().string(""))
     }
 
     @Test

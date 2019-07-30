@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component
 @Component
 class CompetitionCreator {
     fun from(createCompetition: CreateCompetition): Competition {
+        if (createCompetition.name.isNullOrBlank()) {
+            throw DomainValidationRuntimeException("Cannot create a Competition without a name")
+        }
+
         return when {
             createCompetition.startDate != null && createCompetition.endDate != null
                 -> Competition.competition(name = createCompetition.name,

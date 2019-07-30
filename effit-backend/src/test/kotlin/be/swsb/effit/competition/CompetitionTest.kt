@@ -47,7 +47,7 @@ class CompetitionTest {
     fun `when a Competition is created with just an endDate, startDate defaults to today`() {
         val today = LocalDate.now()
 
-        val actual = Competition.competitionWithoutStartDate(endDate = today.plusWeeks(1))
+        val actual = Competition.competitionWithoutStartDate(name="Something", endDate = today.plusWeeks(1))
 
         assertThat(actual.startDate).isEqualTo(today)
     }
@@ -56,21 +56,21 @@ class CompetitionTest {
     fun `when a Competition is created with just an startDate, endDate defaults to 10 days from the startDate`() {
         val startDate = LocalDate.of(2019, 4, 9)
 
-        val actual = Competition.competitionWithoutEndDate(startDate = startDate)
+        val actual = Competition.competitionWithoutEndDate(name="Something", startDate = startDate)
 
         assertThat(actual.endDate).isEqualTo(startDate.plusDays(10))
     }
 
     @Test
     fun `when a Competition is created, it's not started`() {
-        val actual = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019,1,1))
+        val actual = Competition.competitionWithoutEndDate(name="Something", startDate = LocalDate.of(2019,1,1))
 
         assertThat(actual.started).isFalse()
     }
 
     @Test
     fun `A Competition without Challenges still can have Challenges added to it`() {
-        val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019, 4, 9))
+        val someCompetition = Competition.competitionWithoutEndDate(name="Something", startDate = LocalDate.of(2019, 4, 9))
 
         val picassoChallenge = Challenge.defaultChallengeForTest()
         someCompetition.addChallenge(picassoChallenge)
@@ -80,7 +80,7 @@ class CompetitionTest {
 
     @Test
     fun `A Competition without Competitors still can have Competitors added to it`() {
-        val someCompetition = Competition.competitionWithoutEndDate(startDate = LocalDate.of(2019, 4, 9))
+        val someCompetition = Competition.competitionWithoutEndDate(name="Something", startDate = LocalDate.of(2019, 4, 9))
 
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         someCompetition.addCompetitor(snarf)
