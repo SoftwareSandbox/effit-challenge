@@ -26,12 +26,11 @@
             </v-form>
         </div>
 
-        <challenges-table
+        <editable-challenges-table
                 v-if="!competition.started"
                 :challenges="competition.challenges"
-                :isEditable="true"
                 :competitionId="competitionId"
-        ></challenges-table>
+        ></editable-challenges-table>
 
         <!-- TODO: extract to nested route maybe? Based on competition.started in any case -->
         <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
@@ -62,7 +61,7 @@
     import {Challenge} from '@/model/Challenge';
     import {Competition, Competitor} from '@/model/Competition';
     import {Route} from 'vue-router';
-    import ChallengesTable from '@/components/ChallengesTable.vue';
+    import EditableChallengesTable from '@/components/EditableChallengesTable.vue';
 
     function beforeRouteEnterNavGuard(to: Route, from: Route, next: any) {
         return next((vm: CompetitionDetail) => {
@@ -73,7 +72,7 @@
     }
 
     @Component({
-        components: {ChallengesTable},
+        components: {EditableChallengesTable},
         beforeRouteEnter: beforeRouteEnterNavGuard,
     })
     export default class CompetitionDetail extends Vue {

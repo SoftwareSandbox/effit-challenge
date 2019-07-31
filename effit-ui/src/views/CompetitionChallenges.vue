@@ -3,8 +3,7 @@
         <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
         <challenges-table
                 :challenges="competition.challenges"
-                :rowHandler="navigateToMarkAsCompleted"
-                :competitionId="competitionId">
+                :rowHandler="navigateToMarkAsCompleted">
         </challenges-table>
 
         <router-link :to="`/competitions/${competitionId}`" tag="v-btn">
