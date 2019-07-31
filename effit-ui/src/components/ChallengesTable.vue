@@ -108,7 +108,7 @@
 
         @Prop({type: Array}) private challenges !: Challenge[];
         @Prop({type: Function}) private rowHandler !: (challenge: Challenge) => void;
-        @Prop({type: Boolean}) private isEditable: boolean = false;
+        @Prop({type: Boolean}) private isEditable !: boolean;
 
         private mounted() {
             if (this.isEditable) {
