@@ -1,12 +1,12 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
 
     <div>
-        <v-toolbar flat row space-between>
-            <v-toolbar-title>Challenges</v-toolbar-title>
+        <v-toolbar flat>
+            <v-layout row align-center justify-space-between>
+                <v-toolbar-title>Challenges</v-toolbar-title>
+                <v-btn v-if="isEditable" dark @click="showDialog = true">Add Challenge</v-btn>
+            </v-layout>
             <v-dialog v-model="showDialog" max-width="500px">
-                <template v-slot:activator="{ on }">
-                    <v-btn color="primary" v-if="isEditable" dark class="mb-2" v-on="on">Add Challenge</v-btn>
-                </template>
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ formTitle }}</span>
