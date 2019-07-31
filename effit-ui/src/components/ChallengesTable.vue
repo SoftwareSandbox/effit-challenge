@@ -38,8 +38,10 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn colors="primary" flat @click="closeDialog">Cancel</v-btn>
-                        <v-btn colors="primary" flat @click="saveEdit">Save</v-btn>
+                        <v-btn v-if="editingNewChallenge" color="error"
+                               flat @click="deleteItem(editableChallenge)">Delete</v-btn>
+                        <v-btn flat @click="closeDialog">Cancel</v-btn>
+                        <v-btn flat @click="saveEdit(editableChallenge)">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -125,15 +127,20 @@
         private deleteItem(challenge: Challenge) {
             const index = this.challenges.indexOf(challenge);
             confirm('Are you sure you want to delete this challenge?') && this.challenges.splice(index, 1);
+            this.closeDialog();
         }
 
-        private saveEdit() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.challenges[this.editedIndex], this.editableChallenge);
+        private saveEdit(challenge: Challenge) {
+            if (this.editingNewChallenge) {
+                Object.assign(this.challenges[this.editedIndex], challenge);
             } else {
-                this.challenges.push(Object.assign({}, this.editableChallenge));
+                this.challenges.push(Object.assign({}, challenge));
             }
             this.closeDialog();
+        }
+
+        private get editingNewChallenge() {
+            return this.editedIndex > -1;
         }
 
         private closeDialog() {
