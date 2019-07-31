@@ -30,6 +30,7 @@
                 v-if="!competition.started"
                 :challenges="competition.challenges"
                 :isEditable="true"
+                :competitionId="competitionId"
         ></challenges-table>
 
         <!-- TODO: extract to nested route maybe? Based on competition.started in any case -->

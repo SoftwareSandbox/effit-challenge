@@ -95,6 +95,11 @@
         @Prop({type: Array}) private challenges !: Challenge[];
         @Prop({type: Function}) private rowHandler !: (challenge: Challenge) => void;
         @Prop({type: Boolean}) private isEditable !: boolean;
+        //TODO ChallengesTable is not always used in the context of a Competition! Fix this by duplicating component!
+        //And reverting back to the old ChallengesTable.
+        //Only use this "editable" version in CompetitionDetail!
+        //See #51
+        @Prop({type: String}) private competitionId !: string;
 
         get formTitle(): string {
             return this.editedIndex < 0 ? 'New Challenge' : 'Edit Challenge';
@@ -130,9 +135,10 @@
             this.closeDialog();
         }
 
-        private saveEdit(challenge: Challenge) {
+        private async saveEdit(challenge: Challenge) {
             if (this.editingNewChallenge) {
                 this.challenges.push(Object.assign({}, challenge));
+                await this.createAndAddNewChallenge(challenge);
                 this.showSnackBar("Created a new Challenge!");
             } else {
                 Object.assign(this.challenges[this.editedIndex], challenge);
@@ -149,11 +155,17 @@
             setTimeout(() => {
                 this.editableChallenge = Object.assign({}, this.defaultChallenge);
                 this.editedIndex = -1;
+                //TODO refresh challenges to get newly created challenge-ids (that come from the backend)
             }, 300);
         }
 
         private showSnackBar(message: string) {
             this.$store.commit('showSnackMessage', {message});
+        }
+
+        private async createAndAddNewChallenge(challenge: Challenge) {
+            challenge.id = (await this.$axios.post(`/api/challenge`, challenge)).headers.location;
+            await this.$axios.post(`/api/competition/${this.competitionId}/addChallenges`, [challenge]);
         }
     }
 </script>
