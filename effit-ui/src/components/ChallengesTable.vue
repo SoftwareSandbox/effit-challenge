@@ -133,6 +133,7 @@
         private saveEdit(challenge: Challenge) {
             if (this.editingNewChallenge) {
                 this.challenges.push(Object.assign({}, challenge));
+                this.showSnackBar("Created a new Challenge!");
             } else {
                 Object.assign(this.challenges[this.editedIndex], challenge);
             }
@@ -140,7 +141,7 @@
         }
 
         private get editingNewChallenge() {
-            return this.editedIndex < -1;
+            return this.editedIndex < 0;
         }
 
         private closeDialog() {
@@ -149,6 +150,10 @@
                 this.editableChallenge = Object.assign({}, this.defaultChallenge);
                 this.editedIndex = -1;
             }, 300);
+        }
+
+        private showSnackBar(message: string) {
+            this.$store.commit('showSnackMessage', {message});
         }
     }
 </script>
