@@ -38,7 +38,7 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="editingNewChallenge" color="error"
+                        <v-btn v-if="!editingNewChallenge" color="error"
                                flat @click="deleteItem(editableChallenge)">Delete</v-btn>
                         <v-btn flat @click="closeDialog">Cancel</v-btn>
                         <v-btn flat @click="saveEdit(editableChallenge)">Save</v-btn>
@@ -132,15 +132,15 @@
 
         private saveEdit(challenge: Challenge) {
             if (this.editingNewChallenge) {
-                Object.assign(this.challenges[this.editedIndex], challenge);
-            } else {
                 this.challenges.push(Object.assign({}, challenge));
+            } else {
+                Object.assign(this.challenges[this.editedIndex], challenge);
             }
             this.closeDialog();
         }
 
         private get editingNewChallenge() {
-            return this.editedIndex > -1;
+            return this.editedIndex < -1;
         }
 
         private closeDialog() {
