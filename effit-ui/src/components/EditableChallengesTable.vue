@@ -140,7 +140,6 @@
             setTimeout(() => {
                 this.editableChallenge = Object.assign({}, this.defaultChallenge);
                 this.editedIndex = -1;
-                //TODO refresh challenges to get newly created challenge-ids (that come from the backend)
             }, 300);
         }
 

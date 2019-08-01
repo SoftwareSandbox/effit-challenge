@@ -32,7 +32,6 @@
                 :competitionId="competitionId"
         ></editable-challenges-table>
 
-        <!-- TODO: extract to nested route maybe? Based on competition.started in any case -->
         <v-btn v-if="competition.started" @click="navigateToCompleteChallenges">Complete Challenges</v-btn>
 
         <div v-if="competition.started">
