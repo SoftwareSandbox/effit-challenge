@@ -90,6 +90,9 @@ class CreatingCompetitionsScenarioTest {
         assertThat(scenarios.getCompetition(competitionId).challenges)
                 .extracting<String> { it.id.toString() }
                 .doesNotContain(createdChallengeLocation)
+
+        val challengeThatGotCopied = scenarios.getChallenge(createdChallengeLocation)
+        assertThat(challengeThatGotCopied).isEqualTo(challengeToBeCreated)
     }
 
     @Test

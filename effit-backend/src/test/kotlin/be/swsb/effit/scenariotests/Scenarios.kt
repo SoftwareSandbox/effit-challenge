@@ -3,13 +3,14 @@ package be.swsb.effit.scenariotests
 import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.competition.Competition
 import be.swsb.effit.competition.CompetitionId
-import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.CreateCompetition
+import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -21,11 +22,14 @@ import java.util.*
 class Scenarios(val mockMvc: MockMvc,
                 val objectMapper: ObjectMapper) {
 
-    fun createNewChallenge(challengeToBeCreated: Challenge): String? {
+    fun createNewChallenge(challengeToBeCreated: Challenge): String {
         val mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/challenge")
-                .content(challengeToBeCreated.toJson(objectMapper)))
+                .content(challengeToBeCreated.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isCreated)
                 .andReturn()
-        return mvcResult.response.getHeader(HttpHeaders.LOCATION)
+        return mvcResult.response.getHeader(HttpHeaders.LOCATION) ?: fail("No location header on successful challenge creation")
     }
 
     fun createNewCompetition(competition: CreateCompetition, selectedChallenge: Challenge? = null) : CompetitionId {
@@ -100,5 +104,13 @@ class Scenarios(val mockMvc: MockMvc,
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
+    fun getChallenge(requestedChallengeId: String): Challenge {
+        val challengeAsJson = mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{challengeId}", requestedChallengeId)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn().response.contentAsString
+        return objectMapper.readValue(challengeAsJson, Challenge::class.java)
     }
 }
