@@ -12,6 +12,7 @@ import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.*
@@ -235,16 +236,13 @@ class CompetitionControllerTest : ControllerTest() {
         val challenge1 = Challenge.defaultChallengeForTest(name = "FirstChallenge")
         val challenge2 = Challenge.defaultChallengeForTest(name = "SecondChallenge")
         val givenChallenges = listOf(challenge1, challenge2)
-        val persistedChallenge1 = challenge1.copy(id = randomUUID())
-        val persistedChallenge2 = challenge2.copy(id = randomUUID())
 
         val requestedCompetitionIdAsString = "Thundercats"
 
         val thundercatsComp = Competition.defaultCompetitionForTest(name = requestedCompetitionIdAsString)
         Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString)))
                 .thenReturn(thundercatsComp)
-        Mockito.`when`(challengeRepositoryMock.save(challenge1)).thenReturn(persistedChallenge1)
-        Mockito.`when`(challengeRepositoryMock.save(challenge2)).thenReturn(persistedChallenge2)
+        Mockito.`when`(challengeRepositoryMock.save(ArgumentMatchers.any(Challenge::class.java))).thenReturn(challenge1)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
                 .content(givenChallenges.toJson(objectMapper))
@@ -252,8 +250,15 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(thundercatsComp.challenges).containsExactly(persistedChallenge1, persistedChallenge2)
+        val challengesCaptor = ArgumentCaptor.forClass(Challenge::class.java)
+
+        Mockito.verify(challengeRepositoryMock, times(2)).save(challengesCaptor.capture())
+
         Mockito.verify(competitionRepositoryMock).save(thundercatsComp)
+        assertThat(challengesCaptor.allValues[0].name).isEqualTo("FirstChallenge")
+        assertThat(challengesCaptor.allValues[0].id).isNotEqualTo(challenge1.id)
+        assertThat(challengesCaptor.allValues[1].name).isEqualTo("SecondChallenge")
+        assertThat(challengesCaptor.allValues[1].id).isNotEqualTo(challenge2.id)
     }
 
     @Test

@@ -7,6 +7,7 @@ import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -105,7 +106,10 @@ class CreatingCompetitionsScenarioTest {
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)
 
-        scenarios.updateChallenge(challengeToBeCreated.copy(name="Francisco"))
+        val challengeToUpdate = scenarios.getCompetition(competitionId).challenges.find { it.name == challengeToBeCreated.name }
+                ?: fail("Expected a challenge with name ${challengeToBeCreated.name}")
+
+        scenarios.updateChallenge(challengeToUpdate.copy(name="Francisco"))
 
         assertThat(scenarios.getCompetition(competitionId).challenges)
                 .extracting<String> { it.name }

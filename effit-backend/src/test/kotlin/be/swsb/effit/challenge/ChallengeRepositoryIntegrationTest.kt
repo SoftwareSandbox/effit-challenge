@@ -31,4 +31,21 @@ class ChallengeRepositoryIntegrationTest {
 
         assertThat(actual).containsExactly(playboyChallenge, picassoChallenge)
     }
+
+    @Test
+    fun `save of a Challenge with an already existing ID updates the Challenge`() {
+        val playboyChallenge = Challenge(name = "Playboy", points = 7, description = "playboy description")
+        testEntityManager.persist(playboyChallenge)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val updatedChallengeWithSameId = Challenge(id = playboyChallenge.id, name = "Snarfboy", points = 6, description = "playboy description")
+        challengeRepository.save(updatedChallengeWithSameId)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val actual = challengeRepository.findAll()
+
+        assertThat(actual).containsExactly(updatedChallengeWithSameId)
+    }
 }

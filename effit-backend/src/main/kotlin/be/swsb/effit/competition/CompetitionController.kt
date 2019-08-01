@@ -109,7 +109,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
         challengesToBeAdded.forEach {
-            val persistedChallenge = challengeRepository.save(it)
+            val persistedChallenge = challengeRepository.save(it.copy(id = UUID.randomUUID()))
             foundCompetition.addChallenge(persistedChallenge)
         }
         competitionRepository.save(foundCompetition)
