@@ -3,7 +3,10 @@ package be.swsb.effit.challenge
 import be.swsb.effit.exceptions.EffitError
 import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -16,6 +19,9 @@ class ChallengeControllerTest: ControllerTest() {
 
     @Autowired
     lateinit var challengeRepositoryMock: ChallengeRepository
+
+    @Captor
+    lateinit var challengeCaptor: ArgumentCaptor<Challenge>
 
     @Test
     fun `GET api challenge should return all Challenges`() {
@@ -83,4 +89,40 @@ class ChallengeControllerTest: ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is5xxServerError)
     }
+
+
+    @Test
+    fun `PUT api_challenge_challengeId should return 404 when no matching Challenge found for given ChallengeId`() {
+        val givenId = UUID.randomUUID()
+
+        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.empty())
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}", givenId)
+                .content(Challenge.defaultChallengeForTest().toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `PUT api_challenge_challengeId should update given challenge`() {
+        val givenId = UUID.randomUUID()
+        val oldChallenge = Challenge.defaultChallengeForTest(id = givenId, name = "Pablo")
+
+        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.of(oldChallenge))
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}", givenId)
+                .content(oldChallenge.copy(name = "Picasso").toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk)
+
+        Mockito.verify(challengeRepositoryMock).save(challengeCaptor.capture())
+        val persistedChallenge = challengeCaptor.value
+        assertThat(persistedChallenge.name).isEqualTo("Picasso")
+        assertThat(persistedChallenge.points).isEqualTo(oldChallenge.points)
+        assertThat(persistedChallenge.description).isEqualTo(oldChallenge.description)
+        assertThat(persistedChallenge.id).isEqualTo(oldChallenge.id)
+    }
+
 }

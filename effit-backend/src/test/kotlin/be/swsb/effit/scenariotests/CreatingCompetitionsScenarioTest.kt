@@ -2,7 +2,6 @@ package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitApplication
 import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.competition.CompetitionId
 import be.swsb.effit.competition.CreateCompetition
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -92,6 +90,23 @@ class CreatingCompetitionsScenarioTest {
         assertThat(scenarios.getCompetition(competitionId).challenges)
                 .extracting<String> { it.id.toString() }
                 .doesNotContain(createdChallengeLocation)
+    }
+
+    @Test
+    fun `Challenges can get updated when a Competition is not yet started`() {
+        val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+        scenarios.createNewChallenge(challengeToBeCreated)
+
+        val competition = CreateCompetition(name = "Competition with Challenges",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)
+
+        scenarios.updateChallenge(challengeToBeCreated.copy(name="Francisco"))
+
+        assertThat(scenarios.getCompetition(competitionId).challenges)
+                .extracting<String> { it.name }
+                .containsOnly("Francisco")
     }
 
 }

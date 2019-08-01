@@ -127,6 +127,8 @@
                 this.showSnackBar("Created a new Challenge!");
             } else {
                 Object.assign(this.challenges[this.editedIndex], challenge);
+                await this.updateChallenge(challenge);
+                this.showSnackBar("Challenge successfully updated.");
             }
             this.closeDialog();
         }
@@ -150,6 +152,10 @@
         private async createAndAddNewChallenge(challenge: Challenge) {
             challenge.id = (await this.$axios.post(`/api/challenge`, challenge)).headers.location;
             await this.$axios.post(`/api/competition/${this.competitionId}/addChallenges`, [challenge]);
+        }
+
+        private async updateChallenge(challenge: Challenge) {
+            await this.$axios.put(`/api/challenge/${challenge.id}`, challenge);
         }
     }
 </script>

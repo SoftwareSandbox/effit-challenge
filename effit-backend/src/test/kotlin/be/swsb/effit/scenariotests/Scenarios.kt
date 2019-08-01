@@ -92,4 +92,13 @@ class Scenarios(val mockMvc: MockMvc,
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
+
+    fun updateChallenge(updatedChallenge: Challenge) {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}",
+                updatedChallenge.id)
+                .content(updatedChallenge.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+    }
 }

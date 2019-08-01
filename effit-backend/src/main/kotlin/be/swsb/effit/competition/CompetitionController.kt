@@ -4,11 +4,13 @@ import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
+import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
+import java.util.*
 
 @RestController
 @RequestMapping("/api/competition",
@@ -84,6 +86,22 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         val competition = findCompetitionOrThrow(competitionId)
 
         competition.removeCompetitor(competitorToBeRemoved.id)
+        competitionRepository.save(competition)
+
+        return ResponseEntity.accepted().build()
+    }
+
+    @PostMapping("{competitionId}/complete/{challengeId}")
+    fun completeChallenge(@PathVariable("competitionId") competitionId: String,
+                          @PathVariable("challengeId") challengeId: UUID,
+                          @RequestBody completerId: CompleterId): ResponseEntity<Any> {
+        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
+
+        competition.challenges.find { it.id == challengeId }
+                ?.let { competition.completeChallenge(it, completerId.competitorId) }
+                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
+
         competitionRepository.save(competition)
 
         return ResponseEntity.accepted().build()

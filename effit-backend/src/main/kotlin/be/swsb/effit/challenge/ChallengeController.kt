@@ -30,4 +30,20 @@ class ChallengeController(private val challengeRepository: ChallengeRepository) 
         val createdChallengeId: String = challengeRepository.save(createChallenge).id.toString()
         return ResponseEntity.created(URI(createdChallengeId)).build()
     }
+
+    @PutMapping("{challengeId}")
+    fun updateChallenge(@PathVariable(value = "challengeId") challengeId: String,
+                        @RequestBody updatedChallenge: Challenge): ResponseEntity<Any> {
+        return challengeRepository.findByIdOrNull(UUID.fromString(challengeId))
+                ?. let {
+                    challengeRepository.save(
+                            it.copy(name = updatedChallenge.name
+                                    ,
+                            points = updatedChallenge.points,
+                            description = updatedChallenge.description)
+                    )
+                    ResponseEntity.ok().build<Any>()
+                }
+                ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found")
+    }
 }
