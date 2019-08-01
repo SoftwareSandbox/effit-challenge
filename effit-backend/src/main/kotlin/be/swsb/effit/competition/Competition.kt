@@ -50,7 +50,13 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun addChallenge(challenge: Challenge) {
+        //TODO: make this work like addCompetitor
         _challenges.add(challenge)
+    }
+
+    fun removeChallenge(challenge: Challenge) {
+        //TODO: make this work like removeCompetitor
+        _challenges.remove(challenge)
     }
 
     fun addCompetitor(competitor: Competitor) {
