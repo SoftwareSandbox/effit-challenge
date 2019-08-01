@@ -1,3 +1,8 @@
+## 2019/08/01 - Reverted decision to NOT cascade Challenges when saving a Competition
+Because I'm too stupid and too lazy to extract **deletion** of challenges on a competition outside of the competition.
+
+It'll be reworked when I switch to CQRS instead of an anemic domain model anyway (and I can't be bothered right now).
+
 ## 2019/07/29 - TIL to use computed getters and setters instead of watch expressions
 I used it to update the endDate when the startDate was updated in CreateCompetition:
 ```

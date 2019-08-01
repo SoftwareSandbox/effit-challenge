@@ -1,6 +1,7 @@
 package be.swsb.effit.competition
 
 import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.challenge.defaultChallengeForTest
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
@@ -27,6 +28,8 @@ class CompetitionRepositoryIntegrationTest {
     lateinit var competitionRepository: CompetitionRepository
     @Autowired
     lateinit var competitorRepository: CompetitorRepository
+    @Autowired
+    lateinit var challengeRepository: ChallengeRepository
     @Autowired
     lateinit var testEntityManager: TestEntityManager
 
@@ -62,27 +65,6 @@ class CompetitionRepositoryIntegrationTest {
         val actual = competitionRepository.findByCompetitionIdentifier(CompetitionId("snarf"))
 
         assertThat(actual).isNull()
-    }
-
-    @Test
-    fun `save does not cascade Challenges of a Competition`() {
-        val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
-        testEntityManager.persist(snowCase2018)
-
-        val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
-
-        val someUnpersistedChallenge = Challenge.defaultChallengeForTest()
-        assertThat(testEntityManager.entityManager.find(Challenge::class.java, someUnpersistedChallenge.id)).isNull()
-
-        existingCompetition.addChallenge(someUnpersistedChallenge)
-
-        assertThatThrownBy {
-            competitionRepository.save(existingCompetition)
-        }
-        testEntityManager.clear()
-
-        val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
-        assertThat(updatedCompetition.challenges).doesNotContain(someUnpersistedChallenge)
     }
 
     @Test
@@ -149,6 +131,29 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.clear()
 
         assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
+    }
+
+    @Test
+    fun `removing Challenge, also cleans up the table`() {
+        val snarf = Challenge.defaultChallengeForTest(name = "snarf")
+        val lionO = Challenge.defaultChallengeForTest(name = "Lion-O")
+        testEntityManager.persist(snarf)
+        testEntityManager.persist(lionO)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val competition = Competition.defaultCompetitionForTest(challenges = listOf(snarf, lionO))
+        competitionRepository.save(competition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        val retrievedCompetition = competitionRepository.getOne(competition.id)
+        retrievedCompetition.removeChallenge(lionO.id)
+        competitionRepository.save(retrievedCompetition)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        assertThat(challengeRepository.findByIdOrNull(lionO.id)).isNull()
     }
 
     @Test

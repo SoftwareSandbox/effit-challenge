@@ -15,7 +15,7 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val startDate: LocalDate,
                                       val endDate: LocalDate) : RestApiExposed {
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "FK_COMPETITION_ID")
     @JsonSetter("challenges")
     private var _challenges: MutableList<Challenge> = mutableListOf()
@@ -54,9 +54,11 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _challenges.add(challenge)
     }
 
-    fun removeChallenge(challenge: Challenge) {
+    fun removeChallenge(challengeId: UUID) {
         //TODO: make this work like removeCompetitor
-        _challenges.remove(challenge)
+        _challenges.find { it.id == challengeId }
+                ?. let { challengeToBeRemoved -> _challenges.remove(challengeToBeRemoved) }
+                ?: throw DomainValidationRuntimeException("No Challenge found on this competition for given id $challengeId")
     }
 
     fun addCompetitor(competitor: Competitor) {

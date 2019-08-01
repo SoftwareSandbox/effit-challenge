@@ -23,6 +23,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
+import java.util.*
 import java.util.UUID.randomUUID
 
 class CompetitionControllerTest : ControllerTest() {
@@ -417,6 +418,42 @@ class CompetitionControllerTest : ControllerTest() {
                 .andExpect(content().json(expectedError.toJson(objectMapper), true))
 
         verify(competitionRepositoryMock, never()).save(compWithChallenges)
+    }
+
+    @Test
+    fun `api_competition_competitionId_removeChallenge_challengeId should remove the given challenge id`() {
+        val givenCompetitionId = "SnowCase2018"
+        val givenChallengeId = randomUUID()
+
+        val challengeThatWillGetDeleted = Challenge.defaultChallengeForTest(id = givenChallengeId)
+        val someOtherChallenge = Challenge.defaultChallengeForTest(id = randomUUID())
+        val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(challengeThatWillGetDeleted, someOtherChallenge))
+
+        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId)))
+                .thenReturn(someCompetition)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
+                givenCompetitionId,
+                givenChallengeId)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk)
+
+        assertThat(someCompetition.challenges)
+                .doesNotContain(challengeThatWillGetDeleted)
+                .contains(someOtherChallenge)
+    }
+
+    @Test
+    fun `api_competition_competitionId_removeChallenge_challengeId should return 404 when no competition found for given id`() {
+        val givenCompetitionId = "SnowCase2018"
+
+        Mockito.`when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
+                givenCompetitionId,
+                randomUUID())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound)
     }
 
     @Test

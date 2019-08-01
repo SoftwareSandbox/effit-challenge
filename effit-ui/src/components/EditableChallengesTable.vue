@@ -114,9 +114,10 @@
             this.showDialog = true;
         }
 
-        private deleteItem(challenge: Challenge) {
+        private async deleteItem(challenge: Challenge) {
             const index = this.challenges.indexOf(challenge);
             confirm('Are you sure you want to delete this challenge?') && this.challenges.splice(index, 1);
+            await this.removeChallenge(challenge);
             this.closeDialog();
         }
 
@@ -156,6 +157,10 @@
 
         private async updateChallenge(challenge: Challenge) {
             await this.$axios.put(`/api/challenge/${challenge.id}`, challenge);
+        }
+
+        private async removeChallenge(challenge: Challenge) {
+            await this.$axios.post(`/api/competition/${this.competitionId}/removeChallenge/${challenge.id}`);
         }
     }
 </script>

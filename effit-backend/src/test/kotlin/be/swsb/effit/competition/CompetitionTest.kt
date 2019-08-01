@@ -207,4 +207,28 @@ class CompetitionTest {
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy{ someCompetition.completeChallenge(someChallenge, UUID.randomUUID()) }
     }
+
+    @Test
+    fun `removeChallenge when given challenge id not found on competition, should throw exception`() {
+        val someChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge))
+
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy{ someCompetition.removeChallenge(UUID.randomUUID()) }
+    }
+
+    @Test
+    fun `removeChallenge when given challenge id found on competition, should remove challenge`() {
+        val someChallenge = Challenge.defaultChallengeForTest()
+        val otherChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge, otherChallenge))
+
+        someCompetition.removeChallenge(someChallenge.id)
+
+        assertThat(someCompetition.challenges)
+                .doesNotContain(someChallenge)
+                .contains(otherChallenge)
+    }
 }
