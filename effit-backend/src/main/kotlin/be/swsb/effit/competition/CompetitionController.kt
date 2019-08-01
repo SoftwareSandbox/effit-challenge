@@ -4,13 +4,11 @@ import be.swsb.effit.challenge.Challenge
 import be.swsb.effit.challenge.ChallengeRepository
 import be.swsb.effit.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.CompetitorRepository
-import be.swsb.effit.competition.competitor.CompleterId
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
-import java.util.*
 
 @RestController
 @RequestMapping("/api/competition",
@@ -52,7 +50,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     @PostMapping("{competitionId}/unstart")
-    fun unsstartCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
+    fun unstartCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
         return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?.let {
                     unstartCompetition(it)
@@ -67,15 +65,6 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
                 ?.let { addChallengesAndSaveCompetition(it, challengesToBeAdded) }
                 ?: ResponseEntity.notFound().build()
-    }
-
-    private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
-        challengesToBeAdded.forEach {
-            val persistedChallenge = challengeRepository.save(it)
-            foundCompetition.addChallenge(persistedChallenge)
-        }
-        competitionRepository.save(foundCompetition)
-        return ResponseEntity.accepted().build()
     }
 
     @PostMapping("{competitionId}/addCompetitor")
@@ -100,19 +89,12 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         return ResponseEntity.accepted().build()
     }
 
-    @PostMapping("{competitionId}/complete/{challengeId}")
-    fun completeChallenge(@PathVariable("competitionId") competitionId: String,
-                          @PathVariable("challengeId") challengeId: UUID,
-                          @RequestBody completerId: CompleterId): ResponseEntity<Any> {
-        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
-
-        competition.challenges.find { it.id == challengeId }
-                ?.let { competition.completeChallenge(it, completerId.competitorId) }
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
-
-        competitionRepository.save(competition)
-
+    private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
+        challengesToBeAdded.forEach {
+            val persistedChallenge = challengeRepository.save(it)
+            foundCompetition.addChallenge(persistedChallenge)
+        }
+        competitionRepository.save(foundCompetition)
         return ResponseEntity.accepted().build()
     }
 
