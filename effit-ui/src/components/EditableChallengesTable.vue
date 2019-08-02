@@ -116,20 +116,21 @@
 
         private async deleteItem(challenge: Challenge) {
             const index = this.challenges.indexOf(challenge);
-            confirm('Are you sure you want to delete this challenge?') && this.challenges.splice(index, 1);
+            confirm('Are you sure you want to delete this challenge?');
             await this.removeChallenge(challenge);
+            await this.reloadChallenges();
             this.closeDialog();
         }
 
         private async saveEdit(challenge: Challenge) {
             if (this.editingNewChallenge) {
-                this.challenges.push(Object.assign({}, challenge));
                 await this.createAndAddNewChallenge(challenge);
-                this.showSnackBar("Created a new Challenge!");
+                await this.reloadChallenges();
+                this.showSnackBar('Created a new Challenge!');
             } else {
-                Object.assign(this.challenges[this.editedIndex], challenge);
                 await this.updateChallenge(challenge);
-                this.showSnackBar("Challenge successfully updated.");
+                await this.reloadChallenges();
+                this.showSnackBar('Challenge successfully updated.');
             }
             this.closeDialog();
         }
@@ -161,6 +162,10 @@
 
         private async removeChallenge(challenge: Challenge) {
             await this.$axios.post(`/api/competition/${this.competitionId}/removeChallenge/${challenge.id}`);
+        }
+
+        private async reloadChallenges() {
+            this.challenges = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data.challenges;
         }
     }
 </script>
