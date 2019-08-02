@@ -37,8 +37,7 @@ class ChallengeController(private val challengeRepository: ChallengeRepository) 
         return challengeRepository.findByIdOrNull(UUID.fromString(challengeId))
                 ?. let {
                     challengeRepository.save(
-                            it.copy(name = updatedChallenge.name
-                                    ,
+                            it.copy(name = updatedChallenge.name,
                             points = updatedChallenge.points,
                             description = updatedChallenge.description)
                     )
