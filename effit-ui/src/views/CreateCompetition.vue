@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import DateField from '@/components/DateField.vue';
     import ChallengesTable from '@/components/ChallengesTable.vue';
     import ChallengeCard from '@/components/ChallengeCard.vue';
@@ -46,6 +46,7 @@
         components: {ChallengeCard, ChallengesTable, DateField},
     })
     export default class CreateCompetition extends Vue {
+        @Prop({type: String}) public competitionId!: string;
         protected name = '';
         protected backedStartDate = new Date().toISOString().substr(0, 10);
         protected endDate = new Date().toISOString().substr(0, 10);
@@ -61,6 +62,17 @@
             this.$store.commit('updateTitle', 'New Competition');
             this.challenges = (await this.$axios.get(`/api/challenge`)).data.map(this.expandWithSelectedProperty);
             this.rowsPerPageItems.push(this.challenges.length);
+            await this.hostAgain();
+        }
+
+        private async hostAgain() {
+            if (!!this.competitionId) {
+                const competitionToHostAgain = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
+                this.name = competitionToHostAgain.name;
+                this.backedStartDate = competitionToHostAgain.startDate;
+                this.endDate = competitionToHostAgain.endDate;
+                this.showSnackBar(`Successfully cloned ${competitionToHostAgain.name}. Don't forget to update the dates!`);
+            }
         }
 
         private expandWithSelectedProperty(challenge: Challenge) {

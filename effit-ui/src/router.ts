@@ -37,6 +37,12 @@ export default new Router({
       component: CreateCompetition,
     },
     {
+      name: 'HostAgain',
+      path: '/competitions/hostagain/:competitionId',
+      component: CreateCompetition,
+      props: true,
+    },
+    {
       name: 'competitionDetail',
       path: '/competitions/:competitionId',
       component: CompetitionDetail,

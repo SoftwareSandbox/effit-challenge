@@ -1,6 +1,11 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout align-start justify-start column fill-height>
-        <h2>{{competition.startDate}} - {{competition.endDate}}</h2>
+        <h3>
+            <v-layout row justify-space-between align-center>
+                <div>{{competition.startDate}} - {{competition.endDate}}</div>
+                <v-btn @click="hostAgain">Host again</v-btn>
+            </v-layout>
+        </h3>
 
         <v-btn v-if="!competition.started" @click="startCompetition">Start Competition</v-btn>
 
@@ -137,6 +142,11 @@
 
         private byTotalScore(items: Competitor[], index: number): Competitor[] {
             return items.sort((a, b) => b.totalScore - a.totalScore);
+        }
+
+        private hostAgain() {
+            // navigate to createCompetition with an ID of this.competition that should serve as a clone
+            this.$router.push(`/competitions/hostagain/${this.competitionId}`);
         }
     }
 </script>
