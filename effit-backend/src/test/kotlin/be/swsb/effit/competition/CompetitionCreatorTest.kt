@@ -8,21 +8,21 @@ import java.time.LocalDate
 class CompetitionCreatorTest {
 
     @Test
-    fun `from - without startDate delegates properly`() {
+    fun `without startDate delegates properly`() {
         val endDate = LocalDate.now().plusDays(5)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", null, endDate))
         assertThat(actual.startDate).isNotNull()
     }
 
     @Test
-    fun `from - without endDate delegates properly`() {
+    fun `without endDate delegates properly`() {
         val startDate = LocalDate.now().minusDays(8)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", startDate, null))
         assertThat(actual.endDate).isNotNull()
     }
 
     @Test
-    fun `from - with both start and endDate not null delegates properly`() {
+    fun `with both start and endDate not null delegates properly`() {
         val startDate = LocalDate.now().minusDays(8)
         val endDate = LocalDate.now().plusDays(8)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", startDate, endDate))
@@ -31,7 +31,7 @@ class CompetitionCreatorTest {
     }
 
     @Test
-    fun `from - Cannot create a Competition without both a start and end date`() {
+    fun `Cannot create a Competition without both a start and end date`() {
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy {
                     CompetitionCreator().from(CreateCompetition("unimportant", null, null))
@@ -40,7 +40,7 @@ class CompetitionCreatorTest {
     }
 
     @Test
-    fun `from - name is null, cannot create a Competition without a name`() {
+    fun `name is null, cannot create a Competition without a name`() {
         val startDate = LocalDate.now().minusDays(8)
         val endDate = LocalDate.now().plusDays(8)
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
@@ -51,7 +51,7 @@ class CompetitionCreatorTest {
     }
 
     @Test
-    fun `from - name is blank, cannot create a Competition without a name`() {
+    fun `name is blank, cannot create a Competition without a name`() {
         val startDate = LocalDate.now().minusDays(8)
         val endDate = LocalDate.now().plusDays(8)
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
@@ -59,5 +59,25 @@ class CompetitionCreatorTest {
                     CompetitionCreator().from(CreateCompetition(" ", startDate, endDate))
                 }
                 .withMessage("Cannot create a Competition without a name")
+    }
+
+    @Test
+    fun `name contains more than 25 characters, should throw exception`() {
+        val startDate = LocalDate.now().minusDays(8)
+        val endDate = LocalDate.now().plusDays(8)
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy {
+                    CompetitionCreator().from(CreateCompetition("a".repeat(26), startDate, endDate))
+                }
+                .withMessage("Cannot create a Competition with a name longer than 25 characters")
+    }
+
+    @Test
+    fun `name contains exactly 25 characters, should not throw exception`() {
+        val startDate = LocalDate.now().minusDays(8)
+        val endDate = LocalDate.now().plusDays(8)
+        val nameOfExactly25Characters = "a".repeat(25)
+        val createdCompetition = CompetitionCreator().from(CreateCompetition(nameOfExactly25Characters, startDate, endDate))
+        assertThat(createdCompetition.name).isEqualTo(nameOfExactly25Characters)
     }
 }

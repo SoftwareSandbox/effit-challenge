@@ -42,7 +42,7 @@ class CompletingChallengesScenarioTest {
         val whingeChallenge = Challenge(name = "Whinge", points = 4, description = "Whinge at any point during the day")
         scenarios.createNewChallenge(whingeChallenge)
 
-        val competition = CreateCompetition(name = "ThundercatsCompetition 2019",
+        val competition = CreateCompetition(name = "ThundercatsCompo 2019",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition)

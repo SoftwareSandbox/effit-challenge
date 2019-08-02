@@ -9,6 +9,9 @@ class CompetitionCreator {
         if (createCompetition.name.isNullOrBlank()) {
             throw DomainValidationRuntimeException("Cannot create a Competition without a name")
         }
+        if (createCompetition.name.length > 25) {
+            throw DomainValidationRuntimeException("Cannot create a Competition with a name longer than 25 characters")
+        }
 
         return when {
             createCompetition.startDate != null && createCompetition.endDate != null

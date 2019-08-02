@@ -101,7 +101,7 @@ class CreatingCompetitionsScenarioTest {
         val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
         scenarios.createNewChallenge(challengeToBeCreated)
 
-        val competition = CreateCompetition(name = "Competition with Challenges",
+        val competition = CreateCompetition(name = "CompetitionWChallenges",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)

@@ -3,7 +3,7 @@
         <v-form>
             <v-text-field
                     v-model="name"
-                    :counter="50"
+                    :counter="25"
                     label="Name"
                     :rules="nameValidators"
             ></v-text-field>
