@@ -16,6 +16,7 @@
                         <v-container column align-start justify-start>
                             <v-text-field
                                     v-model="editableChallenge.name"
+                                    :autofocus="true"
                                     :counter="50"
                                     label="Name"
                                     required
@@ -90,7 +91,6 @@
         };
         private showDialog: boolean = false;
         private editedIndex = -1;
-
 
         @Prop({type: Array}) private challenges !: Challenge[];
         @Prop({type: Function}) private rowHandler !: (challenge: Challenge) => void;
