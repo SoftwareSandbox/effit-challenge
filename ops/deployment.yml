@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: effit-challenge-webapp
+      annotations:
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8082"
+        prometheus.io/scrape: "true"
     spec:
       containers:
         - name: effit-app
