@@ -1,3 +1,14 @@
+## 2019/08/03 - K8s learnings
+Deployments: some runtime for an application or service (a deployment really is a composition of a pod and a replica set).
+
+Services: A Service is a layer required for service discovery, allows discovering a deployment within the Kubernetes Cluster.
+
+Pods: For example my stateless web application, multiple containers can be run in one pod.
+
+Operators: Considered as the _glue_ between kubernetes and an app or service (e.g. postgres), usually supplied by developer communities (like zalando) 
+
+Ingress: Mainly functions as an http proxy for services. Based on NGINX. 
+
 ## 2019/08/01 - Reverted decision to NOT cascade Challenges when saving a Competition
 Because I'm too stupid and too lazy to extract **deletion** of challenges on a competition outside of the competition.
 
