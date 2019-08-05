@@ -1,0 +1,26 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  labels:
+    team: acid
+  name: acid-jesus
+  namespace: default
+spec:
+  allowedSourceRanges: null
+  databases:
+    effitchallenge: effit-app
+  numberOfInstances: 1
+  postgresql:
+    version: '11'
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
+  teamId: acid
+  users:
+    effit-app: []
+  volume:
+    size: 10Gi
