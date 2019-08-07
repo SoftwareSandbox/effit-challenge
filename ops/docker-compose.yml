@@ -15,6 +15,5 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
   effit_db:
     build: ./postgres/
-    restart: always
     ports:
         - "5544:5432"
