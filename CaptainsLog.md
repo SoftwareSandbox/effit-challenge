@@ -1,3 +1,33 @@
+## 2019/08/21 - GitHub Actions learnings
+
+Tutorial worked great! 
+
+Defined a workflow in `main.yml`.
+
+Workflow > Jobs > Builds > Steps
+
+A `step` can (re-)use an `Action`.
+
+### Questions!
+### Q1
+How do I trigger workflows, jobs, or steps conditionally based on a branch?
+
+Having multiple .yml files in .github/workflows doesn't seem to work. (no additional workflows are listed in actions menu).
+
+Googling stuff like that is horrible because you end up with results on _GitHub Flow_ or projects, but not _GitHub Actions Workflows_.
+
+### Q2
+Does `${{ secrets.SECRET }}` get shown (not asterisked) when you `EXPORT sekret = ${{ secrets.SECRET }}` it?
+
+I (think I) need that because those ${{}} substitution doesn't get done when you `- run: ./someScript.sh`.
+
+### Q3
+Where can I find what the `github` context entails? I've been looking for docs, but can't find any. Is it just the webhook event?
+
+### Q4
+Add feature request to also asterisk GitHub secrets values (to be streamer friendly).
+
+
 ## 2019/08/03 - K8s learnings
 Deployments: some runtime for an application or service (a deployment really is a composition of a pod and a replica set).
 
