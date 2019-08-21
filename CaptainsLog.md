@@ -27,6 +27,8 @@ Where can I find what the `github` context entails? I've been looking for docs, 
 ### Q4
 Add feature request to also asterisk GitHub secrets values (to be streamer friendly).
 
+### Q5
+Try out Java 12 version of the java action.
 
 ## 2019/08/03 - K8s learnings
 Deployments: some runtime for an application or service (a deployment really is a composition of a pod and a replica set).
