@@ -1,6 +1,3 @@
-## 2019/08/21 - GitHub Actions!
-
-
 ## 2019/08/03 - K8s learnings
 Deployments: some runtime for an application or service (a deployment really is a composition of a pod and a replica set).
 
