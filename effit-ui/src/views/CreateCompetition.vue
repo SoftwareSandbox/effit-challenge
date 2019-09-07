@@ -60,21 +60,29 @@
 
         private async mounted() {
             this.$store.commit('updateTitle', 'New Competition');
-            this.challenges = (await this.$axios.get(`/api/challenge`)).data.map(this.expandWithSelectedProperty());
-            this.rowsPerPageItems.push(this.challenges.length);
-            await this.hostAgain();
+            await this.updateProperties();
         }
 
-        private async hostAgain() {
-            if (!!this.competitionId) {
+        private async updateProperties() {
+            if (this.hostAgain) {
                 const competitionToHostAgain = (await this.$axios.get(`/api/competition/${this.competitionId}`)).data;
                 this.name = competitionToHostAgain.name;
                 this.backedStartDate = competitionToHostAgain.startDate;
                 this.endDate = competitionToHostAgain.endDate;
+                this.updateChallenges(competitionToHostAgain.challenges, true);
                 this.showSnackBar(`Successfully cloned ${competitionToHostAgain.name}. Don't forget to update the dates!`);
-                this.challenges = competitionToHostAgain.challenges.map(this.expandWithSelectedProperty(true));
-                this.rowsPerPageItems.push(this.challenges.length);
+            } else {
+                this.updateChallenges((await this.$axios.get(`/api/challenge`)).data);
             }
+        }
+
+        private get hostAgain() {
+            return !!this.competitionId;
+        }
+
+        private updateChallenges(challenges: [Challenge], selected: boolean = false) {
+            this.challenges = challenges.map(this.expandWithSelectedProperty(selected));
+            this.rowsPerPageItems.push(this.challenges.length);
         }
 
         private expandWithSelectedProperty(selected: boolean = false) {
