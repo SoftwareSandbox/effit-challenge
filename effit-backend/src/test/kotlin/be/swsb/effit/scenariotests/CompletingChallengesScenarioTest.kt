@@ -40,7 +40,6 @@ class CompletingChallengesScenarioTest {
     @Test
     fun `Snarf completes the whinge challenge and gets awarded 4 points`() {
         val whingeChallenge = Challenge(name = "Whinge", points = 4, description = "Whinge at any point during the day")
-        scenarios.createNewChallenge(whingeChallenge)
 
         val competition = CreateCompetition(name = "ThundercatsCompo 2019",
                 startDate = LocalDate.of(2018, 3, 16),

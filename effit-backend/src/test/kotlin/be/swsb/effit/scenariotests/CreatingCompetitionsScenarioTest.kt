@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [EffitApplication::class])
@@ -79,27 +80,27 @@ class CreatingCompetitionsScenarioTest {
     }
 
     @Test
-    fun `Challenges should get copied when being added to a Competition`() {
+    fun `Challenges should get copied when hosting a Competition again`() {
         val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
-        val createdChallengeLocation = scenarios.createNewChallenge(challengeToBeCreated)
 
         val competition = CreateCompetition(name = "DummyCompetition",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)
+        val originalChallengeId = scenarios.getCompetition(competitionId).challenges.first().id
 
-        assertThat(scenarios.getCompetition(competitionId).challenges)
-                .extracting<String> { it.id.toString() }
-                .doesNotContain(createdChallengeLocation)
+        val hostedAgainCompetition = CreateCompetition(name = "DummyCompetitionThe2nd",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val hostedAgainCompetitionId = scenarios.createNewCompetition(hostedAgainCompetition, challengeToBeCreated)
 
-        val challengeThatGotCopied = scenarios.getChallenge(createdChallengeLocation)
-        assertThat(challengeThatGotCopied).isEqualTo(challengeToBeCreated)
+        assertThat(scenarios.getCompetition(hostedAgainCompetitionId).challenges.first().id)
+                .isNotEqualTo(originalChallengeId)
     }
 
     @Test
     fun `Challenges can get updated when a Competition is not yet started`() {
         val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
-        scenarios.createNewChallenge(challengeToBeCreated)
 
         val competition = CreateCompetition(name = "CompetitionWChallenges",
                 startDate = LocalDate.of(2018, 3, 16),

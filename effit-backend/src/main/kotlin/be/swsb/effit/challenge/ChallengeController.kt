@@ -13,22 +13,11 @@ import java.util.*
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 class ChallengeController(private val challengeRepository: ChallengeRepository) {
 
-    @GetMapping
-    fun allChallenges(): ResponseEntity<List<Challenge>> {
-        return ResponseEntity.ok(challengeRepository.findAll())
-    }
-
     @GetMapping("{challengeId}")
     fun challengeDetail(@PathVariable(value = "challengeId") challengeId: String): ResponseEntity<Challenge> {
         return challengeRepository.findByIdOrNull(UUID.fromString(challengeId))
                 ?.let { ResponseEntity.ok(it) }
                 ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found")
-    }
-
-    @PostMapping
-    fun createChallenge(@RequestBody createChallenge: CreateChallenge): ResponseEntity<Any> {
-        val createdChallengeId: String = challengeRepository.save(createChallenge).id.toString()
-        return ResponseEntity.created(URI(createdChallengeId)).build()
     }
 
     @PutMapping("{challengeId}")
