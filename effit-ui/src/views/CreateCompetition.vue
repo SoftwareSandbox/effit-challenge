@@ -13,6 +13,7 @@
 
             <v-data-iterator
                     :items="challenges"
+                    v-if="hostAgain"
                     :rows-per-page-items="rowsPerPageItems"
                     :pagination.sync="pagination"
                     content-tag="div"
@@ -71,8 +72,6 @@
                 this.endDate = competitionToHostAgain.endDate;
                 this.updateChallenges(competitionToHostAgain.challenges, true);
                 this.showSnackBar(`Successfully cloned ${competitionToHostAgain.name}. Don't forget to update the dates!`);
-            } else {
-                this.updateChallenges((await this.$axios.get(`/api/challenge`)).data);
             }
         }
 
