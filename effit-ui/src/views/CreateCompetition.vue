@@ -71,7 +71,7 @@
                 this.name = competitionToHostAgain.name;
                 this.backedStartDate = competitionToHostAgain.startDate;
                 this.endDate = competitionToHostAgain.endDate;
-                this.updateChallenges(competitionToHostAgain.challenges, true);
+                this.updateChallenges(competitionToHostAgain.challenges);
                 this.showSnackBar(`Successfully cloned ${competitionToHostAgain.name}. Don't forget to update the dates!`);
             }
         }
@@ -80,15 +80,13 @@
             return !!this.competitionId;
         }
 
-        private updateChallenges(challenges: [Challenge], selected: boolean = false) {
-            this.challenges = challenges.map(this.expandWithSelectedProperty(selected));
+        private updateChallenges(challenges: [Challenge]) {
+            this.challenges = challenges.map(this.expandWithSelectedProperty);
             this.rowsPerPageItems.push(this.challenges.length);
         }
 
-        private expandWithSelectedProperty(selected: boolean = false) {
-            return (challenge: Challenge) => {
-                return {...challenge, ...{selected}};
-            };
+        private expandWithSelectedProperty(challenge: Challenge) {
+            return {...challenge, ...{selected: true}};
         }
 
         private async submit() {
