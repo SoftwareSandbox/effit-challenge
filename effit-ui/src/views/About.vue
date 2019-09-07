@@ -1,7 +1,7 @@
 <template>
   <v-layout column align-start justify-start fill-height>
     <p>It helps you organise competitions among friends that feature challenges. More specifically it facilitates administration.</p>
-    <p>Get started now! First <router-link to="challenges/create">create some challenges</router-link>, to then <router-link to="competitions/create">create a competition</router-link>, and inviting your friends!</p>
+    <p>Get started now! <router-link to="competitions/create">Create a new competition</router-link>, or start from <router-link to="competitions">an existing one</router-link>. To then invite your friends!</p>
     <p>Remember to play nice!</p>
   </v-layout>
 </template>
