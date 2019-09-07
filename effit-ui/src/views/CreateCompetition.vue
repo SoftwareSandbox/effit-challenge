@@ -29,6 +29,7 @@
             </v-data-iterator>
 
             <v-btn @click="submit">submit</v-btn>
+            <v-btn @click="cancel">cancel</v-btn>
         </v-form>
 
     </v-layout>
@@ -97,6 +98,10 @@
                 this.selectedChallenges());
             this.showSnackBar(`Successfully created your new Competition!`);
             this.navigateToCreatedCompetition();
+        }
+
+        private cancel() {
+            this.$router.push('/');
         }
 
         set startDate(newDate: string) {
