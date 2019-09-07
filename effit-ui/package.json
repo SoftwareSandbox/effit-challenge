@@ -27,6 +27,7 @@
     "axios": "^0.19.0",
     "babel-core": "7.0.0-bridge.0",
     "fibers": "^3.1.1",
+    "mem": "^5.1.1",
     "sass": "^1.17.2",
     "sass-loader": "^7.1.0",
     "stylus": "^0.54.5",
