@@ -152,7 +152,6 @@
         }
 
         private async createAndAddNewChallenge(challenge: Challenge) {
-            challenge.id = (await this.$axios.post(`/api/challenge`, challenge)).headers.location;
             await this.$axios.post(`/api/competition/${this.competitionId}/addChallenges`, [challenge]);
         }
 
