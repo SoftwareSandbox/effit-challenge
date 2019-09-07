@@ -60,7 +60,7 @@
 
         private async mounted() {
             this.$store.commit('updateTitle', 'New Competition');
-            this.challenges = (await this.$axios.get(`/api/challenge`)).data.map(this.expandWithSelectedProperty);
+            this.challenges = (await this.$axios.get(`/api/challenge`)).data.map(this.expandWithSelectedProperty());
             this.rowsPerPageItems.push(this.challenges.length);
             await this.hostAgain();
         }
@@ -72,11 +72,15 @@
                 this.backedStartDate = competitionToHostAgain.startDate;
                 this.endDate = competitionToHostAgain.endDate;
                 this.showSnackBar(`Successfully cloned ${competitionToHostAgain.name}. Don't forget to update the dates!`);
+                this.challenges = competitionToHostAgain.challenges.map(this.expandWithSelectedProperty(true));
+                this.rowsPerPageItems.push(this.challenges.length);
             }
         }
 
-        private expandWithSelectedProperty(challenge: Challenge) {
-            return {...challenge, ...{selected: false}};
+        private expandWithSelectedProperty(selected: boolean = false) {
+            return (challenge: Challenge) => {
+                return {...challenge, ...{selected}};
+            };
         }
 
         private async submit() {
