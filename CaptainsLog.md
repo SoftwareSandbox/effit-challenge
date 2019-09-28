@@ -4,13 +4,11 @@
 Plan of attack:
 * [x] introduce hexagonal just as packages first
 * [x] extract domain from effit-backend as is
+* [ ] introduce mapping stuff between future module dependencies
+    * [ ] move to using queries
+    * [ ] move to using commands
 * [ ] extract modules out of packages
-* [ ] the domain's write side (commands)
-* [ ] the domain's read side (queries + projections of our domain)
-* [ ] the domain's Core
-* [ ] the domain's API
-* [ ] the domain's UI layer
-* [ ] the domain's Persistence layer
+* [ ] try to get rid of H2 dependency (see where it breaks if I do)
 * [ ] get rid of hibernate and replace with something else (let's try spring data jdbc)
 
 Copied `effit-backend` to `effit-cqrs-backend` so I can continuously refer to both architectures on stream.

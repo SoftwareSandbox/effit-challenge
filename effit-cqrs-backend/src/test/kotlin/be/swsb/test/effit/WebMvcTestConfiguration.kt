@@ -3,6 +3,7 @@ package be.swsb.test.effit
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
+import be.swsb.effit.domain.query.QueryExecutor
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -19,4 +20,6 @@ class WebMvcTestConfiguration {
     lateinit var competitorRepository: CompetitorRepository
     @MockBean
     lateinit var challengeRepository: ChallengeRepository
+    @MockBean
+    lateinit var queryExecutor: QueryExecutor
 }
