@@ -1,22 +1,25 @@
 ## 2019/09/28 - Start of moving to CQRS
 `Command and Query Responsibility Segregation`
 
-effit-backend
+Plan of attack:
+* [x] introduce hexagonal just as packages first
+* [x] extract domain from effit-backend as is
+* [ ] extract modules out of packages
 * [ ] the domain's write side (commands)
 * [ ] the domain's read side (queries + projections of our domain)
-* [ ] the domain's core
+* [ ] the domain's Core
 * [ ] the domain's API
-* [ ] the domain's persistence layer
+* [ ] the domain's UI layer
+* [ ] the domain's Persistence layer
 * [ ] get rid of hibernate and replace with something else (let's try spring data jdbc)
 
-alternative
-* [ ] keep effit-backend as is (move to persistence layer)
-* [ ] extract domain from effit-backend as is
-* [ ] map to and from persistence layer
-* [ ] start writing commands
-* [ ] move to spring jdbc
-
 Copied `effit-backend` to `effit-cqrs-backend` so I can continuously refer to both architectures on stream.
+
+Check out the module dependency diagram:
+
+![](docs/diagrams/Effit-Module-Dependency-Diagram.png)
+
+
 
 ## 2019/08/21 - GitHub Actions learnings
 
