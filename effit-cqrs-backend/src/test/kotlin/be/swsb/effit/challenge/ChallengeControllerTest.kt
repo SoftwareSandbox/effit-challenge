@@ -1,6 +1,7 @@
 package be.swsb.effit.challenge
 
-import be.swsb.effit.adapter.ui.challenge.ChallengeRepository
+import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
+import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.exceptions.EffitError
 import be.swsb.effit.util.toJson
 import be.swsb.test.effit.ControllerTest

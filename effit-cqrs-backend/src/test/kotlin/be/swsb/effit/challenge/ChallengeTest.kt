@@ -1,5 +1,6 @@
 package be.swsb.effit.challenge
 
+import be.swsb.effit.domain.core.challenge.Challenge
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

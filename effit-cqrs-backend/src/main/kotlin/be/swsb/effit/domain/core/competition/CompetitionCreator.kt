@@ -1,5 +1,6 @@
-package be.swsb.effit.competition
+package be.swsb.effit.domain.core.competition
 
+import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.springframework.stereotype.Component
 

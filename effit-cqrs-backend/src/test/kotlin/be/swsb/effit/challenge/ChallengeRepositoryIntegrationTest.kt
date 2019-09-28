@@ -1,6 +1,7 @@
 package be.swsb.effit.challenge
 
-import be.swsb.effit.adapter.ui.challenge.ChallengeRepository
+import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
+import be.swsb.effit.domain.core.challenge.Challenge
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

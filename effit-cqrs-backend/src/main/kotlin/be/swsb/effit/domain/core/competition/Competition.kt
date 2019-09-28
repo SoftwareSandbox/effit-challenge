@@ -1,7 +1,7 @@
-package be.swsb.effit.competition
+package be.swsb.effit.domain.core.competition
 
-import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import be.swsb.effit.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter

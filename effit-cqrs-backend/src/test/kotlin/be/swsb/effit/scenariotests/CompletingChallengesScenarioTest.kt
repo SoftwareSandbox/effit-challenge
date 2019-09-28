@@ -1,9 +1,9 @@
 package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitApplication
-import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.competition.CreateCompetition
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
 import com.fasterxml.jackson.databind.ObjectMapper

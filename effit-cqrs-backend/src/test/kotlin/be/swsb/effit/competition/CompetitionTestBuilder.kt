@@ -1,9 +1,7 @@
 package be.swsb.effit.competition
 
-import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.challenge.defaultChallengeForTest
-import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.domain.core.competition.competitor.Competitor
 import java.time.LocalDate
 
 fun Competition.Companion.defaultCompetitionForTest(

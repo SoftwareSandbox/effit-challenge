@@ -1,9 +1,13 @@
 package be.swsb.effit.competition
 
-import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.challenge.defaultChallengeForTest
-import be.swsb.effit.competition.competitor.Competitor
+import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.core.competition.CompetitionId
+import be.swsb.effit.domain.core.competition.CompetitorNotFoundOnCompetitionDomainException
+import be.swsb.effit.domain.core.competition.UnableToAddCompetitorToStartedCompetitionDomainException
+import be.swsb.effit.domain.core.competition.UnableToRemoveCompetitorOfAStartedCompetitionDomainException
 import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test

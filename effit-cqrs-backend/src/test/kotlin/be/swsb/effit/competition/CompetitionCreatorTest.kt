@@ -1,5 +1,7 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.core.competition.CompetitionCreator
 import be.swsb.effit.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test

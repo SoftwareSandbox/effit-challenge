@@ -1,11 +1,11 @@
 package be.swsb.effit.scenariotests
 
-import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.competition.Competition
-import be.swsb.effit.competition.CompetitionId
-import be.swsb.effit.competition.CreateCompetition
-import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.competition.competitor.CompleterId
+import be.swsb.effit.domain.core.competition.CompetitionId
+import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.util.toJson
 import com.fasterxml.jackson.databind.ObjectMapper

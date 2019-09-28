@@ -1,11 +1,13 @@
 package be.swsb.effit.competition
 
-import be.swsb.effit.challenge.Challenge
-import be.swsb.effit.adapter.ui.challenge.ChallengeRepository
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
+import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.challenge.defaultChallengeForTest
-import be.swsb.effit.competition.competitor.Competitor
-import be.swsb.effit.competition.competitor.CompetitorRepository
+import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.core.competition.CompetitionId
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException

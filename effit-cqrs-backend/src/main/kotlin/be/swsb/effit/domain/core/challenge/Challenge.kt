@@ -1,4 +1,4 @@
-package be.swsb.effit.challenge
+package be.swsb.effit.domain.core.challenge
 
 import be.swsb.effit.util.RestApiExposed
 import java.util.*

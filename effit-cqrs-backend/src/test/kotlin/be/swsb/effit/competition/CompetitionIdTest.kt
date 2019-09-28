@@ -1,11 +1,10 @@
 package be.swsb.effit.competition
 
+import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.exceptions.DomainValidationRuntimeException
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class CompetitionIdTest {
 

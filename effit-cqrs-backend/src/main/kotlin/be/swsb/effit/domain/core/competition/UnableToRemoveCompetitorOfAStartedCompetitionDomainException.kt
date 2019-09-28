@@ -1,4 +1,4 @@
-package be.swsb.effit.competition
+package be.swsb.effit.domain.core.competition
 
 import be.swsb.effit.exceptions.DomainRuntimeException
 import be.swsb.effit.exceptions.HttpStatusCode

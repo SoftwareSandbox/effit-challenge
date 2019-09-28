@@ -1,7 +1,9 @@
 package be.swsb.effit.competition.competitor
 
-import be.swsb.effit.challenge.Challenge
+import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
+import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.challenge.defaultChallengeForTest
+import be.swsb.effit.domain.core.competition.competitor.Competitor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
