@@ -1,9 +1,9 @@
 package be.swsb.effit.scenariotests
 
-import be.swsb.effit.EffitApplication
+import be.swsb.effit.EffitCqrsApplication
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.util.toJson
+import be.swsb.effit.adapter.ui.util.toJson
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
 
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(classes = [EffitApplication::class])
+@SpringBootTest(classes = [EffitCqrsApplication::class])
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CreatingCompetitionsScenarioTest {

@@ -1,7 +1,7 @@
 package be.swsb.effit.domain.core.competition
 
 import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.exceptions.DomainValidationRuntimeException
+import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
 import org.springframework.stereotype.Component
 
 @Component

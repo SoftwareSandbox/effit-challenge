@@ -1,11 +1,11 @@
 package be.swsb.effit.scenariotests
 
-import be.swsb.effit.EffitApplication
+import be.swsb.effit.EffitCqrsApplication
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.competition.competitor.defaultCompetitorForTest
-import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
+import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import java.time.LocalDate
 
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(classes = [EffitApplication::class])
+@SpringBootTest(classes = [EffitCqrsApplication::class])
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CompletingChallengesScenarioTest {

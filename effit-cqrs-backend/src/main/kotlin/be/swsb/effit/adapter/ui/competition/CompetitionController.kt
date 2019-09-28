@@ -11,7 +11,7 @@ import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.domain.core.competition.CompetitionCreator
 import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
+import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

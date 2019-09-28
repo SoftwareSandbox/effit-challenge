@@ -1,13 +1,13 @@
 package be.swsb.effit.scenariotests
 
 import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
-import be.swsb.effit.competition.competitor.defaultCompetitorForTest
-import be.swsb.effit.util.toJson
+import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.adapter.ui.util.toJson
+import be.swsb.effit.domain.core.competition.Competition
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpHeaders

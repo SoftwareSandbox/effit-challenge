@@ -1,6 +1,6 @@
 package be.swsb.effit.domain.core.challenge
 
-import be.swsb.effit.util.RestApiExposed
+import be.swsb.effit.adapter.ui.util.RestApiExposed
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id

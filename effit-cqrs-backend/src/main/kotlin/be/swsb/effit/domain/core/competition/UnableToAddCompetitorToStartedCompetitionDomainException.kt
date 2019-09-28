@@ -1,7 +1,7 @@
 package be.swsb.effit.domain.core.competition
 
-import be.swsb.effit.exceptions.DomainRuntimeException
-import be.swsb.effit.exceptions.HttpStatusCode
+import be.swsb.effit.domain.core.exceptions.DomainRuntimeException
+import be.swsb.effit.domain.core.exceptions.HttpStatusCode
 
 class UnableToAddCompetitorToStartedCompetitionDomainException
     : DomainRuntimeException(

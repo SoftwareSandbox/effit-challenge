@@ -2,7 +2,7 @@ package be.swsb.effit.adapter.ui.challenge
 
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.exceptions.EntityNotFoundDomainRuntimeException
+import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

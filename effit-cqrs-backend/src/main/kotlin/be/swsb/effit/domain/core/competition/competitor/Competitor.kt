@@ -1,7 +1,7 @@
 package be.swsb.effit.domain.core.competition.competitor
 
 import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.util.RestApiExposed
+import be.swsb.effit.adapter.ui.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.util.*
 import javax.persistence.Entity
