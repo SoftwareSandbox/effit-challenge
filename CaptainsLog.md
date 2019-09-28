@@ -1,3 +1,23 @@
+## 2019/09/28 - Start of moving to CQRS
+`Command and Query Responsibility Segregation`
+
+effit-backend
+* [ ] the domain's write side (commands)
+* [ ] the domain's read side (queries + projections of our domain)
+* [ ] the domain's core
+* [ ] the domain's API
+* [ ] the domain's persistence layer
+* [ ] get rid of hibernate and replace with something else (let's try spring data jdbc)
+
+alternative
+* [ ] keep effit-backend as is (move to persistence layer)
+* [ ] extract domain from effit-backend as is
+* [ ] map to and from persistence layer
+* [ ] start writing commands
+* [ ] move to spring jdbc
+
+Copied `effit-backend` to `effit-cqrs-backend` so I can continuously refer to both architectures on stream.
+
 ## 2019/08/21 - GitHub Actions learnings
 
 Tutorial worked great! 
