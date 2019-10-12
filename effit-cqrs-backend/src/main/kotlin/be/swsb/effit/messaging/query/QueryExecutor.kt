@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class QueryExecutor(val registeredHandlers: List<QueryHandler<*,*>>) {
 
+    @Suppress("UNCHECKED_CAST")
     fun <R> execute(query: Query<R>): R {
         val queryHandler = getQueryHandler(query) as QueryHandler<R, Query<R>>?
 
