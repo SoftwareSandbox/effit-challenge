@@ -1,13 +1,15 @@
 package be.swsb.effit.domain.query.challenge
 
+import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.query.QueryHandler
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 @Component
-class FindChallengeQueryHandler: QueryHandler<Challenge?, FindChallenge> {
+class FindChallengeQueryHandler(val challengeRepository: ChallengeRepository) : QueryHandler<Challenge?, FindChallenge> {
     override fun handle(query: FindChallenge): Challenge? {
-        return null
+        return challengeRepository.findByIdOrNull(query.challengeId)
     }
 
     override fun getQueryType(): Class<FindChallenge> {

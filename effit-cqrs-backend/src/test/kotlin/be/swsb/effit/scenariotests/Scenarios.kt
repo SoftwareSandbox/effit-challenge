@@ -69,6 +69,7 @@ class Scenarios(val mockMvc: MockMvc,
     }
 
     fun completeChallenge(competitionId: CompetitionId, challengeId: UUID, competitorId: UUID) {
+        getChallenge(challengeId) //mimick the fact that a Challenge was selected in the UI
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
                 competitionId.id,
                 challengeId.toString()
@@ -95,8 +96,8 @@ class Scenarios(val mockMvc: MockMvc,
                 .andExpect(MockMvcResultMatchers.status().isOk)
     }
 
-    fun getChallenge(requestedChallengeId: String): Challenge {
-        val challengeAsJson = mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{challengeId}", requestedChallengeId)
+    fun getChallenge(requestedChallengeId: UUID): Challenge {
+        val challengeAsJson = mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{challengeId}", requestedChallengeId.toString())
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn().response.contentAsString
