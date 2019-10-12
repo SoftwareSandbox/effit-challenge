@@ -5,8 +5,8 @@ import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
-import be.swsb.effit.domain.query.QueryExecutor
 import be.swsb.effit.domain.query.challenge.FindChallenge
+import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,7 +34,7 @@ class ChallengeControllerTest: ControllerTest() {
     fun `GET api challenge id should return no challenge found for given id when challenge does not exist`() {
         val givenId = UUID.randomUUID()
 
-        Mockito.`when`(queryExecutorMock.execute<Challenge>(FindChallenge(givenId))).thenReturn(null)
+        Mockito.`when`(queryExecutorMock.execute(FindChallenge(givenId))).thenReturn(null)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -48,7 +48,7 @@ class ChallengeControllerTest: ControllerTest() {
         val givenId = UUID.randomUUID()
         val expectedChallenge = Challenge.defaultChallengeForTest(id = givenId)
 
-        Mockito.`when`(queryExecutorMock.execute<Challenge>(FindChallenge(givenId))).thenReturn(expectedChallenge)
+        Mockito.`when`(queryExecutorMock.execute(FindChallenge(givenId))).thenReturn(expectedChallenge)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
                 .accept(MediaType.APPLICATION_JSON_UTF8))

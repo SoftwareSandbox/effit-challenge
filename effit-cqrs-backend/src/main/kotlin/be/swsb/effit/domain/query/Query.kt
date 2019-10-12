@@ -1,3 +1,7 @@
 package be.swsb.effit.domain.query
 
-interface Query
+interface Query<R> {
+    fun asString(): String {
+        return this.javaClass.name
+    }
+}
