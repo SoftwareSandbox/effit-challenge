@@ -21,7 +21,7 @@ class FindAllCompetitionsQueryHandlerTest {
         val expected = listOf(Competition.defaultCompetitionForTest())
         `when`(competitionRepositoryMock.findAll()).thenReturn(expected)
 
-        val actual = FindAllCompetitionsQueryHandler(competitionRepositoryMock).handle(FindAllCompetitions(true))
+        val actual = FindAllCompetitionsQueryHandler(competitionRepositoryMock).handle(FindAllCompetitions)
 
         assertThat(actual).isEqualTo(expected)
     }

@@ -47,7 +47,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `GET api_competition should return all Competitions`() {
         val expectedCompetitions = listOf(Competition.defaultCompetitionForTest())
-        `when`(queryExecutorMock.execute(FindAllCompetitions(true))).thenReturn(expectedCompetitions)
+        `when`(queryExecutorMock.execute(FindAllCompetitions)).thenReturn(expectedCompetitions)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition")
                 .accept(MediaType.APPLICATION_JSON_UTF8))
