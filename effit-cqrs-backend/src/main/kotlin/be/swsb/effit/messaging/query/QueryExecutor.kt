@@ -5,7 +5,7 @@ import be.swsb.effit.domain.query.QueryHandler
 import org.springframework.stereotype.Service
 
 @Service
-class QueryExecutor(val registeredHandlers: List<QueryHandler<*,*>>) {
+class QueryExecutor(private val registeredHandlers: List<QueryHandler<*,*>>) {
 
     @Suppress("UNCHECKED_CAST")
     fun <R> execute(query: Query<R>): R {
