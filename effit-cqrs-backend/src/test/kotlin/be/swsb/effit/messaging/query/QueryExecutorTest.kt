@@ -1,6 +1,5 @@
 package be.swsb.effit.messaging.query
 
-import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.query.Query
 import be.swsb.effit.domain.query.QueryHandler
 import org.assertj.core.api.Assertions.assertThat
@@ -8,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -19,9 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
     FindAllSnarfsQueryHandler::class
     ])
 class QueryExecutorTest {
-
-    @MockBean
-    private lateinit var competitionRepository: CompetitionRepository
 
     @Bean
     fun findAllSnarfsQueryHandler(): FindAllSnarfsQueryHandler {
