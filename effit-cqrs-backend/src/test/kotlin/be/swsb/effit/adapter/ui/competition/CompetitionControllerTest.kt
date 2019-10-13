@@ -17,7 +17,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -43,7 +42,6 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `GET api_competition should return all Competitions`() {
         val expectedCompetitions = listOf(Competition.defaultCompetitionForTest())
-
         `when`(competitionRepositoryMock.findAll()).thenReturn(expectedCompetitions)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition")
@@ -59,8 +57,7 @@ class CompetitionControllerTest : ControllerTest() {
         val expectedCompetitionWithChallenges = Competition.defaultCompetitionForTest(
                 challenges = listOf(Challenge.defaultChallengeForTest())
         )
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetitionWithChallenges)
+        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, expectedCompetitionWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -72,8 +69,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `GET api_competition_name should return 404 when no matching Competition found for given name`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
+        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, null)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -117,8 +113,8 @@ class CompetitionControllerTest : ControllerTest() {
         val expectedError = EffitError("Sorry, there's already a competition that has a generated CompetitionId of ${competitionIdThatAlreadyExists.id}. Try entering a (slightly) different name.")
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(competitionIdThatAlreadyExists))
-                .thenReturn(competitionToCreate)
+
+        `when`(competitionRepositoryMock.findByCompetitionIdentifier(competitionIdThatAlreadyExists)).thenReturn(competitionToCreate)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(createCompetition.toJson(objectMapper))
@@ -164,12 +160,11 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_start should start a Competition`() {
-        val existingCompetition = Competition.defaultCompetitionWithChallengesAndCompetitorsForTest(name = "ThundercatsCompetition")
+        val competitionId = "ThundercatsCompetition"
+        val existingCompetition = Competition.defaultCompetitionWithChallengesAndCompetitorsForTest(name = competitionId)
+        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
 
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
-                .thenReturn(existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "ThundercatsCompetition")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
@@ -179,12 +174,11 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_start should return 202 when Competition was already started`() {
-        val existingCompetition = Competition.defaultStartedCompetition(name = "ThundercatsCompetition")
+        val competitionId = "ThundercatsCompetition"
+        val existingCompetition = Competition.defaultStartedCompetition(name = competitionId)
+        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
 
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
-                .thenReturn(existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "ThundercatsCompetition")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
@@ -200,12 +194,11 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_unstart should undo starting a Competition`() {
-        val existingCompetition = Competition.defaultStartedCompetition(name = "ThundercatsCompetition")
+        val competitionId = "ThundercatsCompetition"
+        val existingCompetition = Competition.defaultStartedCompetition(name = competitionId)
+        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
 
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
-                .thenReturn(existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", "ThundercatsCompetition")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
@@ -215,12 +208,11 @@ class CompetitionControllerTest : ControllerTest() {
 
     @Test
     fun `POST api_competition_competitionId_unstart should return 202 when Competition was not started`() {
-        val existingCompetition = Competition.defaultCompetitionForTest(name = "ThundercatsCompetition", started = false)
+        val competitionId = "ThundercatsCompetition"
+        val existingCompetition = Competition.defaultCompetitionForTest(name = competitionId, started = false)
+        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
 
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId("ThundercatsCompetition")))
-                .thenReturn(existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", "ThundercatsCompetition")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
@@ -243,8 +235,7 @@ class CompetitionControllerTest : ControllerTest() {
         val requestedCompetitionIdAsString = "Thundercats"
 
         val thundercatsComp = Competition.defaultCompetitionForTest(name = requestedCompetitionIdAsString)
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString)))
-                .thenReturn(thundercatsComp)
+        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, thundercatsComp)
         `when`(challengeRepositoryMock.save(ArgumentMatchers.any(Challenge::class.java))).thenReturn(challenge1)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
@@ -267,8 +258,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_addChallenges should return 404 when no matching Competition found for given CompetitionId`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(null)
+        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, null)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addChallenges", requestedCompetitionIdAsString)
                 .content(listOf(Challenge.defaultChallengeForTest(name = "FirstChallenge", points = 3, description = "1st")).toJson(objectMapper))
@@ -280,8 +270,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_addCompetitor should return 404 when no competition was found`() {
         val givenCompetitionId = "SnowCase2018"
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, null)
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
@@ -295,13 +284,10 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_addCompetitor should add given Competitor to Competitions' Competitors`() {
         val givenCompetitionId = "Thundercats"
-
         val thundercatsComp = Competition.defaultCompetitionForTest(name = givenCompetitionId)
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(thundercatsComp)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, thundercatsComp)
 
         val snarf = Competitor.defaultCompetitorForTest()
-
         `when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
@@ -322,7 +308,6 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_complete_challengeId should return 404 when no competition was found`() {
         val givenCompetitionId = "SnowCase2018"
-
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
@@ -343,8 +328,7 @@ class CompetitionControllerTest : ControllerTest() {
         val givenChallengeId = randomUUID().toString()
 
         val compWithoutChallenges = Competition.defaultCompetitionForTest(name = givenCompetitionId)
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithoutChallenges)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithoutChallenges)
 
         val expectedError = EffitError("Competition with id $givenCompetitionId has no challenge with id $givenChallengeId")
 
@@ -372,8 +356,7 @@ class CompetitionControllerTest : ControllerTest() {
                 competitors = listOf(Competitor.defaultCompetitorForTest(id = competitorId)),
                 challenges = listOf(picassoChallenge),
                 started = true)
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
                 givenCompetitionId,
@@ -405,8 +388,7 @@ class CompetitionControllerTest : ControllerTest() {
                 challenges = listOf(picassoChallenge),
                 started = true
         )
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(compWithChallenges)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithChallenges)
 
         val expectedError = EffitError("This competitor already completed the ${picassoChallenge.name} challenge.")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
@@ -430,9 +412,7 @@ class CompetitionControllerTest : ControllerTest() {
         val challengeThatWillGetDeleted = Challenge.defaultChallengeForTest(id = givenChallengeId)
         val someOtherChallenge = Challenge.defaultChallengeForTest(id = randomUUID())
         val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(challengeThatWillGetDeleted, someOtherChallenge))
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId)))
-                .thenReturn(someCompetition)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
                 givenCompetitionId,
@@ -448,8 +428,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `api_competition_competitionId_removeChallenge_challengeId should return 404 when no competition found for given id`() {
         val givenCompetitionId = "SnowCase2018"
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, null)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
                 givenCompetitionId,
@@ -464,8 +443,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val snarf = Competitor.defaultCompetitorForTest()
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
                 .content(snarf.toJson(objectMapper))
@@ -484,8 +462,7 @@ class CompetitionControllerTest : ControllerTest() {
 
         val snarf = Competitor.defaultCompetitorForTest()
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf))
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(someCompetition)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
                 .content(Competitor.defaultCompetitorForTest().toJson(objectMapper))
@@ -501,8 +478,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_removeCompetitor should return 404 when no competition found for given competition id`() {
         val givenCompetitionId = "SnowCase2018"
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(givenCompetitionId))).thenReturn(null)
+        `when findByCompetitionIdentifier then return`(givenCompetitionId, null)
 
         val expectedError = EffitError("Competition with id $givenCompetitionId not found")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
@@ -511,5 +487,9 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound)
                 .andExpect(content().json(expectedError.toJson(objectMapper), true))
+    }
+
+    private fun `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString: String, expectedCompetition: Competition?) {
+        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetition)
     }
 }
