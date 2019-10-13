@@ -7,6 +7,7 @@ import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.command.competition.StartCompetition
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
@@ -23,7 +24,6 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -103,34 +103,12 @@ class CompetitionControllerTest : ControllerTest() {
     fun `POST api_competition_competitionId_start should start a Competition`() {
         val competitionId = "ThundercatsCompetition"
         val existingCompetition = Competition.defaultCompetitionWithChallengesAndCompetitorsForTest(name = competitionId)
-        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
+        `when`(commandExecutorMock.execute(StartCompetition(CompetitionId(competitionId)))).thenReturn(existingCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
-
-        assertThat(existingCompetition.started).isTrue()
-    }
-
-    @Test
-    fun `POST api_competition_competitionId_start should return 202 when Competition was already started`() {
-        val competitionId = "ThundercatsCompetition"
-        val existingCompetition = Competition.defaultStartedCompetition(name = competitionId)
-        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isAccepted)
-    }
-
-    @Test
-    fun `POST api_competition_competitionId_start should return 404 when no matching Competition found for given CompetitionId`() {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", "NonExistingCompetitionId")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound)
     }
 
     @Test
