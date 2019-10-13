@@ -9,20 +9,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class FindByCompetitionIdQueryHandlerTest {
+class FindCompetitionQueryHandlerTest {
 
     @Mock
     private lateinit var competitionRepositoryMock: CompetitionRepository
-    private lateinit var handler: FindByCompetitionIdQueryHandler
+    private lateinit var handler: FindCompetitionQueryHandler
 
     @BeforeEach
     fun setUp() {
-        handler = FindByCompetitionIdQueryHandler(competitionRepositoryMock)
+        handler = FindCompetitionQueryHandler(competitionRepositoryMock)
     }
 
     @Test
@@ -31,7 +30,7 @@ class FindByCompetitionIdQueryHandlerTest {
         val expectedCompetition = Competition.defaultCompetitionForTest()
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(givenCompetitionId)).thenReturn(expectedCompetition)
 
-        val actual = handler.handle(FindByCompetitionId(givenCompetitionId))
+        val actual = handler.handle(FindCompetition(givenCompetitionId))
 
         assertThat(actual).isEqualTo(expectedCompetition)
     }
@@ -41,7 +40,7 @@ class FindByCompetitionIdQueryHandlerTest {
         val givenCompetitionId = CompetitionId("Thundercats")
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(givenCompetitionId)).thenReturn(null)
 
-        val actual = handler.handle(FindByCompetitionId(givenCompetitionId))
+        val actual = handler.handle(FindCompetition(givenCompetitionId))
 
         assertThat(actual).isNull()
     }

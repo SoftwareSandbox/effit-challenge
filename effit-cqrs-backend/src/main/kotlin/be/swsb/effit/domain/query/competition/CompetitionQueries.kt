@@ -6,8 +6,8 @@ import be.swsb.effit.domain.query.Query
 
 sealed class CompetitionQueries {
     object FindAllCompetitions: Query<List<Competition>>
-    data class FindByCompetitionId(val id: CompetitionId): Query<Competition?>
+    data class FindCompetition(val id: CompetitionId): Query<Competition?>
 }
 
 typealias FindAllCompetitions = CompetitionQueries.FindAllCompetitions
-typealias FindByCompetitionId = CompetitionQueries.FindByCompetitionId
+typealias FindCompetition = CompetitionQueries.FindCompetition

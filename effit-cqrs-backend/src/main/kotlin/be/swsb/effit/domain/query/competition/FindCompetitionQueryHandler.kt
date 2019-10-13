@@ -6,12 +6,12 @@ import be.swsb.effit.domain.query.QueryHandler
 import org.springframework.stereotype.Component
 
 @Component
-class FindByCompetitionIdQueryHandler(val competitionRepository: CompetitionRepository) : QueryHandler<Competition?, FindByCompetitionId> {
-    override fun handle(query: FindByCompetitionId): Competition? {
+class FindCompetitionQueryHandler(val competitionRepository: CompetitionRepository) : QueryHandler<Competition?, FindCompetition> {
+    override fun handle(query: FindCompetition): Competition? {
         return competitionRepository.findByCompetitionIdentifier(query.id)
     }
 
-    override fun getQueryType(): Class<FindByCompetitionId> {
-        return FindByCompetitionId::class.java
+    override fun getQueryType(): Class<FindCompetition> {
+        return FindCompetition::class.java
     }
 }

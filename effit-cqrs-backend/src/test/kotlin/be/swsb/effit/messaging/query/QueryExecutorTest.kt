@@ -3,7 +3,6 @@ package be.swsb.effit.messaging.query
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.query.Query
 import be.swsb.effit.domain.query.QueryHandler
-import be.swsb.effit.domain.query.competition.FindByCompetitionIdQueryHandler
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test

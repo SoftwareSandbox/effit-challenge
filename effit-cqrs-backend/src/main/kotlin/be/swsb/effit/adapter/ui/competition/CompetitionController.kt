@@ -13,7 +13,7 @@ import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
-import be.swsb.effit.domain.query.competition.FindByCompetitionId
+import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -43,7 +43,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping
     fun createCompetition(@RequestBody createCompetition: CreateCompetition): ResponseEntity<Any> {
         val competitionToBeCreated = competitionCreator.from(createCompetition)
-        queryExecutor.execute(FindByCompetitionId(competitionToBeCreated.competitionId))
+        queryExecutor.execute(FindCompetition(competitionToBeCreated.competitionId))
                 ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
         val createdCompetition = competitionRepository.save(competitionToBeCreated)
         return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
@@ -136,7 +136,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     private fun findCompetitionOrThrow(competitionId: String): Competition {
-        return queryExecutor.execute(FindByCompetitionId(CompetitionId(competitionId)))
+        return queryExecutor.execute(FindCompetition(CompetitionId(competitionId)))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
     }
 

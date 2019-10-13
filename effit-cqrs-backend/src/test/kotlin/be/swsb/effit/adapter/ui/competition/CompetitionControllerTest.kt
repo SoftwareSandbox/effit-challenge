@@ -13,7 +13,7 @@ import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
-import be.swsb.effit.domain.query.competition.FindByCompetitionId
+import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
@@ -94,7 +94,7 @@ class CompetitionControllerTest : ControllerTest() {
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId("Snowcase 2018")))).thenReturn(null)
+        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId("Snowcase 2018")))).thenReturn(null)
         `when`(competitionRepositoryMock.save(ArgumentMatchers.any(Competition::class.java))).thenReturn(createdCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
@@ -118,7 +118,7 @@ class CompetitionControllerTest : ControllerTest() {
         val expectedError = EffitError("Sorry, there's already a competition that has a generated CompetitionId of ${competitionIdThatAlreadyExists.id}. Try entering a (slightly) different name.")
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(queryExecutorMock.execute(FindByCompetitionId(competitionIdThatAlreadyExists))).thenReturn(competitionToCreate)
+        `when`(queryExecutorMock.execute(FindCompetition(competitionIdThatAlreadyExists))).thenReturn(competitionToCreate)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(createCompetition.toJson(objectMapper))
@@ -153,7 +153,7 @@ class CompetitionControllerTest : ControllerTest() {
                 endDate = LocalDate.of(2018, 3, 25))
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId("Snowcase 2018")))).thenReturn(null)
+        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId("Snowcase 2018")))).thenReturn(null)
         doThrow(IllegalStateException::class.java).`when`(competitionRepositoryMock).save(competitionToCreate)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
@@ -495,6 +495,6 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     private fun `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString: String, expectedCompetition: Competition?) {
-        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetition)
+        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetition)
     }
 }
