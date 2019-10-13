@@ -33,9 +33,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @GetMapping("{competitionId}")
     fun competitionDetail(@PathVariable competitionId: String): ResponseEntity<Competition> {
-        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?.let { ResponseEntity.ok(it) }
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
+        return ResponseEntity.ok(findCompetitionOrThrow(competitionId))
     }
 
     @PostMapping
@@ -49,30 +47,23 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/start")
     fun startCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
-        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?.let {
-                    startCompetition(it)
-                    return ResponseEntity.accepted().build()
-                }
-                ?: ResponseEntity.notFound().build()
+        val competition = findCompetitionOrThrow(competitionId)
+        startCompetition(competition)
+        return ResponseEntity.accepted().build()
     }
 
     @PostMapping("{competitionId}/unstart")
     fun unstartCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
-        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?.let {
-                    unstartCompetition(it)
-                    return ResponseEntity.accepted().build()
-                }
-                ?: ResponseEntity.notFound().build()
+        val competition = findCompetitionOrThrow(competitionId)
+        unstartCompetition(competition)
+        return ResponseEntity.accepted().build()
     }
 
     @PostMapping("{competitionId}/addChallenges")
     fun addChallenges(@PathVariable competitionId: String,
                       @RequestBody challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
-        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?.let { addChallengesAndSaveCompetition(it, challengesToBeAdded) }
-                ?: ResponseEntity.notFound().build()
+        val competition = findCompetitionOrThrow(competitionId)
+        return addChallengesAndSaveCompetition(competition, challengesToBeAdded)
     }
 
     @PostMapping("{competitionId}/addCompetitor")
@@ -101,9 +92,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     fun completeChallenge(@PathVariable("competitionId") competitionId: String,
                           @PathVariable("challengeId") challengeId: UUID,
                           @RequestBody completerId: CompleterId): ResponseEntity<Any> {
-        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
-
+        val competition = findCompetitionOrThrow(competitionId)
         competition.challenges.find { it.id == challengeId }
                 ?.let { competition.completeChallenge(it, completerId.competitorId) }
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
@@ -116,9 +105,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping("{competitionId}/removeChallenge/{challengeId}")
     fun removeChallenge(@PathVariable("competitionId") competitionId: String,
                         @PathVariable("challengeId") challengeId: UUID): ResponseEntity<Any> {
-        val competition = competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
-
+        val competition = findCompetitionOrThrow(competitionId)
         competition.removeChallenge(challengeId)
         competitionRepository.save(competition)
 
