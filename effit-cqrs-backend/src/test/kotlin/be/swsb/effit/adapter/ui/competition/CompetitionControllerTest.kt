@@ -1,17 +1,19 @@
 package be.swsb.effit.adapter.ui.competition
 
-import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
-import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
-import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
-import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
-import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
+import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
+import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.query.competition.FindByCompetitionId
+import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -35,6 +37,8 @@ class CompetitionControllerTest : ControllerTest() {
     lateinit var competitorRepositoryMock: CompetitorRepository
     @Autowired
     lateinit var challengeRepositoryMock: ChallengeRepository
+    @Autowired
+    lateinit var queryExecutorMock: QueryExecutor
 
     @MockBean
     lateinit var competitionCreatorMock: CompetitionCreator
@@ -490,6 +494,6 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     private fun `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString: String, expectedCompetition: Competition?) {
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(CompetitionId(requestedCompetitionIdAsString))).thenReturn(expectedCompetition)
+        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetition)
     }
 }

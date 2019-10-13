@@ -12,6 +12,8 @@ import be.swsb.effit.domain.core.competition.CompetitionAlreadyExistsDomainExcep
 import be.swsb.effit.domain.core.competition.CompetitionCreator
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
+import be.swsb.effit.domain.query.competition.FindByCompetitionId
+import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -24,7 +26,8 @@ import java.util.*
 class CompetitionController(private val competitionRepository: CompetitionRepository,
                             private val competitorRepository: CompetitorRepository,
                             private val challengeRepository: ChallengeRepository,
-                            private val competitionCreator: CompetitionCreator) {
+                            private val competitionCreator: CompetitionCreator,
+                            private val queryExecutor: QueryExecutor) {
 
     @GetMapping
     fun allCompetitions(): ResponseEntity<List<Competition>> {
@@ -132,7 +135,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     private fun findCompetitionOrThrow(competitionId: String): Competition {
-        return competitionRepository.findByCompetitionIdentifier(CompetitionId(competitionId))
+        return queryExecutor.execute(FindByCompetitionId(CompetitionId(competitionId)))
                 ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId not found")
     }
 
