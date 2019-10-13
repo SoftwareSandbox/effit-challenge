@@ -2,16 +2,13 @@
 `Command and Query Responsibility Segregation`
 
 Plan of attack:
-* [x] introduce hexagonal just as packages first
-* [x] extract domain from effit-backend as is
-* [ ] introduce mapping stuff between future module dependencies
-    * [ ] move to using queries
-    * [ ] move to using commands
-* [ ] extract modules out of packages
-* [ ] try to get rid of H2 dependency (see where it breaks if I do)
-* [ ] get rid of hibernate and replace with something else (let's try spring data jdbc)
+See [issue #58](https://github.com/SoftwareSandbox/effit-challenge/issues/58)
+
+**Notes**:
 
 Copied `effit-backend` to `effit-cqrs-backend` so I can continuously refer to both architectures on stream.
+
+An important in-between step was to just move logic in controller functions straight into the CommandHandlers, and only in a later stage move that to actually applying those Commands to the Aggregates.
 
 Check out the module dependency diagram:
 
