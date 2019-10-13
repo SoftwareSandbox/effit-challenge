@@ -2,9 +2,9 @@ package be.swsb.effit.messaging.query
 
 import be.swsb.effit.domain.query.Query
 import be.swsb.effit.domain.query.QueryHandler
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class QueryExecutor(val registeredHandlers: List<QueryHandler<*,*>>) {
 
     @Suppress("UNCHECKED_CAST")

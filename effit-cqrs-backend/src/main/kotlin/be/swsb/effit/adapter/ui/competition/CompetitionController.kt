@@ -7,13 +7,12 @@ import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.Competition
-import be.swsb.effit.domain.core.competition.CompetitionAlreadyExistsDomainException
-import be.swsb.effit.domain.core.competition.CompetitionCreator
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
+import be.swsb.effit.messaging.command.CommandExecutor
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -27,7 +26,7 @@ import java.util.*
 class CompetitionController(private val competitionRepository: CompetitionRepository,
                             private val competitorRepository: CompetitorRepository,
                             private val challengeRepository: ChallengeRepository,
-                            private val competitionCreator: CompetitionCreator,
+                            private val commandExecutor: CommandExecutor,
                             private val queryExecutor: QueryExecutor) {
 
     @GetMapping
@@ -42,10 +41,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping
     fun createCompetition(@RequestBody createCompetition: CreateCompetition): ResponseEntity<Any> {
-        val competitionToBeCreated = competitionCreator.from(createCompetition)
-        queryExecutor.execute(FindCompetition(competitionToBeCreated.competitionId))
-                ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
-        val createdCompetition = competitionRepository.save(competitionToBeCreated)
+        val createdCompetition = commandExecutor.execute(createCompetition)
         return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
     }
 
