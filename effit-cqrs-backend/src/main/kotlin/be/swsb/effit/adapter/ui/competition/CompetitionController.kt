@@ -42,7 +42,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping
     fun createCompetition(@RequestBody createCompetition: CreateCompetition): ResponseEntity<Any> {
         val competitionToBeCreated = competitionCreator.from(createCompetition)
-        competitionRepository.findByCompetitionIdentifier(competitionToBeCreated.competitionId)
+        queryExecutor.execute(FindByCompetitionId(competitionToBeCreated.competitionId))
                 ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
         val createdCompetition = competitionRepository.save(competitionToBeCreated)
         return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
