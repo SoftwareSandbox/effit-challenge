@@ -12,6 +12,7 @@ import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
+import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindByCompetitionId
 import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
@@ -46,7 +47,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `GET api_competition should return all Competitions`() {
         val expectedCompetitions = listOf(Competition.defaultCompetitionForTest())
-        `when`(competitionRepositoryMock.findAll()).thenReturn(expectedCompetitions)
+        `when`(queryExecutorMock.execute(FindAllCompetitions(true))).thenReturn(expectedCompetitions)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition")
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -81,7 +82,7 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition, should be able to create a new Competition and save it`() {
+    fun `POST api_competition should be able to create a new Competition and save it`() {
         val createCompetition = CreateCompetition(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
@@ -92,8 +93,8 @@ class CompetitionControllerTest : ControllerTest() {
         val createdCompetition = Competition.defaultCompetitionForTest(name = "Snowcase 2018",
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
-
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
+        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId("Snowcase 2018")))).thenReturn(null)
         `when`(competitionRepositoryMock.save(ArgumentMatchers.any(Competition::class.java))).thenReturn(createdCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
@@ -117,8 +118,7 @@ class CompetitionControllerTest : ControllerTest() {
         val expectedError = EffitError("Sorry, there's already a competition that has a generated CompetitionId of ${competitionIdThatAlreadyExists.id}. Try entering a (slightly) different name.")
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-
-        `when`(competitionRepositoryMock.findByCompetitionIdentifier(competitionIdThatAlreadyExists)).thenReturn(competitionToCreate)
+        `when`(queryExecutorMock.execute(FindByCompetitionId(competitionIdThatAlreadyExists))).thenReturn(competitionToCreate)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(createCompetition.toJson(objectMapper))
@@ -153,6 +153,7 @@ class CompetitionControllerTest : ControllerTest() {
                 endDate = LocalDate.of(2018, 3, 25))
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
+        `when`(queryExecutorMock.execute(FindByCompetitionId(CompetitionId("Snowcase 2018")))).thenReturn(null)
         doThrow(IllegalStateException::class.java).`when`(competitionRepositoryMock).save(competitionToCreate)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")

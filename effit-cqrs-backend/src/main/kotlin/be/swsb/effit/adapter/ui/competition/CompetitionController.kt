@@ -12,6 +12,7 @@ import be.swsb.effit.domain.core.competition.CompetitionAlreadyExistsDomainExcep
 import be.swsb.effit.domain.core.competition.CompetitionCreator
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
+import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindByCompetitionId
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
@@ -31,7 +32,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @GetMapping
     fun allCompetitions(): ResponseEntity<List<Competition>> {
-        return ResponseEntity.ok(competitionRepository.findAll())
+        return ResponseEntity.ok(queryExecutor.execute(FindAllCompetitions(true)))
     }
 
     @GetMapping("{competitionId}")
@@ -42,7 +43,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping
     fun createCompetition(@RequestBody createCompetition: CreateCompetition): ResponseEntity<Any> {
         val competitionToBeCreated = competitionCreator.from(createCompetition)
-        competitionRepository.findByCompetitionIdentifier(competitionToBeCreated.competitionId)
+        queryExecutor.execute(FindByCompetitionId(competitionToBeCreated.competitionId))
                 ?.let { throw CompetitionAlreadyExistsDomainException(competitionToBeCreated.competitionId) }
         val createdCompetition = competitionRepository.save(competitionToBeCreated)
         return ResponseEntity.created(URI(createdCompetition.competitionId.id)).build()
