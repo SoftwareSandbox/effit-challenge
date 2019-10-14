@@ -7,6 +7,7 @@ COPY ./effit-cqrs-webapp.jar /app.jar
 
 COPY ./execJava.sh /execJava.sh
 
-CMD java $JAVA_OPTS \
-    -Djava.security.egd=file:/dev/./urandom -jar \
-    /app.jar
+CMD ./execJava.sh
+#CMD java $JAVA_OPTS \
+#    -Djava.security.egd=file:/dev/./urandom -jar \
+#    /app.jar
