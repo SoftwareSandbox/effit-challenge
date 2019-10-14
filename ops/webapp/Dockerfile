@@ -5,9 +5,9 @@ VOLUME /tmp
 
 COPY ./effit-cqrs-webapp.jar /app.jar
 
-COPY ./execJava.sh /execJava.sh
+#COPY ./execJava.sh /execJava.sh
+#CMD ./execJava.sh
 
-CMD ./execJava.sh
-#CMD java $JAVA_OPTS \
-#    -Djava.security.egd=file:/dev/./urandom -jar \
-#    /app.jar
+CMD java $JAVA_OPTS \
+    -Djava.security.egd=file:/dev/./urandom -jar \
+    /app.jar

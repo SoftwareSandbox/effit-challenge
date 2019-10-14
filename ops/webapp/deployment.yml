@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: effit-app
-          image: registry.gitlab.rotate-it.be/sch3lp/effit-challenge:latest
+          image: registry.gitlab.rotate-it.be/sch3lp/effit-challenge:cqrs-stage-1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
