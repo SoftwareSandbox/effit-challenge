@@ -33,6 +33,7 @@
                                     box
                                     label="Description"
                                     rows="1"
+                                    :counter="255"
                             ></v-textarea>
                         </v-container>
                     </v-card-text>
