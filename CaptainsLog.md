@@ -1,3 +1,8 @@
+## 2019/10/14 - Deploying CQRS-backend now + Spiel try-out
+To both Heroku (by uncommenting `execJava` stuff in the Dockerfile and pushing to `prod` branch) and Kubernetes (by locally building a new image and pushing to rotate-it docker registry and `kubectl apply`ing).
+
+Going to try and run a Competition for our upcoming long weekend at Spiel in Essen, Germany.
+
 ## 2019/09/28 - Start of moving to CQRS
 `Command and Query Responsibility Segregation`
 
