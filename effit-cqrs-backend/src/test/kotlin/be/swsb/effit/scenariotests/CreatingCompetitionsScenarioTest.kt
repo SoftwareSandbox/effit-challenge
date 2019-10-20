@@ -120,7 +120,7 @@ class CreatingCompetitionsScenarioTest {
     fun `Challenges can get updated when a Competition was unstarted`() {
         val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
 
-        val competition = CreateCompetition(name = "CompetitionWChallenges",
+        val competition = CreateCompetition(name = "UnstartedCompWChallenges",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)

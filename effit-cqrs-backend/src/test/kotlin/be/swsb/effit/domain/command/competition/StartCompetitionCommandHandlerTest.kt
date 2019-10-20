@@ -38,16 +38,6 @@ class StartCompetitionCommandHandlerTest {
     }
 
     @Test
-    fun `handle | when no competition found throws exception`() {
-        val competitionId = "ThundercatsCompetition"
-        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(competitionId)))).thenReturn(null)
-
-        assertThatExceptionOfType(EntityNotFoundDomainRuntimeException::class.java)
-                .isThrownBy { handler.handle(StartCompetition(CompetitionId(competitionId))) }
-                .withMessage("Competition with id $competitionId not found")
-    }
-
-    @Test
     fun `handle | when competition found and not yet started, should start the competition`() {
         val competitionId = "ThundercatsCompetition"
         val existingCompetition = Competition.defaultCompetitionWithChallengesAndCompetitorsForTest(name = competitionId)

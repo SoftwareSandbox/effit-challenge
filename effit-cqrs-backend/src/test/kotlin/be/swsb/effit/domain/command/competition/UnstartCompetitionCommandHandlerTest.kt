@@ -38,17 +38,6 @@ class UnstartCompetitionCommandHandlerTest {
     }
 
     @Test
-    fun `handle | when no competition found, should throw EntityNotFoundException`() {
-        val competitionId = CompetitionId("Spiel2019")
-
-        `when`(queryExecutor.execute(FindCompetition(competitionId))).thenReturn(null)
-
-        assertThatExceptionOfType(EntityNotFoundDomainRuntimeException::class.java)
-                .isThrownBy { handler.handle(UnstartCompetition(competitionId)) }
-                .withMessage("Competition with id Spiel2019 not found")
-    }
-
-    @Test
     fun `handle | when competition found and already not started, should just return the competition`() {
         val competitionId = CompetitionId("Spiel2019")
 

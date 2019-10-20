@@ -15,15 +15,15 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class FindCompetitionQueryHandlerTest {
+class MaybeFindCompetitionQueryHandlerTest {
 
     @Mock
     private lateinit var competitionRepositoryMock: CompetitionRepository
-    private lateinit var handler: FindCompetitionQueryHandler
+    private lateinit var handler: MaybeFindCompetitionQueryHandler
 
     @BeforeEach
     fun setUp() {
-        handler = FindCompetitionQueryHandler(competitionRepositoryMock)
+        handler = MaybeFindCompetitionQueryHandler(competitionRepositoryMock)
     }
 
     @Test
@@ -32,18 +32,18 @@ class FindCompetitionQueryHandlerTest {
         val expectedCompetition = Competition.defaultCompetitionForTest()
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(givenCompetitionId)).thenReturn(expectedCompetition)
 
-        val actual = handler.handle(FindCompetition(givenCompetitionId))
+        val actual = handler.handle(MaybeFindCompetition(givenCompetitionId))
 
         assertThat(actual).isEqualTo(expectedCompetition)
     }
 
     @Test
-    fun `handle | no competition found should throw EntityNotFoundException`() {
+    fun `handle | no competition found returns null`() {
         val givenCompetitionId = CompetitionId("Thundercats")
         `when`(competitionRepositoryMock.findByCompetitionIdentifier(givenCompetitionId)).thenReturn(null)
 
-        assertThatExceptionOfType(EntityNotFoundDomainRuntimeException::class.java)
-                .isThrownBy { handler.handle(FindCompetition(givenCompetitionId)) }
-                .withMessage("Competition with id Thundercats not found")
+        val actual = handler.handle(MaybeFindCompetition(givenCompetitionId))
+
+        assertThat(actual).isNull()
     }
 }

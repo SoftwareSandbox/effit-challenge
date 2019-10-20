@@ -3,6 +3,7 @@ package be.swsb.effit.domain.command.competition
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.query.competition.FindCompetition
+import be.swsb.effit.domain.query.competition.MaybeFindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -44,7 +45,7 @@ class CreateCompetitionCommandHandlerTest {
                 startDate = LocalDate.of(2018, 3, 15),
                 endDate = LocalDate.of(2018, 3, 25))
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId("Snowcase 2018")))).thenReturn(null)
+        `when`(queryExecutorMock.execute(MaybeFindCompetition(CompetitionId("Snowcase 2018")))).thenReturn(null)
         `when`(competitionRepositoryMock.save(ArgumentMatchers.any(Competition::class.java))).thenReturn(createdCompetition)
 
         val actual = handler.handle(createCompetition)
@@ -64,7 +65,7 @@ class CreateCompetitionCommandHandlerTest {
         val competitionIdThatAlreadyExists = competitionToCreate.competitionId
 
         `when`(competitionCreatorMock.from(createCompetition)).thenReturn(competitionToCreate)
-        `when`(queryExecutorMock.execute(FindCompetition(competitionIdThatAlreadyExists))).thenReturn(competitionToCreate)
+        `when`(queryExecutorMock.execute(MaybeFindCompetition(competitionIdThatAlreadyExists))).thenReturn(competitionToCreate)
 
         assertThatExceptionOfType(CompetitionAlreadyExistsDomainException::class.java)
                 .isThrownBy { handler.handle(createCompetition) }

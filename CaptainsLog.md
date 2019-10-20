@@ -1,3 +1,8 @@
+## 2019/10/20 - New Convention: non-optional Query types should throw EntityNotFound exceptions
+Made finding an exact Competition and "maybe" finding one explicit:
+
+There was some duplicate code in `findOrThrow` that I first tried to extract into an abstract CompetitionCommandHandler, but then it occurred to me that it might be more explicit if I put it in the Query Type: `MaybeFindCompetition` and `FindCompetition`. So now the convention is, if you try to execute a query that expects a non optional type (e.g.: `Competition`) and it couldn't be found, the QueryHandler is supposed to throw an `EntityNotFoundDomainException`. If it **is** a non optional type (e.g.: `Competition?`), then the convention is the QueryHandler is supposed to **not** throw that exception and instead just return the optional result.
+
 ## 2019/10/14 - Deploying CQRS-backend now + Spiel try-out
 To both Heroku (by uncommenting `execJava` stuff in the Dockerfile and pushing to `prod` branch) and Kubernetes (by locally building a new image and pushing to rotate-it docker registry and `kubectl apply`ing).
 
