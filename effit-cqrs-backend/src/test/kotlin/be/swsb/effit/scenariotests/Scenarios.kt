@@ -87,6 +87,13 @@ class Scenarios(val mockMvc: MockMvc,
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
 
+    fun unstartCompetition(competitionId: CompetitionId) {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId.id)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isAccepted)
+    }
+
     fun updateChallenge(updatedChallenge: Challenge) {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}",
                 updatedChallenge.id)

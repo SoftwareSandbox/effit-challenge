@@ -116,4 +116,27 @@ class CreatingCompetitionsScenarioTest {
                 .containsOnly("Francisco")
     }
 
+    @Test
+    fun `Challenges can get updated when a Competition was unstarted`() {
+        val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+
+        val competition = CreateCompetition(name = "CompetitionWChallenges",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val competitionId = scenarios.createNewCompetition(competition, challengeToBeCreated)
+        scenarios.addCompetitor("Snarf", competitionId)
+
+        scenarios.startCompetition(competitionId)
+        scenarios.unstartCompetition(competitionId)
+
+        val challengeToUpdate = scenarios.getCompetition(competitionId).challenges.find { it.name == challengeToBeCreated.name }
+                ?: fail("Expected a challenge with name ${challengeToBeCreated.name}")
+
+        scenarios.updateChallenge(challengeToUpdate.copy(name="Francisco"))
+
+        assertThat(scenarios.getCompetition(competitionId).challenges)
+                .extracting<String> { it.name }
+                .containsOnly("Francisco")
+    }
+
 }

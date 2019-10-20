@@ -8,6 +8,7 @@ import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.command.competition.StartCompetition
+import be.swsb.effit.domain.command.competition.UnstartCompetition
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
@@ -115,14 +116,12 @@ class CompetitionControllerTest : ControllerTest() {
     fun `POST api_competition_competitionId_unstart should undo starting a Competition`() {
         val competitionId = "ThundercatsCompetition"
         val existingCompetition = Competition.defaultStartedCompetition(name = competitionId)
-        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
+        `when`(commandExecutorMock.execute(UnstartCompetition(CompetitionId(competitionId)))).thenReturn(existingCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
-
-        assertThat(existingCompetition.started).isFalse()
     }
 
     @Test
@@ -135,14 +134,6 @@ class CompetitionControllerTest : ControllerTest() {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
-    }
-
-    @Test
-    fun `POST api_competition_competitionId_unstart should return 404 when no matching Competition found for given CompetitionId`() {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", "NonExistingCompetitionId")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound)
     }
 
     @Test

@@ -6,6 +6,7 @@ import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.command.competition.StartCompetition
+import be.swsb.effit.domain.command.competition.UnstartCompetition
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
@@ -54,8 +55,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/unstart")
     fun unstartCompetition(@PathVariable competitionId: String): ResponseEntity<Any> {
-        val competition = findCompetitionOrThrow(competitionId)
-        unstartCompetition(competition)
+        commandExecutor.execute(UnstartCompetition(CompetitionId(competitionId)))
         return ResponseEntity.accepted().build()
     }
 
@@ -119,11 +119,6 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         }
         competitionRepository.save(foundCompetition)
         return ResponseEntity.accepted().build()
-    }
-
-    private fun unstartCompetition(competition: Competition) {
-        competition.unstart()
-        competitionRepository.save(competition)
     }
 
     private fun findCompetitionOrThrow(competitionId: String): Competition {

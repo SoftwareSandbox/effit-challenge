@@ -11,8 +11,10 @@ sealed class CompetitionCommands {
                                  val startDate: LocalDate?,
                                  val endDate: LocalDate?): RestApiExposed, Command<Competition>
     data class StartCompetition(val id: CompetitionId): Command<Competition>
+    data class UnstartCompetition(val id: CompetitionId): Command<Competition>
 
 }
 
 typealias CreateCompetition = CompetitionCommands.CreateCompetition
 typealias StartCompetition = CompetitionCommands.StartCompetition
+typealias UnstartCompetition = CompetitionCommands.UnstartCompetition
