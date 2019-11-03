@@ -36,11 +36,9 @@ class CompetitionTest {
         val startDate = LocalDate.of(2018, 3, 19)
         val endDate = startDate.minusDays(10)
 
-        assertThatThrownBy {
-            Competition.competition(name = "SnowCase Val Thorens 2018", startDate = startDate, endDate = endDate)
-        }
-                .isInstanceOf(IllegalArgumentException::class.java)
-                .hasMessage("The end date can not be before the start date")
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy { Competition.competition(name = "SnowCase Val Thorens 2018", startDate = startDate, endDate = endDate) }
+                .withMessage("The end date can not be before the start date")
     }
 
     @Test

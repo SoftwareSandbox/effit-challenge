@@ -44,8 +44,7 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         get() = _started
 
     init {
-        //TODO: change IllegalArgument to DomainValidation
-        if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
+        if (endDate.isBefore(startDate)) throw DomainValidationRuntimeException("The end date can not be before the start date")
         competitionIdentifier = CompetitionId(name)
         _started = false
     }
