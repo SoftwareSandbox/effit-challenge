@@ -69,29 +69,6 @@ class CompetitionTest {
     }
 
     @Test
-    fun `addChallenge | A Competition without Challenges still can have Challenges added to it`() {
-        val someCompetition = Competition.competitionWithoutEndDate(name = "Something", startDate = LocalDate.of(2019, 4, 9))
-
-        val picassoChallenge = Challenge.defaultChallengeForTest()
-        someCompetition.addChallenge(picassoChallenge)
-
-        assertThat(someCompetition.challenges).contains(picassoChallenge)
-    }
-
-    @Test
-    fun `addChallenge | A Competition that's already started cannot have Challenges added to it`() {
-        val existingChallenges = listOf(Challenge.defaultChallengeForTest())
-        val someCompetition = Competition.defaultStartedCompetition(name = "Something", challenges = existingChallenges)
-
-        val picassoChallenge = Challenge.defaultChallengeForTest()
-
-        assertThatExceptionOfType(UnableToAddChallengeToStartedCompetitionDomainException::class.java)
-                .isThrownBy { someCompetition.addChallenge(picassoChallenge) }
-
-        assertThat(someCompetition.challenges).isEqualTo(existingChallenges)
-    }
-
-    @Test
     fun `addCompetitor | A Competition without Competitors still can have Competitors added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(name = "Something", startDate = LocalDate.of(2019, 4, 9))
 
@@ -170,6 +147,66 @@ class CompetitionTest {
     }
 
     @Test
+    fun `addChallenge | A Competition without Challenges still can have Challenges added to it`() {
+        val someCompetition = Competition.competitionWithoutEndDate(name = "Something", startDate = LocalDate.of(2019, 4, 9))
+
+        val picassoChallenge = Challenge.defaultChallengeForTest()
+        someCompetition.addChallenge(picassoChallenge)
+
+        assertThat(someCompetition.challenges).contains(picassoChallenge)
+    }
+
+    @Test
+    fun `addChallenge | A Competition that's already started cannot have Challenges added to it`() {
+        val existingChallenges = listOf(Challenge.defaultChallengeForTest())
+        val someCompetition = Competition.defaultStartedCompetition(name = "Something", challenges = existingChallenges)
+
+        val picassoChallenge = Challenge.defaultChallengeForTest()
+
+        assertThatExceptionOfType(UnableToAddChallengeToStartedCompetitionDomainException::class.java)
+                .isThrownBy { someCompetition.addChallenge(picassoChallenge) }
+
+        assertThat(someCompetition.challenges).isEqualTo(existingChallenges)
+    }
+
+    @Test
+    fun `removeChallenge | when given challenge id not found on competition, should throw exception`() {
+        val someChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(someChallenge))
+
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy { someCompetition.removeChallenge(UUID.randomUUID()) }
+    }
+
+    @Test
+    fun `removeChallenge | when given challenge id found on competition, should remove challenge`() {
+        val someChallenge = Challenge.defaultChallengeForTest()
+        val otherChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(someChallenge, otherChallenge))
+
+        someCompetition.removeChallenge(someChallenge.id)
+
+        assertThat(someCompetition.challenges)
+                .doesNotContain(someChallenge)
+                .contains(otherChallenge)
+    }
+
+    @Test
+    fun `removeChallenge | a Competition that's already started, cannot have Challenges removed from it`() {
+        val someChallenge = Challenge.defaultChallengeForTest()
+        val otherChallenge = Challenge.defaultChallengeForTest()
+
+        val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge, otherChallenge))
+
+        assertThatExceptionOfType(UnableToRemoveChallengeFromStartedCompetitionDomainException::class.java)
+                .isThrownBy{ someCompetition.removeChallenge(someChallenge.id) }
+
+        assertThat(someCompetition.challenges).containsExactly(someChallenge, otherChallenge)
+    }
+
+    @Test
     fun `completeChallenge | when competition is started, should complete the challenge of given Competitor`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
@@ -219,29 +256,5 @@ class CompetitionTest {
 
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy { someCompetition.completeChallenge(someChallenge, UUID.randomUUID()) }
-    }
-
-    @Test
-    fun `removeChallenge | when given challenge id not found on competition, should throw exception`() {
-        val someChallenge = Challenge.defaultChallengeForTest()
-
-        val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge))
-
-        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
-                .isThrownBy { someCompetition.removeChallenge(UUID.randomUUID()) }
-    }
-
-    @Test
-    fun `removeChallenge | when given challenge id found on competition, should remove challenge`() {
-        val someChallenge = Challenge.defaultChallengeForTest()
-        val otherChallenge = Challenge.defaultChallengeForTest()
-
-        val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge, otherChallenge))
-
-        someCompetition.removeChallenge(someChallenge.id)
-
-        assertThat(someCompetition.challenges)
-                .doesNotContain(someChallenge)
-                .contains(otherChallenge)
     }
 }

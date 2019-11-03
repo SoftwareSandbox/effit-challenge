@@ -58,7 +58,9 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     }
 
     fun removeChallenge(challengeId: UUID) {
-        //TODO: make this work like removeCompetitor
+        if (_started) {
+            throw UnableToRemoveChallengeFromStartedCompetitionDomainException()
+        }
         _challenges.find { it.id == challengeId }
                 ?. let { challengeToBeRemoved -> _challenges.remove(challengeToBeRemoved) }
                 ?: throw DomainValidationRuntimeException("No Challenge found on this competition for given id $challengeId")
