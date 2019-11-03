@@ -1,3 +1,13 @@
+## 2019/11/3 - Options for choosing where Transactionality lies
+Problem when adding multiple Challenges to an existing Competition: when one of the Challenges is invalid, none of the challenges should be added.
+
+Added a ScenarioTest for this, and put `@Transactional` on the `CompetitionController.addChallenges` method, but not sure how I feel about that.
+
+Because I think, ideally, I have my `CommandExecutor.execute` be the transaction boundary, because it implicitly is the consistency boundary of my _aggregates_.
+The reason for that being that Commands get executed on an Aggregate.
+
+If I then add an `AddChallenges` (note: multiple) command, the Competition should be consistent after execution of adding multiple Challenges. 
+
 ## 2019/10/20 - New Convention: non-optional Query types should throw EntityNotFound exceptions
 Made finding an exact Competition and "maybe" finding one explicit:
 

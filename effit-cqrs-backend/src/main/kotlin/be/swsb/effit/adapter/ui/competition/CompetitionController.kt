@@ -1,11 +1,9 @@
 package be.swsb.effit.adapter.ui.competition
 
-import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.command.competition.*
-import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
@@ -16,6 +14,7 @@ import be.swsb.effit.messaging.command.CommandExecutor
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 import java.util.*
@@ -25,7 +24,6 @@ import java.util.*
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 class CompetitionController(private val competitionRepository: CompetitionRepository,
                             private val competitorRepository: CompetitorRepository,
-                            private val challengeRepository: ChallengeRepository,
                             private val commandExecutor: CommandExecutor,
                             private val queryExecutor: QueryExecutor) {
 
@@ -58,6 +56,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     @PostMapping("{competitionId}/addChallenges")
+    @Transactional
     fun addChallenges(@PathVariable competitionId: String,
                       @RequestBody challengesToBeAdded: List<ChallengeToAdd>): ResponseEntity<Any> {
         challengesToBeAdded

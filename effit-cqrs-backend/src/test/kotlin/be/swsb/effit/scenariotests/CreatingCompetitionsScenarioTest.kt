@@ -79,6 +79,28 @@ class CreatingCompetitionsScenarioTest {
     }
 
     @Test
+    fun `Adding Challenges, one of which is invalid, should not add any Challenge`() {
+        val challengeToBeCreated = ChallengeToAdd(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+        val anotherChallengeToBeCreated = ChallengeToAdd(name = "SomethingElse", points = 5, description = "Something...")
+        val invalidChallengeToBeCreated = ChallengeToAdd(name = "Invalid Challenge", points = 0, description = "Invalid because points cannot be 0")
+
+        val competition = CreateCompetition(name = "DummyCompetition",
+                startDate = LocalDate.of(2018, 3, 16),
+                endDate = LocalDate.of(2018, 3, 26))
+        val competitionId = scenarios.createNewCompetition(competition)
+        assertThat(scenarios.getCompetition(competitionId).challenges).isEmpty()
+
+        val challengesToBeAdded = listOf(challengeToBeCreated, invalidChallengeToBeCreated, anotherChallengeToBeCreated)
+        scenarios.mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", competitionId.id)
+                .content(challengesToBeAdded.toJson(scenarios.objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        assertThat(scenarios.getCompetition(competitionId).challenges).isEmpty()
+    }
+
+    @Test
     fun `Challenges should get copied when hosting a Competition again`() {
         val challengeToBeCreated = ChallengeToAdd(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
 
@@ -109,7 +131,7 @@ class CreatingCompetitionsScenarioTest {
         val challengeToUpdate = scenarios.getCompetition(competitionId).challenges.find { it.name == challengeToBeCreated.name }
                 ?: fail("Expected a challenge with name ${challengeToBeCreated.name}")
 
-        scenarios.updateChallenge(challengeToUpdate.copy(name="Francisco"))
+        scenarios.updateChallenge(challengeToUpdate.copy(name = "Francisco"))
 
         assertThat(scenarios.getCompetition(competitionId).challenges)
                 .extracting<String> { it.name }
@@ -132,7 +154,7 @@ class CreatingCompetitionsScenarioTest {
         val challengeToUpdate = scenarios.getCompetition(competitionId).challenges.find { it.name == challengeToBeCreated.name }
                 ?: fail("Expected a challenge with name ${challengeToBeCreated.name}")
 
-        scenarios.updateChallenge(challengeToUpdate.copy(name="Francisco"))
+        scenarios.updateChallenge(challengeToUpdate.copy(name = "Francisco"))
 
         assertThat(scenarios.getCompetition(competitionId).challenges)
                 .extracting<String> { it.name }

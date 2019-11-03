@@ -3,6 +3,7 @@ package be.swsb.effit.messaging.command
 import be.swsb.effit.domain.command.Command
 import be.swsb.effit.domain.command.CommandHandler
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CommandExecutor(private val registeredHandlers: List<CommandHandler<*, *>>) {
