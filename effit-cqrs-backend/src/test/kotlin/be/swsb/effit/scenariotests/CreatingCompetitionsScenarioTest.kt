@@ -84,7 +84,7 @@ class CreatingCompetitionsScenarioTest {
         val anotherChallengeToBeCreated = ChallengeToAdd(name = "SomethingElse", points = 5, description = "Something...")
         val invalidChallengeToBeCreated = ChallengeToAdd(name = "Invalid Challenge", points = 0, description = "Invalid because points cannot be 0")
 
-        val competition = CreateCompetition(name = "DummyCompetition",
+        val competition = CreateCompetition(name = "InvalidChallengesComp",
                 startDate = LocalDate.of(2018, 3, 16),
                 endDate = LocalDate.of(2018, 3, 26))
         val competitionId = scenarios.createNewCompetition(competition)

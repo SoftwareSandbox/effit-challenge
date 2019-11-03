@@ -56,12 +56,9 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     }
 
     @PostMapping("{competitionId}/addChallenges")
-    @Transactional
     fun addChallenges(@PathVariable competitionId: String,
                       @RequestBody challengesToBeAdded: List<ChallengeToAdd>): ResponseEntity<Any> {
-        challengesToBeAdded
-                .map { AddChallenge(CompetitionId(competitionId), it) }
-                .forEach { commandExecutor.execute(it) }
+        commandExecutor.execute(AddChallenges(CompetitionId(competitionId), challengesToBeAdded))
         return ResponseEntity.accepted().build()
     }
 

@@ -11,17 +11,19 @@ import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.stereotype.Component
 
 @Component
-class AddChallengeCommandHandler(
+class AddChallengesCommandHandler(
         private val queryExecutor: QueryExecutor,
         private val challengeRepository: ChallengeRepository,
         private val competitionRepository: CompetitionRepository
-) : CommandHandler<Competition, AddChallenge> {
+) : CommandHandler<Competition, AddChallenges> {
 
-    override fun handle(command: AddChallenge): Competition {
-        val newlyCreatedChallenge = createNewChallenge(command.challengeToAdd)
-        val persistedChallenge = challengeRepository.save(newlyCreatedChallenge)
+    override fun handle(command: AddChallenges): Competition {
         val foundCompetition = findCompetition(command.id)
-        foundCompetition.addChallenge(persistedChallenge)
+        command.challengesToAdd.forEach {
+            val newlyCreatedChallenge = createNewChallenge(it)
+            val persistedChallenge = challengeRepository.save(newlyCreatedChallenge)
+            foundCompetition.addChallenge(persistedChallenge)
+        }
         return competitionRepository.save(foundCompetition)
     }
 
@@ -37,7 +39,7 @@ class AddChallengeCommandHandler(
         return queryExecutor.execute(FindCompetition(competitionId))
     }
 
-    override fun getCommandType(): Class<AddChallenge> {
-        return AddChallenge::class.java
+    override fun getCommandType(): Class<AddChallenges> {
+        return AddChallenges::class.java
     }
 }

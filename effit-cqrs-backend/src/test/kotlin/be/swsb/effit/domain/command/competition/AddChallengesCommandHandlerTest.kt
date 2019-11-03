@@ -22,7 +22,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class AddChallengeCommandHandlerTest {
+class AddChallengesCommandHandlerTest {
 
     @Mock
     private lateinit var queryExecutorMock: QueryExecutor
@@ -35,40 +35,50 @@ class AddChallengeCommandHandlerTest {
     @Captor
     private lateinit var challengeCaptor: ArgumentCaptor<Challenge>
 
-    private lateinit var handler: AddChallengeCommandHandler
+    private lateinit var handler: AddChallengesCommandHandler
 
     @BeforeEach
     fun setUp() {
-        handler = AddChallengeCommandHandler(queryExecutorMock, challengeRepositoryMock, competitionRepositoryMock)
+        handler = AddChallengesCommandHandler(queryExecutorMock, challengeRepositoryMock, competitionRepositoryMock)
     }
 
     @Test
     fun `handle | Created Challenge should be valid`() {
         val invalidChallengeToAdd = ChallengeToAdd(name = "Snarf's Challenge", points = 0, description = "whatever")
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
-                .isThrownBy { handler.handle(AddChallenge(CompetitionId("does not matter"), invalidChallengeToAdd)) }
+                .isThrownBy { handler.handle(AddChallenges(CompetitionId("does not matter"), listOf(invalidChallengeToAdd))) }
     }
 
     @Test
-    fun `handle | Create Challenge and add it to the found Competition`() {
+    fun `handle | Create Challenges and add them to the found Competition`() {
         val competitionId = "ThundercatsCompetition"
         val existingCompetition = Competition.defaultCompetitionForTest(name = competitionId)
         `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(competitionId)))).thenReturn(existingCompetition)
-        val newlyCreatedAndSavedChallenge = Challenge.defaultChallengeForTest()
-        `when`(challengeRepositoryMock.save(challengeCaptor.capture())).thenReturn(newlyCreatedAndSavedChallenge)
+        val newlyCreatedAndSavedChallenge1 = Challenge.defaultChallengeForTest()
+        val newlyCreatedAndSavedChallenge2 = Challenge.defaultChallengeForTest()
+        `when`(challengeRepositoryMock.save(challengeCaptor.capture()))
+                .thenReturn(newlyCreatedAndSavedChallenge1)
+                .thenReturn(newlyCreatedAndSavedChallenge2)
         `when`(competitionRepositoryMock.save(competitionCaptor.capture())).thenReturn(existingCompetition)
 
-        val challengeToAdd = ChallengeToAdd.defaultChallengeToAddForTest()
+        val challengeToAdd1 = ChallengeToAdd.defaultChallengeToAddForTest(name = "challenge1")
+        val challengeToAdd2 = ChallengeToAdd.defaultChallengeToAddForTest(name = "challenge2")
 
-        handler.handle(AddChallenge(CompetitionId(competitionId), challengeToAdd))
+        handler.handle(AddChallenges(CompetitionId(competitionId), listOf(challengeToAdd1, challengeToAdd2)))
 
-        val challengeToBeSaved = challengeCaptor.value
-        assertThat(challengeToBeSaved.id).isNotNull()
-        assertThat(challengeToBeSaved.name).isEqualTo(challengeToAdd.name)
-        assertThat(challengeToBeSaved.points).isEqualTo(challengeToAdd.points)
-        assertThat(challengeToBeSaved.description).isEqualTo(challengeToAdd.description)
+        val challenge1ToBeSaved = challengeCaptor.allValues[0]
+        assertThat(challenge1ToBeSaved.id).isNotNull()
+        assertThat(challenge1ToBeSaved.name).isEqualTo(challengeToAdd1.name)
+        assertThat(challenge1ToBeSaved.points).isEqualTo(challengeToAdd1.points)
+        assertThat(challenge1ToBeSaved.description).isEqualTo(challengeToAdd1.description)
+
+        val challenge2ToBeSaved = challengeCaptor.allValues[1]
+        assertThat(challenge2ToBeSaved.id).isNotNull()
+        assertThat(challenge2ToBeSaved.name).isEqualTo(challengeToAdd2.name)
+        assertThat(challenge2ToBeSaved.points).isEqualTo(challengeToAdd2.points)
+        assertThat(challenge2ToBeSaved.description).isEqualTo(challengeToAdd2.description)
 
         val competitionToBeSaved = competitionCaptor.value
-        assertThat(competitionToBeSaved.challenges).containsExactly(newlyCreatedAndSavedChallenge)
+        assertThat(competitionToBeSaved.challenges).containsExactly(newlyCreatedAndSavedChallenge1, newlyCreatedAndSavedChallenge2)
     }
 }

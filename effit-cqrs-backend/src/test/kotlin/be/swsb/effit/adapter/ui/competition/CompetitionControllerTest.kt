@@ -123,8 +123,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        verify(commandExecutorMock).execute(AddChallenge(requestedCompetitionId, challenge1))
-        verify(commandExecutorMock).execute(AddChallenge(requestedCompetitionId, challenge2))
+        verify(commandExecutorMock).execute(AddChallenges(requestedCompetitionId, givenChallenges))
     }
 
     @Test

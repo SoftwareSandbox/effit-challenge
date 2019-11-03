@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CommandExecutor(private val registeredHandlers: List<CommandHandler<*, *>>) {
+
+    @Transactional
     @Suppress("UNCHECKED_CAST")
     fun <A> execute(command: Command<A>): A {
         val commandHandler = getCommandHandler(command) as CommandHandler<A, Command<A>>
