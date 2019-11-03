@@ -69,7 +69,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `A Competition without Challenges still can have Challenges added to it`() {
+    fun `addChallenge | A Competition without Challenges still can have Challenges added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(name="Something", startDate = LocalDate.of(2019, 4, 9))
 
         val picassoChallenge = Challenge.defaultChallengeForTest()
@@ -79,7 +79,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `A Competition without Competitors still can have Competitors added to it`() {
+    fun `addCompetitor | A Competition without Competitors still can have Competitors added to it`() {
         val someCompetition = Competition.competitionWithoutEndDate(name="Something", startDate = LocalDate.of(2019, 4, 9))
 
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
@@ -89,7 +89,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `A Competition that is started cannot have Competitors added to it`() {
+    fun `addCompetitor | A Competition that is started cannot have Competitors added to it`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someStartedCompetition = Competition.defaultStartedCompetition(competitors = listOf(snarf))
 
@@ -104,7 +104,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeCompetitor when no matching competitor is found, throw DomainException`() {
+    fun `removeCompetitor | when no matching competitor is found, throw DomainException`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
 
@@ -115,7 +115,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeCompetitor when no Competition is started, throw DomainException`() {
+    fun `removeCompetitor | when no Competition is started, throw DomainException`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
 
@@ -126,7 +126,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeCompetitor when matching competitor is found, remove it from the Competition`() {
+    fun `removeCompetitor | when matching competitor is found, remove it from the Competition`() {
         val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
 
@@ -138,7 +138,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `start should throw exception when no competitors were added to the competition`() {
+    fun `start | should throw exception when no competitors were added to the competition`() {
         val someCompetition = Competition.defaultCompetitionForTest(competitors = emptyList())
 
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
@@ -146,7 +146,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `start should throw exception when no challenges were added to the competition`() {
+    fun `start | should throw exception when no challenges were added to the competition`() {
         val someCompetition = Competition.defaultCompetitionForTest(
                 competitors = listOf(Competitor.defaultCompetitorForTest()),
                 challenges = emptyList()
@@ -157,7 +157,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge when competition is started, should complete the challenge of given Competitor`() {
+    fun `completeChallenge | when competition is started, should complete the challenge of given Competitor`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
 
@@ -172,7 +172,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge when competition is not yet started, should throw an exception`() {
+    fun `completeChallenge | when competition is not yet started, should throw an exception`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
 
@@ -188,7 +188,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge when challenge not found on competition, should throw exception`() {
+    fun `completeChallenge | when challenge not found on competition, should throw exception`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         val someChallengeOfAnotherCompetition = Challenge.defaultChallengeForTest()
 
@@ -199,7 +199,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge when given competitor id not found on competition, should throw exception`() {
+    fun `completeChallenge | when given competitor id not found on competition, should throw exception`() {
         val someChallenge = Challenge.defaultChallengeForTest()
 
         val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge))
@@ -209,7 +209,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeChallenge when given challenge id not found on competition, should throw exception`() {
+    fun `removeChallenge | when given challenge id not found on competition, should throw exception`() {
         val someChallenge = Challenge.defaultChallengeForTest()
 
         val someCompetition = Competition.defaultStartedCompetition(challenges = listOf(someChallenge))
@@ -219,7 +219,7 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeChallenge when given challenge id found on competition, should remove challenge`() {
+    fun `removeChallenge | when given challenge id found on competition, should remove challenge`() {
         val someChallenge = Challenge.defaultChallengeForTest()
         val otherChallenge = Challenge.defaultChallengeForTest()
 
