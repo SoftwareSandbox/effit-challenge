@@ -1,9 +1,9 @@
 package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitCqrsApplication
-import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.adapter.ui.util.toJson
+import be.swsb.effit.domain.command.competition.ChallengeToAdd
+import be.swsb.effit.domain.command.competition.CreateCompetition
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -80,7 +80,7 @@ class CreatingCompetitionsScenarioTest {
 
     @Test
     fun `Challenges should get copied when hosting a Competition again`() {
-        val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+        val challengeToBeCreated = ChallengeToAdd(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
 
         val competition = CreateCompetition(name = "DummyCompetition",
                 startDate = LocalDate.of(2018, 3, 16),
@@ -99,7 +99,7 @@ class CreatingCompetitionsScenarioTest {
 
     @Test
     fun `Challenges can get updated when a Competition is not yet started`() {
-        val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+        val challengeToBeCreated = ChallengeToAdd(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
 
         val competition = CreateCompetition(name = "CompetitionWChallenges",
                 startDate = LocalDate.of(2018, 3, 16),
@@ -118,7 +118,7 @@ class CreatingCompetitionsScenarioTest {
 
     @Test
     fun `Challenges can get updated when a Competition was unstarted`() {
-        val challengeToBeCreated = Challenge(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
+        val challengeToBeCreated = ChallengeToAdd(name = "Picasso", points = 3, description = "Paint a mustache on a sleeping victim without getting caught")
 
         val competition = CreateCompetition(name = "UnstartedCompWChallenges",
                 startDate = LocalDate.of(2018, 3, 16),

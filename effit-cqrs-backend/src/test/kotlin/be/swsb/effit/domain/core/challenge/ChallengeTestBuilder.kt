@@ -1,6 +1,5 @@
 package be.swsb.effit.domain.core.challenge
 
-import be.swsb.effit.domain.core.challenge.Challenge
 import org.assertj.core.internal.bytebuddy.utility.RandomString
 import java.util.*
 

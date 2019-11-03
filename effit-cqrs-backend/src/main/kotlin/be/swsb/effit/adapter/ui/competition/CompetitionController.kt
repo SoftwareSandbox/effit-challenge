@@ -4,9 +4,7 @@ import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
-import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.domain.command.competition.StartCompetition
-import be.swsb.effit.domain.command.competition.UnstartCompetition
+import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
@@ -61,9 +59,11 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/addChallenges")
     fun addChallenges(@PathVariable competitionId: String,
-                      @RequestBody challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
-        val competition = findCompetition(competitionId)
-        return addChallengesAndSaveCompetition(competition, challengesToBeAdded)
+                      @RequestBody challengesToBeAdded: List<ChallengeToAdd>): ResponseEntity<Any> {
+        challengesToBeAdded
+                .map { AddChallenge(CompetitionId(competitionId), it) }
+                .forEach { commandExecutor.execute(it) }
+        return ResponseEntity.accepted().build()
     }
 
     @PostMapping("{competitionId}/addCompetitor")
@@ -110,15 +110,6 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
         competitionRepository.save(competition)
 
         return ResponseEntity.ok().build<Any>()
-    }
-
-    private fun addChallengesAndSaveCompetition(foundCompetition: Competition, challengesToBeAdded: List<Challenge>): ResponseEntity<Any> {
-        challengesToBeAdded.forEach {
-            val persistedChallenge = challengeRepository.save(it.copy(id = UUID.randomUUID()))
-            foundCompetition.addChallenge(persistedChallenge)
-        }
-        competitionRepository.save(foundCompetition)
-        return ResponseEntity.accepted().build()
     }
 
     private fun findCompetition(competitionId: String): Competition {

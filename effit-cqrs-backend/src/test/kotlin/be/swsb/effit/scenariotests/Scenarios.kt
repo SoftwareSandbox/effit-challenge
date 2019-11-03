@@ -7,6 +7,7 @@ import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.adapter.ui.util.toJson
+import be.swsb.effit.domain.command.competition.ChallengeToAdd
 import be.swsb.effit.domain.core.competition.Competition
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +22,7 @@ import java.util.*
 class Scenarios(val mockMvc: MockMvc,
                 val objectMapper: ObjectMapper) {
 
-    fun createNewCompetition(competition: CreateCompetition, selectedChallenge: Challenge? = null) : CompetitionId {
+    fun createNewCompetition(competition: CreateCompetition, selectedChallenge: ChallengeToAdd? = null) : CompetitionId {
         val mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(competition.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -45,7 +46,7 @@ class Scenarios(val mockMvc: MockMvc,
         return objectMapper.readValue(competitionAsJson, Competition::class.java)
     }
 
-    fun addChallenges(competitionId: CompetitionId, challenges: List<Challenge>) {
+    fun addChallenges(competitionId: CompetitionId, challenges: List<ChallengeToAdd>) {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", competitionId.id)
                 .content(challenges.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

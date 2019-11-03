@@ -1,14 +1,11 @@
 package be.swsb.effit.adapter.ui.competition
 
-import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
-import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.domain.command.competition.StartCompetition
-import be.swsb.effit.domain.command.competition.UnstartCompetition
+import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
@@ -21,7 +18,6 @@ import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,8 +34,6 @@ class CompetitionControllerTest : ControllerTest() {
     lateinit var competitionRepositoryMock: CompetitionRepository
     @Autowired
     lateinit var competitorRepositoryMock: CompetitorRepository
-    @Autowired
-    lateinit var challengeRepositoryMock: ChallengeRepository
     @Autowired
     lateinit var queryExecutorMock: QueryExecutor
     @Autowired
@@ -115,28 +109,13 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition_competitionId_unstart should return 202 when Competition was not started`() {
-        val competitionId = "ThundercatsCompetition"
-        val existingCompetition = Competition.defaultCompetitionForTest(name = competitionId, started = false)
-        `when findByCompetitionIdentifier then return`(competitionId, existingCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isAccepted)
-    }
-
-    @Test
     fun `POST api_competition_addChallenges should add given Challenges to the given Competition`() {
-        val challenge1 = Challenge.defaultChallengeForTest(name = "FirstChallenge")
-        val challenge2 = Challenge.defaultChallengeForTest(name = "SecondChallenge")
+        val challenge1 = ChallengeToAdd.defaultChallengeToAddForTest(name = "FirstChallenge")
+        val challenge2 = ChallengeToAdd.defaultChallengeToAddForTest(name = "SecondChallenge")
         val givenChallenges = listOf(challenge1, challenge2)
 
         val requestedCompetitionIdAsString = "Thundercats"
-
-        val thundercatsComp = Competition.defaultCompetitionForTest(name = requestedCompetitionIdAsString)
-        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, thundercatsComp)
-        `when`(challengeRepositoryMock.save(ArgumentMatchers.any(Challenge::class.java))).thenReturn(challenge1)
+        val requestedCompetitionId = CompetitionId(requestedCompetitionIdAsString)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
                 .content(givenChallenges.toJson(objectMapper))
@@ -144,15 +123,8 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        val challengesCaptor = ArgumentCaptor.forClass(Challenge::class.java)
-
-        verify(challengeRepositoryMock, times(2)).save(challengesCaptor.capture())
-
-        verify(competitionRepositoryMock).save(thundercatsComp)
-        assertThat(challengesCaptor.allValues[0].name).isEqualTo("FirstChallenge")
-        assertThat(challengesCaptor.allValues[0].id).isNotEqualTo(challenge1.id)
-        assertThat(challengesCaptor.allValues[1].name).isEqualTo("SecondChallenge")
-        assertThat(challengesCaptor.allValues[1].id).isNotEqualTo(challenge2.id)
+        verify(commandExecutorMock).execute(AddChallenge(requestedCompetitionId, challenge1))
+        verify(commandExecutorMock).execute(AddChallenge(requestedCompetitionId, challenge2))
     }
 
     @Test

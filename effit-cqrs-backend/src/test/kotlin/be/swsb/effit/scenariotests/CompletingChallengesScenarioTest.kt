@@ -1,9 +1,9 @@
 package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitCqrsApplication
-import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.command.competition.ChallengeToAdd
 import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -39,7 +39,7 @@ class CompletingChallengesScenarioTest {
 
     @Test
     fun `Snarf completes the whinge challenge and gets awarded 4 points`() {
-        val whingeChallenge = Challenge(name = "Whinge", points = 4, description = "Whinge at any point during the day")
+        val whingeChallenge = ChallengeToAdd(name = "Whinge", points = 4, description = "Whinge at any point during the day")
 
         val competition = CreateCompetition(name = "ThundercatsCompo 2019",
                 startDate = LocalDate.of(2018, 3, 16),
