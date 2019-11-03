@@ -44,13 +44,16 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         get() = _started
 
     init {
+        //TODO: change IllegalArgument to DomainValidation
         if (endDate.isBefore(startDate)) throw IllegalArgumentException("The end date can not be before the start date")
         competitionIdentifier = CompetitionId(name)
         _started = false
     }
 
     fun addChallenge(challenge: Challenge) {
-        //TODO: make this work like addCompetitor
+        if (_started) {
+            throw UnableToAddChallengeToStartedCompetitionDomainException()
+        }
         _challenges.add(challenge)
     }
 
