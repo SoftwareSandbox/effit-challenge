@@ -65,9 +65,4 @@ class CompletingChallengesScenarioTest {
 
         assertThat(updatedThundercatsCompetition.competitors).containsExactly(snarfWithCompletedChallenge)
     }
-
-    @Test
-    fun `LionO becomes the leader of a competition, is removed by a salty admin, causing Snarf who was second to become the leader`() {
-        //TODO implement this at some point
-    }
 }

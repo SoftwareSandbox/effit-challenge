@@ -52,7 +52,7 @@
 
         private async mounted() {
             // TODO: refactor this to also include the competition id,
-            // TODO: to make it explicit that its not just any challenge,
+            // TODO: to make it explicit that it's not just any challenge,
             // TODO: but specifically the one belonging to this competitionId.
             this.challenge = (await this.$axios.get(`/api/challenge/${this.challengeId}`)).data;
             this.$store.commit('updateTitle', `Who completed ${this.challenge.name}?`);
