@@ -1,14 +1,14 @@
 package be.swsb.effit.scenariotests
 
-import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.domain.command.competition.CreateCompetition
-import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
-import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.ChallengeToAdd
+import be.swsb.effit.domain.command.competition.CreateCompetition
+import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.Competition
+import be.swsb.effit.domain.core.competition.CompetitionId
+import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpHeaders
@@ -62,11 +62,10 @@ class Scenarios(val mockMvc: MockMvc,
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
 
-        assertThat(getCompetition(competitionId).competitors)
-                .extracting<UUID> { it.id }
-                .containsOnly(addedCompetitor.id)
+        val foundCompetitor = getCompetition(competitionId).competitors.find { it.name == addedCompetitor.name }
+        assertThat(foundCompetitor).isNotNull
 
-        return addedCompetitor.id
+        return foundCompetitor!!.id
     }
 
     fun completeChallenge(competitionId: CompetitionId, challengeId: UUID, competitorId: UUID) {

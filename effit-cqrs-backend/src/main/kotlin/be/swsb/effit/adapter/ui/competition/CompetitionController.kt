@@ -7,6 +7,7 @@ import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.core.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
@@ -14,7 +15,6 @@ import be.swsb.effit.messaging.command.CommandExecutor
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 import java.util.*
@@ -65,11 +65,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     @PostMapping("{competitionId}/addCompetitor")
     fun addCompetitor(@PathVariable("competitionId") competitionId: String,
                       @RequestBody competitor: Competitor): ResponseEntity<Any> {
-        val competition = findCompetition(competitionId)
-
-        competition.addCompetitor(competitorRepository.save(competitor))
-        competitionRepository.save(competition)
-
+        commandExecutor.execute(AddCompetitor(CompetitionId(competitionId), CompetitorName(competitor.name)))
         return ResponseEntity.accepted().build()
     }
 

@@ -10,6 +10,7 @@ import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
+import be.swsb.effit.domain.core.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
@@ -129,10 +130,8 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_addCompetitor should add given Competitor to Competitions' Competitors`() {
         val givenCompetitionId = "Thundercats"
-        val thundercatsComp = Competition.defaultCompetitionForTest(name = givenCompetitionId)
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, thundercatsComp)
 
-        val snarf = Competitor.defaultCompetitorForTest()
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
         `when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
@@ -141,13 +140,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(thundercatsComp.competitors)
-                .usingElementComparatorIgnoringFields("id")
-                .containsExactly(snarf)
-
-        val inOrder = inOrder(competitorRepositoryMock, competitionRepositoryMock)
-        inOrder.verify(competitorRepositoryMock).save(snarf)
-        inOrder.verify(competitionRepositoryMock).save(thundercatsComp)
+        verify(commandExecutorMock).execute(AddCompetitor(CompetitionId(givenCompetitionId), CompetitorName("Snarf")))
     }
 
     @Test
