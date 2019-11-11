@@ -1,5 +1,5 @@
 ## 2019/11/11 - Commands risks to become a garbage bin
-Right now, I chose to put common wrapper classes (like `CompetitorName` or `CompleterId`) in the `commands` _module_.
+Right now, I chose to put common wrapper classes (like `CompetitorName` or `ChallengeToAdd`) in the `commands` _module_.
 
 But that means that to get typesafety (or the same rules) in for example the `query` _module_, that module would also need to depend on `commands`.
 
