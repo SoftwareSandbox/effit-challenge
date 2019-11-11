@@ -2,12 +2,20 @@ package be.swsb.effit.domain.core.competition.competitor
 
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
+import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.assertj.core.internal.bytebuddy.utility.RandomString
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class CompetitorTest {
+
+    @Test
+    fun `A Competitor Name must not be longer than 50 characters`() {
+        assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
+                .isThrownBy { Competitor(name = RandomString.make(51)) }
+    }
 
     @Test
     fun `Completing a Challenge that already was completed, throws an exception`() {

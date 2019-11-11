@@ -2,6 +2,7 @@ package be.swsb.effit.domain.core.competition.competitor
 
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.adapter.ui.util.RestApiExposed
+import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.util.*
 import javax.persistence.Entity
@@ -21,6 +22,12 @@ data class Competitor(@Id val id: UUID = UUID.randomUUID(),
 
     val completedChallenges: List<Challenge>
         get() = _completedChallenges
+
+    init {
+        if (name.length > 50) {
+            throw DomainValidationRuntimeException("A Competitor name must be less than 50 characters.")
+        }
+    }
 
     fun completeChallenge(challenge: Challenge) {
         _completedChallenges.find { it == challenge }
