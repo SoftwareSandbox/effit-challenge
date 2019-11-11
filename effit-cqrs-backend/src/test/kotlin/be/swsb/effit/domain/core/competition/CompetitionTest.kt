@@ -1,11 +1,14 @@
 package be.swsb.effit.domain.core.competition
 
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.competitor.randomCompetitorName
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.*
@@ -71,30 +74,33 @@ class CompetitionTest {
         val someCompetition = Competition.competitionWithoutEndDate(name = "Something", startDate = LocalDate.of(2019, 4, 9))
 
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        someCompetition.addCompetitor(snarf)
+        someCompetition.addCompetitor(CompetitorName("Snarf"))
 
-        assertThat(someCompetition.competitors).contains(snarf)
+        assertThat(someCompetition.competitors)
+                .usingElementComparatorIgnoringFields("id")
+                .contains(snarf)
     }
 
     @Test
     fun `addCompetitor | A Competition that is started cannot have Competitors added to it`() {
         val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        val someStartedCompetition = Competition.defaultStartedCompetition(competitors = listOf(snarf))
+        val someStartedCompetition = Competition.defaultStartedCompetition(competitors = listOf(CompetitorName("Snarf")))
 
         val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
 
         assertThatExceptionOfType(UnableToAddCompetitorToStartedCompetitionDomainException::class.java)
-                .isThrownBy { someStartedCompetition.addCompetitor(lionO) }
+                .isThrownBy { someStartedCompetition.addCompetitor(CompetitorName("Lion-O")) }
 
         assertThat(someStartedCompetition.competitors)
+                .usingElementComparatorIgnoringFields("id")
                 .contains(snarf)
                 .doesNotContain(lionO)
     }
 
     @Test
     fun `removeCompetitor | when no matching competitor is found, throw DomainException`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
+        val snarf = CompetitorName("Snarf")
+        val liono = CompetitorName("Lion-O")
 
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
 
@@ -103,26 +109,28 @@ class CompetitionTest {
     }
 
     @Test
-    fun `removeCompetitor | when no Competition is started, throw DomainException`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
+    fun `removeCompetitor | A Competition that is already started cannot have Competitors removed from it`() {
+        val snarf = CompetitorName(name = "Snarf")
+        val liono = CompetitorName(name = "Lion-O")
 
         val someCompetition = Competition.defaultStartedCompetition(competitors = listOf(snarf, liono))
 
         assertThatExceptionOfType(UnableToRemoveCompetitorOfAStartedCompetitionDomainException::class.java)
-                .isThrownBy { someCompetition.removeCompetitor(snarf.id) }
+                .isThrownBy { someCompetition.removeCompetitor(UUID.randomUUID()) }
     }
 
     @Test
     fun `removeCompetitor | when matching competitor is found, remove it from the Competition`() {
-        val liono = Competitor.defaultCompetitorForTest(name = "Lion-O")
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val lionoName = CompetitorName(name = "Lion-O")
+        val snarf = CompetitorName(name = "Snarf")
 
-        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, liono))
-
+        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, lionoName))
+        val liono = someCompetition.findCompetitor("Lion-O")
         someCompetition.removeCompetitor(liono.id)
 
-        assertThat(someCompetition.competitors).containsExactly(snarf)
+        assertThat(someCompetition.competitors)
+                .usingElementComparatorIgnoringFields("id")
+                .containsExactly(Competitor.defaultCompetitorForTest(name = "Snarf"))
     }
 
     @Test
@@ -136,7 +144,7 @@ class CompetitionTest {
     @Test
     fun `start | should throw exception when no challenges were added to the competition`() {
         val someCompetition = Competition.defaultCompetitionForTest(
-                competitors = listOf(Competitor.defaultCompetitorForTest()),
+                competitors = listOf(CompetitorName.randomCompetitorName()),
                 challenges = emptyList()
         )
 
@@ -205,29 +213,32 @@ class CompetitionTest {
     }
 
     @Test
-    fun `completeChallenge | when competition is started, should complete the challenge of given Competitor`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+    fun `completeChallenge | when a Competition is started, should complete the challenge of given Competitor`() {
+        val snarfName = CompetitorName(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
 
         val someCompetition = Competition.defaultCompetitionForTest(
-                competitors = listOf(snarf),
+                competitors = listOf(snarfName),
                 challenges = listOf(someChallenge),
                 started = true)
 
+        val snarf = someCompetition.findCompetitor("Snarf")
         someCompetition.completeChallenge(someChallenge, snarf.id)
 
         assertThat(snarf.completedChallenges).containsExactly(someChallenge)
     }
 
     @Test
-    fun `completeChallenge | when competition is not yet started, should throw an exception`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+    fun `completeChallenge | when a Competition is not yet started, should throw an exception`() {
+        val snarfName = CompetitorName(name = "Snarf")
         val someChallenge = Challenge.defaultChallengeForTest()
 
         val someCompetition = Competition.defaultCompetitionForTest(
-                competitors = listOf(snarf),
+                competitors = listOf(snarfName),
                 challenges = listOf(someChallenge),
                 started = false)
+
+        val snarf = someCompetition.findCompetitor("Snarf")
 
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy { someCompetition.completeChallenge(someChallenge, snarf.id) }
@@ -237,10 +248,11 @@ class CompetitionTest {
 
     @Test
     fun `completeChallenge | when challenge not found on competition, should throw exception`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        val snarfName = CompetitorName("Snarf")
         val someChallengeOfAnotherCompetition = Challenge.defaultChallengeForTest()
 
-        val someCompetition = Competition.defaultStartedCompetition(competitors = listOf(snarf))
+        val someCompetition = Competition.defaultStartedCompetition(competitors = listOf(snarfName))
+        val snarf = someCompetition.findCompetitor("Snarf")
 
         assertThatExceptionOfType(DomainValidationRuntimeException::class.java)
                 .isThrownBy { someCompetition.completeChallenge(someChallengeOfAnotherCompetition, snarf.id) }

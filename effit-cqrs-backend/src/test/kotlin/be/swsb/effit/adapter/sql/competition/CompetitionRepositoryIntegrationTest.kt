@@ -1,14 +1,14 @@
 package be.swsb.effit.adapter.sql.competition
 
-import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
-import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
-import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
+import be.swsb.effit.domain.core.challenge.Challenge
+import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.Competition
-import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.defaultCompetitionForTest
+import be.swsb.effit.domain.core.competition.findCompetitor
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException
@@ -90,36 +90,27 @@ class CompetitionRepositoryIntegrationTest {
     }
 
     @Test
-    fun `saving a Competition with persisted Competitors`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
-        testEntityManager.persist(snarf)
-        testEntityManager.flush()
-        testEntityManager.clear()
-
+    fun `saving a Competition with unpersisted Competitors`() {
         val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
         testEntityManager.flush()
 
-        snowCase2018.addCompetitor(snarf)
+        snowCase2018.addCompetitor(CompetitorName("snarf"))
 
         competitionRepository.save(snowCase2018)
         testEntityManager.flush()
         testEntityManager.clear()
 
-        val persistedSnarf = testEntityManager.find(Competitor::class.java, snarf.id)
-
         val fetchedSnowcase = testEntityManager.find(Competition::class.java, snowCase2018.id)
-        assertThat(fetchedSnowcase.competitors).usingFieldByFieldElementComparator().containsExactly(persistedSnarf)
+        assertThat(fetchedSnowcase.competitors)
+                .extracting<String> { it.name }
+                .containsExactly("snarf")
     }
 
     @Test
     fun `removing Competitor, also cleans up the table`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
-        val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
-        testEntityManager.persist(snarf)
-        testEntityManager.persist(lionO)
-        testEntityManager.flush()
-        testEntityManager.clear()
+        val snarf = CompetitorName(name = "snarf")
+        val lionO = CompetitorName(name = "Lion-O")
 
         val competition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, lionO))
         competitionRepository.save(competition)
@@ -127,12 +118,13 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.clear()
 
         val retrievedCompetition = competitionRepository.getOne(competition.id)
-        retrievedCompetition.removeCompetitor(lionO.id)
+        val lionOId = retrievedCompetition.findCompetitor("Lion-O").id
+        retrievedCompetition.removeCompetitor(lionOId)
         competitionRepository.save(retrievedCompetition)
         testEntityManager.flush()
         testEntityManager.clear()
 
-        assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
+        assertThat(competitorRepository.findByIdOrNull(lionOId)).isNull()
     }
 
     @Test
@@ -160,25 +152,23 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `deleting a Competition, also deletes its Competitors`() {
-        val snarf = Competitor.defaultCompetitorForTest(name = "snarf")
-        val lionO = Competitor.defaultCompetitorForTest(name = "Lion-O")
-        testEntityManager.persist(snarf)
-        testEntityManager.persist(lionO)
-        testEntityManager.flush()
-        testEntityManager.clear()
+        val snarfName = CompetitorName(name = "snarf")
+        val lionOName = CompetitorName(name = "Lion-O")
 
-        val competition = Competition.defaultCompetitionForTest(competitors = listOf(snarf, lionO))
+        val competition = Competition.defaultCompetitionForTest(competitors = listOf(snarfName, lionOName))
         competitionRepository.save(competition)
         testEntityManager.flush()
         testEntityManager.clear()
 
         val retrievedCompetition = competitionRepository.getOne(competition.id)
+        val snarf = retrievedCompetition.findCompetitor("snarf")
+        val lionO = retrievedCompetition.findCompetitor("Lion-O")
         competitionRepository.delete(retrievedCompetition)
         testEntityManager.flush()
         testEntityManager.clear()
 
-        assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
         assertThat(competitorRepository.findByIdOrNull(snarf.id)).isNull()
+        assertThat(competitorRepository.findByIdOrNull(lionO.id)).isNull()
         assertThat(competitionRepository.findByIdOrNull(competition.id)).isNull()
     }
 

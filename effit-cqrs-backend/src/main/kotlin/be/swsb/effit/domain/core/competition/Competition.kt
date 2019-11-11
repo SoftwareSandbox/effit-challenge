@@ -1,9 +1,10 @@
 package be.swsb.effit.domain.core.competition
 
+import be.swsb.effit.adapter.ui.util.RestApiExposed
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
-import be.swsb.effit.adapter.ui.util.RestApiExposed
 import com.fasterxml.jackson.annotation.JsonSetter
 import java.time.LocalDate
 import java.util.*
@@ -65,11 +66,16 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                 ?: throw DomainValidationRuntimeException("No Challenge found on this competition for given id $challengeId")
     }
 
-    fun addCompetitor(competitor: Competitor) {
+    fun addCompetitor(competitorName: CompetitorName) {
         if (_started) {
             throw UnableToAddCompetitorToStartedCompetitionDomainException()
         }
+        val competitor = createCompetitor(competitorName)
         _competitors.add(competitor)
+    }
+
+    private fun createCompetitor(competitorName: CompetitorName): Competitor {
+        return Competitor(name = competitorName.name)
     }
 
     fun removeCompetitor(competitorIdToBeRemoved: UUID) {
