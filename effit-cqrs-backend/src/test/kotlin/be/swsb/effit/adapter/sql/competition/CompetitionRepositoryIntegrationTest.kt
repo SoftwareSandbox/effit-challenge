@@ -2,13 +2,12 @@ package be.swsb.effit.adapter.sql.competition
 
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
+import be.swsb.effit.domain.command.competition.ChallengeToAdd
 import be.swsb.effit.domain.command.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.defaultChallengeToAddForTest
 import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
-import be.swsb.effit.domain.core.competition.Competition
-import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.domain.core.competition.defaultCompetitionForTest
-import be.swsb.effit.domain.core.competition.findCompetitor
+import be.swsb.effit.domain.core.challenge.fromChallengeToAdd
+import be.swsb.effit.domain.core.competition.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hibernate.exception.ConstraintViolationException
@@ -76,14 +75,16 @@ class CompetitionRepositoryIntegrationTest {
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
 
-        val someChallenge = Challenge.defaultChallengeForTest()
-        existingCompetition.addChallenge(someChallenge)
+        val someChallengeToAdd = ChallengeToAdd.defaultChallengeToAddForTest()
+        existingCompetition.addChallenge(someChallengeToAdd)
 
         competitionRepository.save(existingCompetition)
         testEntityManager.flush()
 
         val updatedCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
-        assertThat(updatedCompetition.challenges).containsExactly(someChallenge)
+        assertThat(updatedCompetition.challenges)
+                .usingElementComparatorIgnoringFields("id")
+                .containsExactly(Challenge.fromChallengeToAdd(someChallengeToAdd))
     }
 
     @Test
@@ -126,12 +127,8 @@ class CompetitionRepositoryIntegrationTest {
 
     @Test
     fun `removing Challenge, also cleans up the table`() {
-        val snarf = Challenge.defaultChallengeForTest(name = "snarf")
-        val lionO = Challenge.defaultChallengeForTest(name = "Lion-O")
-        testEntityManager.persist(snarf)
-        testEntityManager.persist(lionO)
-        testEntityManager.flush()
-        testEntityManager.clear()
+        val snarf = ChallengeToAdd.defaultChallengeToAddForTest(name = "snarf")
+        val lionO = ChallengeToAdd.defaultChallengeToAddForTest(name = "Lion-O")
 
         val competition = Competition.defaultCompetitionForTest(challenges = listOf(snarf, lionO))
         competitionRepository.save(competition)
@@ -139,12 +136,13 @@ class CompetitionRepositoryIntegrationTest {
         testEntityManager.clear()
 
         val retrievedCompetition = competitionRepository.getOne(competition.id)
-        retrievedCompetition.removeChallenge(lionO.id)
+        val lionOId = retrievedCompetition.findChallenge("Lion-O").id
+        retrievedCompetition.removeChallenge(lionOId)
         competitionRepository.save(retrievedCompetition)
         testEntityManager.flush()
         testEntityManager.clear()
 
-        assertThat(challengeRepository.findByIdOrNull(lionO.id)).isNull()
+        assertThat(challengeRepository.findByIdOrNull(lionOId)).isNull()
     }
 
     @Test

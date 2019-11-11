@@ -1,6 +1,7 @@
 package be.swsb.effit.domain.core.competition
 
 import be.swsb.effit.adapter.ui.util.RestApiExposed
+import be.swsb.effit.domain.command.competition.ChallengeToAdd
 import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.competition.competitor.Competitor
@@ -50,11 +51,20 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
         _started = false
     }
 
-    fun addChallenge(challenge: Challenge) {
+    fun addChallenge(challengeToAdd: ChallengeToAdd) {
         if (_started) {
             throw UnableToAddChallengeToStartedCompetitionDomainException()
         }
+        val challenge = createChallenge(challengeToAdd)
         _challenges.add(challenge)
+    }
+
+    private fun createChallenge(challengeToAdd: ChallengeToAdd): Challenge {
+        return Challenge(
+                name = challengeToAdd.name,
+                points = challengeToAdd.points,
+                description = challengeToAdd.description
+        )
     }
 
     fun removeChallenge(challengeId: UUID) {

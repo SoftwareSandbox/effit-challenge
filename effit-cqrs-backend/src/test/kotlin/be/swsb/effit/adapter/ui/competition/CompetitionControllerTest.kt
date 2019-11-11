@@ -7,8 +7,6 @@ import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.command.competition.competitor.CompetitorName
-import be.swsb.effit.domain.core.challenge.Challenge
-import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
@@ -56,7 +54,7 @@ class CompetitionControllerTest : ControllerTest() {
     fun `GET api_competition_name should return the competition with matching competition id`() {
         val requestedCompetitionIdAsString = "SnowCase2018"
         val expectedCompetitionWithChallenges = Competition.defaultCompetitionForTest(
-                challenges = listOf(Challenge.defaultChallengeForTest())
+                challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest())
         )
         `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, expectedCompetitionWithChallenges)
 
@@ -168,16 +166,16 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_complete_challengeId should add challenge given Competitors completedChallenges`() {
         val givenCompetitionId = "SnowCase2018"
-        val givenChallengeId = randomUUID()
 
-        val picassoChallenge = Challenge.defaultChallengeForTest(id = givenChallengeId)
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
                 competitors = listOf(CompetitorName("Snarf")),
-                challenges = listOf(picassoChallenge),
+                challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")),
                 started = true)
         val snarf = compWithChallenges.findCompetitor("Snarf")
         val successfulCompetitor = CompleterId(snarf.id)
+        val picassoChallenge = compWithChallenges.findChallenge("Picasso")
+        val givenChallengeId = picassoChallenge.id
         `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
@@ -197,16 +195,15 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
         val givenCompetitionId = "SnowCase2018"
-        val givenChallengeId = randomUUID()
-
-        val picassoChallenge = Challenge.defaultChallengeForTest(id = givenChallengeId)
 
         val compWithChallenges = Competition.defaultCompetitionForTest(
                 name = givenCompetitionId,
                 competitors = listOf(CompetitorName("Snarf")),
-                challenges = listOf(picassoChallenge),
+                challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")),
                 started = true
         )
+        val picassoChallenge = compWithChallenges.findChallenge("Picasso")
+        val givenChallengeId = picassoChallenge.id
         val snarf = compWithChallenges.findCompetitor("Snarf")
         snarf.completeChallenge(picassoChallenge)
         val successfulCompetitor = CompleterId(snarf.id)
@@ -229,11 +226,13 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `api_competition_competitionId_removeChallenge_challengeId should remove the given challenge id`() {
         val givenCompetitionId = "SnowCase2018"
-        val givenChallengeId = randomUUID()
 
-        val challengeThatWillGetDeleted = Challenge.defaultChallengeForTest(id = givenChallengeId)
-        val someOtherChallenge = Challenge.defaultChallengeForTest(id = randomUUID())
+        val challengeThatWillGetDeleted = ChallengeToAdd.defaultChallengeToAddForTest(name = "ChallengeToBeDeleted")
+        val someOtherChallenge = ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")
         val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(challengeThatWillGetDeleted, someOtherChallenge))
+        val challengeExpectedToBeDeleted = someCompetition.findChallenge("ChallengeToBeDeleted")
+        val givenChallengeId = challengeExpectedToBeDeleted.id
+
         `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
@@ -243,8 +242,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .andExpect(status().isOk)
 
         assertThat(someCompetition.challenges)
-                .doesNotContain(challengeThatWillGetDeleted)
-                .contains(someOtherChallenge)
+                .doesNotContain(challengeExpectedToBeDeleted)
     }
 
     @Test
