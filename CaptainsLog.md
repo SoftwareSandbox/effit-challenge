@@ -1,3 +1,10 @@
+## 2019/11/11 - Commands risks to become a garbage bin
+Right now, I chose to put common wrapper classes (like `CompetitorName` or `CompleterId`) in the `commands` _module_.
+
+But that means that to get typesafety (or the same rules) in for example the `query` _module_, that module would also need to depend on `commands`.
+
+And that seems like an unreasonable dependency. So maybe I need something like a shared types module?
+
 ## 2019/11/3 - Options for choosing where Transactionality lies
 Problem when adding multiple Challenges to an existing Competition: when one of the Challenges is invalid, none of the challenges should be added.
 
