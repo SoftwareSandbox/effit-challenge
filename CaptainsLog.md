@@ -1,3 +1,7 @@
+## 2019/11/11 - Gradual redesign does not always allow _optimal explicitness_
+For example, when having `addCompetitor` use a newly introduced `CompetitorName` wrapper, I ran into the fact that I can't just change `Competitor` itself.
+Because the UI still depends on `Competitor` being some object that is instantiatable by Jackson. I wanted to introduce a new constructor that takes a `CompetitorName` and returns a `Competitor`.
+
 ## 2019/11/11 - Commands risks to become a garbage bin
 Right now, I chose to put common wrapper classes (like `CompetitorName` or `ChallengeToAdd`) in the `commands` _module_.
 
