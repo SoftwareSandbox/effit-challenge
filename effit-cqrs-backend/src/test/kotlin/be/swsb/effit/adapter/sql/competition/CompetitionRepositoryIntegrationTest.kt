@@ -70,16 +70,13 @@ class CompetitionRepositoryIntegrationTest {
     }
 
     @Test
-    fun `saving a Competition with persisted Challenges`() {
+    fun `saving a Competition with unpersisted Challenges`() {
         val snowCase2018 = Competition.defaultCompetitionForTest(name = "SnowCase2018")
         testEntityManager.persist(snowCase2018)
 
         val existingCompetition = competitionRepository.findByCompetitionIdentifier(CompetitionId("SnowCase2018"))!!
 
         val someChallenge = Challenge.defaultChallengeForTest()
-        testEntityManager.persist(someChallenge)
-        testEntityManager.flush()
-
         existingCompetition.addChallenge(someChallenge)
 
         competitionRepository.save(existingCompetition)
