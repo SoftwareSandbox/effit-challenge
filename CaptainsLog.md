@@ -1,3 +1,14 @@
+## 2019/11/11 - Choices of updating the TestBuilder API or not
+While redesigning `addCompetitor` to use just competitor names instead of `Competitor`s:
+
+`Competition.defaultCompetitionForTest` used to have `competitors` which were actual `Competitor`s, but I chose to change that API to `CompetitorName`s instead.
+
+This had the implication of having to change all usages in tests, which was tedious, but also allowed me to double check if whatever use-case was happening there, was still the thing I wanted. 
+
+The other choice, was to keep the API as is, but _internally_ (in the TestBuilder function) translate the `Competitor`s into `CompetitorName`s **and** also set the expected UUIDs.
+
+Let's find out which one was the better choice by doing the same with `addChallenge`.
+
 ## 2019/11/11 - Gradual redesign does not always allow _optimal explicitness_
 For example, when having `addCompetitor` use a newly introduced `CompetitorName` wrapper, I ran into the fact that I can't just change `Competitor` itself.
 Because the UI still depends on `Competitor` being some object that is instantiatable by Jackson. I wanted to introduce a new constructor that takes a `CompetitorName` and returns a `Competitor`.
