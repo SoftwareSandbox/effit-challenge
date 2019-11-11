@@ -1,3 +1,10 @@
+## 2019/11/11 - Choices of updating the TestBuilder API or not: result
+The choice to keep the API as is, wouldn't work, because you cannot change the id fields of instances of course, you dummy.
+
+The other thing I noticed though, is that instead of having your compiler tell you something is wrong and needs fixin', it'll be the tests that tell you this.
+
+So the conclusion is: whenever your construction of a domain object changes, your test builder should change API along with it.
+
 ## 2019/11/11 - Choices of updating the TestBuilder API or not
 While redesigning `addCompetitor` to use just competitor names instead of `Competitor`s:
 
