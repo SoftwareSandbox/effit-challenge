@@ -4,7 +4,7 @@ import be.swsb.effit.adapter.ui.util.RestApiExposed
 import be.swsb.effit.domain.command.Command
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.domain.core.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import java.time.LocalDate
 
 sealed class CompetitionCommands {

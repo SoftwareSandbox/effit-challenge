@@ -7,7 +7,7 @@ import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
-import be.swsb.effit.domain.core.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
@@ -64,8 +64,8 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
 
     @PostMapping("{competitionId}/addCompetitor")
     fun addCompetitor(@PathVariable("competitionId") competitionId: String,
-                      @RequestBody competitor: Competitor): ResponseEntity<Any> {
-        commandExecutor.execute(AddCompetitor(CompetitionId(competitionId), CompetitorName(competitor.name)))
+                      @RequestBody competitorName: CompetitorName): ResponseEntity<Any> {
+        commandExecutor.execute(AddCompetitor(CompetitionId(competitionId), competitorName))
         return ResponseEntity.accepted().build()
     }
 

@@ -10,7 +10,7 @@ import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
-import be.swsb.effit.domain.core.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
