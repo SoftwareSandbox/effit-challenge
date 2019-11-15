@@ -1,3 +1,6 @@
+## 2019/11/15 - Socrates Belgium! (inline classes not jacksonifiable)
+See [this issue](https://github.com/FasterXML/jackson-module-kotlin/issues/199).
+
 ## 2019/11/11 - Choices of updating the TestBuilder API or not: result
 The choice to keep the API as is, wouldn't work, because you cannot change the id fields of instances of course, you dummy.
 
