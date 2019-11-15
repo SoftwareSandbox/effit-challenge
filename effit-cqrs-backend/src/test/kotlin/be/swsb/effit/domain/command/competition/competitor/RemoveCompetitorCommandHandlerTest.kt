@@ -1,12 +1,14 @@
-package be.swsb.effit.domain.command.competition
+package be.swsb.effit.domain.command.competition.competitor
 
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
-import be.swsb.effit.domain.command.competition.competitor.CompetitorName
+import be.swsb.effit.domain.command.competition.AddCompetitor
+import be.swsb.effit.domain.command.competition.RemoveCompetitor
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.competitor.Competitor
 import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.core.competition.defaultCompetitionForTest
+import be.swsb.effit.domain.core.competition.findCompetitor
 import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +23,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class AddCompetitorCommandHandlerTest {
+class RemoveCompetitorCommandHandlerTest {
 
     @Mock
     private lateinit var queryExecutor: QueryExecutor
@@ -30,30 +32,29 @@ class AddCompetitorCommandHandlerTest {
     @Captor
     private lateinit var savedCompetitionCaptor: ArgumentCaptor<Competition>
 
-    private lateinit var handler: AddCompetitorCommandHandler
+    private lateinit var handler: RemoveCompetitorCommandHandler
 
     @BeforeEach
     fun setUp() {
-        handler = AddCompetitorCommandHandler(queryExecutor, competitionRepository)
+        handler = RemoveCompetitorCommandHandler(queryExecutor, competitionRepository)
     }
 
     @Test
-    fun `handle | When Competition found, create Competitor and add it to the Competition`() {
-        val thundercatsCompetition = Competition.defaultCompetitionForTest()
+    fun `handle | When Competition found, remove the Competitor with the given id from the Competition`() {
+        val snarfsName = CompetitorName("Snarf")
+        val thundercatsCompetition = Competition.defaultCompetitionForTest(competitors = listOf(snarfsName))
         val givenCompetitionId = CompetitionId("ThundercatsCompetition")
-        val competitorName = CompetitorName("Snarf")
 
         `when`(queryExecutor.execute(FindCompetition(givenCompetitionId))).thenReturn(thundercatsCompetition)
 
-        val savedCompetitor = Competitor.defaultCompetitorForTest(name="Snarf")
         val updatedAndSavedCompetition = Competition.defaultCompetitionForTest()
         `when`(competitionRepository.save(savedCompetitionCaptor.capture())).thenReturn(updatedAndSavedCompetition)
 
-        handler.handle(AddCompetitor(givenCompetitionId, competitorName))
+        val snarfsId = thundercatsCompetition.findCompetitor("Snarf").id
 
-        assertThat(thundercatsCompetition.competitors)
-                .usingElementComparatorIgnoringFields("id")
-                .containsExactly(savedCompetitor)
+        handler.handle(RemoveCompetitor(givenCompetitionId, CompetitorId(snarfsId)))
+
+        assertThat(thundercatsCompetition.competitors).isEmpty()
 
         verify(competitionRepository).save(thundercatsCompetition)
     }

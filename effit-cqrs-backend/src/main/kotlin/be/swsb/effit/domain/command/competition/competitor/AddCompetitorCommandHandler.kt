@@ -1,7 +1,8 @@
-package be.swsb.effit.domain.command.competition
+package be.swsb.effit.domain.command.competition.competitor
 
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.command.CommandHandler
+import be.swsb.effit.domain.command.competition.AddCompetitor
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor

@@ -6,6 +6,7 @@ import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.*
+import be.swsb.effit.domain.command.competition.competitor.CompetitorId
 import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.competition.*
 import be.swsb.effit.domain.core.competition.competitor.Competitor
@@ -251,11 +252,11 @@ class CompetitionControllerTest : ControllerTest() {
 
         val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(CompetitorName("Snarf")))
         val snarf = someCompetition.findCompetitor("Snarf")
-
+        val snarfId = CompetitorId(snarf.id)
         `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
-                .content(snarf.toJson(objectMapper))
+                .content(snarfId.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
