@@ -26,6 +26,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
+import java.util.*
 import java.util.UUID.randomUUID
 
 class CompetitionControllerTest : ControllerTest() {
@@ -249,11 +250,7 @@ class CompetitionControllerTest : ControllerTest() {
     @Test
     fun `POST api_competition_compId_removeCompetitor should remove the given competitor id`() {
         val givenCompetitionId = "SnowCase2018"
-
-        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(CompetitorName("Snarf")))
-        val snarf = someCompetition.findCompetitor("Snarf")
-        val snarfId = CompetitorId(snarf.id)
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
+        val snarfId = CompetitorId(UUID.randomUUID())
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
                 .content(snarfId.toJson(objectMapper))
@@ -261,29 +258,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(someCompetition.competitors).isEmpty()
-
-        verify(competitionRepositoryMock).save(someCompetition)
-    }
-
-    @Test
-    fun `POST api_competition_compId_removeCompetitor should return 400 when no competitor found for given id`() {
-        val givenCompetitionId = "SnowCase2018"
-
-        val someCompetition = Competition.defaultCompetitionForTest(competitors = listOf(CompetitorName("Snarf")))
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
-                .content(Competitor.defaultCompetitorForTest().toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest)
-
-        assertThat(someCompetition.competitors)
-                .usingElementComparatorIgnoringFields("id")
-                .containsExactly(Competitor.defaultCompetitorForTest(name="Snarf"))
-
-        verify(competitionRepositoryMock, never()).save(ArgumentMatchers.any(Competition::class.java))
+        verify(commandExecutorMock).execute(RemoveCompetitor(CompetitionId(givenCompetitionId), snarfId))
     }
 
     private fun `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString: String, expectedCompetition: Competition) {
