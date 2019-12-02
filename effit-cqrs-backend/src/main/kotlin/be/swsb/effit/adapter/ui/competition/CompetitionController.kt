@@ -5,10 +5,9 @@ import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.command.competition.competitor.CompetitorId
+import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.domain.core.competition.competitor.Competitor
-import be.swsb.effit.domain.command.competition.competitor.CompetitorName
 import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import be.swsb.effit.domain.query.competition.FindAllCompetitions
 import be.swsb.effit.domain.query.competition.FindCompetition
