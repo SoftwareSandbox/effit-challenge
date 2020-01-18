@@ -3,7 +3,6 @@ package be.swsb.effit.adapter.ui.competition
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
-import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
 import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.command.competition.competitor.CompetitorId
@@ -16,9 +15,7 @@ import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.messaging.command.CommandExecutor
 import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -58,7 +55,7 @@ class CompetitionControllerTest : ControllerTest() {
         val expectedCompetitionWithChallenges = Competition.defaultCompetitionForTest(
                 challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest())
         )
-        `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString, expectedCompetitionWithChallenges)
+        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetitionWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -128,19 +125,17 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition_compId_addCompetitor should add given Competitor to Competitions' Competitors`() {
-        val givenCompetitionId = "Thundercats"
+    fun `api_competition_competitionId_removeChallenge_challengeId should remove the given challenge id`() {
+        val givenCompetitionId = "SnowCase2018"
+        val givenChallengeId = randomUUID()
 
-        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
-        `when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
-                .content(snarf.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
+                givenCompetitionId,
+                givenChallengeId)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isAccepted)
+                .andExpect(status().isOk)
 
-        verify(commandExecutorMock).execute(AddCompetitor(CompetitionId(givenCompetitionId), CompetitorName("Snarf")))
+        verify(commandExecutorMock).execute(RemoveChallenge(CompetitionId(givenCompetitionId), givenChallengeId))
     }
 
     @Test
@@ -162,25 +157,19 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `api_competition_competitionId_removeChallenge_challengeId should remove the given challenge id`() {
-        val givenCompetitionId = "SnowCase2018"
+    fun `POST api_competition_compId_addCompetitor should add given Competitor to Competitions' Competitors`() {
+        val givenCompetitionId = "Thundercats"
 
-        val challengeThatWillGetDeleted = ChallengeToAdd.defaultChallengeToAddForTest(name = "ChallengeToBeDeleted")
-        val someOtherChallenge = ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")
-        val someCompetition = Competition.defaultCompetitionForTest(challenges = listOf(challengeThatWillGetDeleted, someOtherChallenge))
-        val challengeExpectedToBeDeleted = someCompetition.findChallenge("ChallengeToBeDeleted")
-        val givenChallengeId = challengeExpectedToBeDeleted.id
+        val snarf = Competitor.defaultCompetitorForTest(name = "Snarf")
+        `when`(competitorRepositoryMock.save(snarf)).thenReturn(snarf)
 
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, someCompetition)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
-                givenCompetitionId,
-                givenChallengeId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
+                .content(snarf.toJson(objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk)
+                .andExpect(status().isAccepted)
 
-        assertThat(someCompetition.challenges)
-                .doesNotContain(challengeExpectedToBeDeleted)
+        verify(commandExecutorMock).execute(AddCompetitor(CompetitionId(givenCompetitionId), CompetitorName("Snarf")))
     }
 
     @Test
@@ -195,9 +184,5 @@ class CompetitionControllerTest : ControllerTest() {
                 .andExpect(status().isAccepted)
 
         verify(commandExecutorMock).execute(RemoveCompetitor(CompetitionId(givenCompetitionId), snarfId))
-    }
-
-    private fun `when findByCompetitionIdentifier then return`(requestedCompetitionIdAsString: String, expectedCompetition: Competition) {
-        `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetition)
     }
 }

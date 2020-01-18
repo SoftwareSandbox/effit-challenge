@@ -1,0 +1,21 @@
+package be.swsb.effit.domain.command.competition
+
+import be.swsb.effit.adapter.sql.competition.CompetitionRepository
+import be.swsb.effit.domain.command.CommandHandler
+import be.swsb.effit.domain.core.competition.Competition
+import be.swsb.effit.domain.query.competition.FindCompetition
+import be.swsb.effit.messaging.query.QueryExecutor
+import org.springframework.stereotype.Component
+
+@Component
+class RemoveChallengeCommandHandler(val queryExecutor: QueryExecutor, val competitionRepository: CompetitionRepository) : CommandHandler<Competition, RemoveChallenge> {
+    override fun handle(command: RemoveChallenge): Competition {
+        val competition = queryExecutor.execute(FindCompetition(command.id))
+        competition.removeChallenge(command.challengeId)
+        return competitionRepository.save(competition)
+    }
+
+    override fun getCommandType(): Class<RemoveChallenge> {
+        return RemoveChallenge::class.java
+    }
+}

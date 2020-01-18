@@ -17,6 +17,7 @@ sealed class CompetitionCommands {
     data class StartCompetition(val id: CompetitionId): Command<Competition>
     data class UnstartCompetition(val id: CompetitionId): Command<Competition>
     data class AddChallenges(val id: CompetitionId, val challengesToAdd: List<ChallengeToAdd>): Command<Competition>
+    data class RemoveChallenge(val id: CompetitionId, val challengeId: UUID): Command<Competition>
     data class AddCompetitor(val id: CompetitionId, val competitorToAdd: CompetitorName): Command<Competition>
     data class RemoveCompetitor(val id: CompetitionId, val competitorIdToRemove: CompetitorId): Command<Competition>
     data class CompleteChallenge(val id: CompetitionId, val challengeId: UUID, val completerId: CompleterId): Command<Competition>
@@ -26,6 +27,7 @@ typealias CreateCompetition = CompetitionCommands.CreateCompetition
 typealias StartCompetition = CompetitionCommands.StartCompetition
 typealias UnstartCompetition = CompetitionCommands.UnstartCompetition
 typealias AddChallenges = CompetitionCommands.AddChallenges
+typealias RemoveChallenge = CompetitionCommands.RemoveChallenge
 typealias AddCompetitor = CompetitionCommands.AddCompetitor
 typealias RemoveCompetitor = CompetitionCommands.RemoveCompetitor
 typealias CompleteChallenge = CompetitionCommands.CompleteChallenge
