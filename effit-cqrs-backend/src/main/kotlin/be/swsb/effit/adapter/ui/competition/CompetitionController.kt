@@ -80,13 +80,7 @@ class CompetitionController(private val competitionRepository: CompetitionReposi
     fun completeChallenge(@PathVariable("competitionId") competitionId: String,
                           @PathVariable("challengeId") challengeId: UUID,
                           @RequestBody completerId: CompleterId): ResponseEntity<Any> {
-        val competition = findCompetition(competitionId)
-        competition.challenges.find { it.id == challengeId }
-                ?.let { competition.completeChallenge(it, completerId.competitorId) }
-                ?: throw EntityNotFoundDomainRuntimeException("Competition with id $competitionId has no challenge with id $challengeId")
-
-        competitionRepository.save(competition)
-
+        commandExecutor.execute(CompleteChallenge(CompetitionId(competitionId), challengeId, completerId))
         return ResponseEntity.accepted().build()
     }
 

@@ -144,41 +144,10 @@ class CompetitionControllerTest : ControllerTest() {
     }
 
     @Test
-    fun `POST api_competition_compId_complete_challengeId should return 404 when no challenge was found`() {
-        val successfulCompetitor = CompleterId(randomUUID())
-        val givenCompetitionId = "SnowCase2018"
-        val givenChallengeId = randomUUID().toString()
-
-        val compWithoutChallenges = Competition.defaultCompetitionForTest(name = givenCompetitionId)
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithoutChallenges)
-
-        val expectedError = EffitError("Competition with id $givenCompetitionId has no challenge with id $givenChallengeId")
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
-                givenCompetitionId,
-                givenChallengeId
-        )
-                .content(successfulCompetitor.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound)
-                .andExpect(content().json(expectedError.toJson(objectMapper), true))
-    }
-
-    @Test
     fun `POST api_competition_compId_complete_challengeId should add challenge given Competitors completedChallenges`() {
         val givenCompetitionId = "SnowCase2018"
-
-        val compWithChallenges = Competition.defaultCompetitionForTest(
-                name = givenCompetitionId,
-                competitors = listOf(CompetitorName("Snarf")),
-                challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")),
-                started = true)
-        val snarf = compWithChallenges.findCompetitor("Snarf")
-        val successfulCompetitor = CompleterId(snarf.id)
-        val picassoChallenge = compWithChallenges.findChallenge("Picasso")
-        val givenChallengeId = picassoChallenge.id
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithChallenges)
+        val successfulCompetitor = CompleterId(randomUUID())
+        val givenChallengeId = randomUUID()
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
                 givenCompetitionId,
@@ -189,40 +158,7 @@ class CompetitionControllerTest : ControllerTest() {
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isAccepted)
 
-        assertThat(snarf.completedChallenges)
-                .containsExactly(picassoChallenge)
-        verify(competitionRepositoryMock).save(compWithChallenges)
-    }
-
-    @Test
-    fun `POST api_competition_compId_complete_challengeId should return 400 when Competitor already finished given challenge`() {
-        val givenCompetitionId = "SnowCase2018"
-
-        val compWithChallenges = Competition.defaultCompetitionForTest(
-                name = givenCompetitionId,
-                competitors = listOf(CompetitorName("Snarf")),
-                challenges = listOf(ChallengeToAdd.defaultChallengeToAddForTest(name = "Picasso")),
-                started = true
-        )
-        val picassoChallenge = compWithChallenges.findChallenge("Picasso")
-        val givenChallengeId = picassoChallenge.id
-        val snarf = compWithChallenges.findCompetitor("Snarf")
-        snarf.completeChallenge(picassoChallenge)
-        val successfulCompetitor = CompleterId(snarf.id)
-        `when findByCompetitionIdentifier then return`(givenCompetitionId, compWithChallenges)
-
-        val expectedError = EffitError("This competitor already completed the ${picassoChallenge.name} challenge.")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/complete/{challengeId}",
-                givenCompetitionId,
-                givenChallengeId.toString()
-        )
-                .content(successfulCompetitor.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest)
-                .andExpect(content().json(expectedError.toJson(objectMapper), true))
-
-        verify(competitionRepositoryMock, never()).save(compWithChallenges)
+        verify(commandExecutorMock).execute(CompleteChallenge(CompetitionId(givenCompetitionId), givenChallengeId, successfulCompetitor))
     }
 
     @Test

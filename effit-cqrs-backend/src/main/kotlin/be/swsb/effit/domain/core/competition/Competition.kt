@@ -187,4 +187,8 @@ class CompetitionId constructor(name: String) {
     override fun hashCode(): Int {
         return _id.hashCode()
     }
+
+    override fun toString(): String {
+        return _id
+    }
 }
