@@ -8,7 +8,10 @@ import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.stereotype.Component
 
 @Component
-class RemoveChallengeCommandHandler(val queryExecutor: QueryExecutor, val competitionRepository: CompetitionRepository) : CommandHandler<Competition, RemoveChallenge> {
+class RemoveChallengeCommandHandler(
+        private val queryExecutor: QueryExecutor,
+        private val competitionRepository: CompetitionRepository)
+    : CommandHandler<Competition, RemoveChallenge> {
     override fun handle(command: RemoveChallenge): Competition {
         val competition = queryExecutor.execute(FindCompetition(command.id))
         competition.removeChallenge(command.challengeId)

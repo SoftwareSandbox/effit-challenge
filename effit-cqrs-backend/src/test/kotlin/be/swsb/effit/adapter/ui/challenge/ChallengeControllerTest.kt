@@ -1,11 +1,11 @@
 package be.swsb.effit.adapter.ui.challenge
 
-import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
-import be.swsb.effit.adapter.ui.exceptions.EffitError
 import be.swsb.effit.adapter.ui.util.toJson
+import be.swsb.effit.domain.command.challenge.UpdateChallenge
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
 import be.swsb.effit.domain.query.challenge.FindChallenge
+import be.swsb.effit.messaging.command.CommandExecutor
 import be.swsb.effit.messaging.query.QueryExecutor
 import be.swsb.test.effit.ControllerTest
 import org.assertj.core.api.Assertions.assertThat
@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.*
@@ -23,12 +26,9 @@ import java.util.*
 class ChallengeControllerTest: ControllerTest() {
 
     @Autowired
-    lateinit var challengeRepositoryMock: ChallengeRepository
+    lateinit var commandExecutorMock: CommandExecutor
     @Autowired
     lateinit var queryExecutorMock: QueryExecutor
-
-    @Captor
-    lateinit var challengeCaptor: ArgumentCaptor<Challenge>
 
     @Test
     fun `GET api challenge id should return specific Challenge for given id`() {
@@ -37,7 +37,7 @@ class ChallengeControllerTest: ControllerTest() {
 
         Mockito.`when`(queryExecutorMock.execute(FindChallenge(givenId))).thenReturn(expectedChallenge)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
+        mockMvc.perform(get("/api/challenge/{id}", givenId.toString())
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -45,37 +45,17 @@ class ChallengeControllerTest: ControllerTest() {
     }
 
     @Test
-    fun `PUT api_challenge_challengeId should return 404 when no matching Challenge found for given ChallengeId`() {
-        val givenId = UUID.randomUUID()
-
-        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.empty())
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}", givenId)
-                .content(Challenge.defaultChallengeForTest().toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound)
-    }
-
-    @Test
     fun `PUT api_challenge_challengeId should update given challenge`() {
         val givenId = UUID.randomUUID()
-        val oldChallenge = Challenge.defaultChallengeForTest(id = givenId, name = "Pablo")
+        val updateChallenge = UpdateChallenge(givenId, "Pablo", 7, "snarf snarf")
 
-        Mockito.`when`(challengeRepositoryMock.findById(givenId)).thenReturn(Optional.of(oldChallenge))
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}", givenId)
-                .content(oldChallenge.copy(name = "Picasso").toJson(objectMapper))
+        mockMvc.perform(put("/api/challenge/{challengeId}", givenId)
+                .content(updateChallenge.toJson(objectMapper))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk)
 
-        Mockito.verify(challengeRepositoryMock).save(challengeCaptor.capture())
-        val persistedChallenge = challengeCaptor.value
-        assertThat(persistedChallenge.name).isEqualTo("Picasso")
-        assertThat(persistedChallenge.points).isEqualTo(oldChallenge.points)
-        assertThat(persistedChallenge.description).isEqualTo(oldChallenge.description)
-        assertThat(persistedChallenge.id).isEqualTo(oldChallenge.id)
+        verify(commandExecutorMock).execute(updateChallenge)
     }
 
 }

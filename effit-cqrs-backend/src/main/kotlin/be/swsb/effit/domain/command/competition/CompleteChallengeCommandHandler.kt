@@ -10,7 +10,10 @@ import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.stereotype.Component
 
 @Component
-class CompleteChallengeCommandHandler(val queryExecutor: QueryExecutor, val competitionRepository: CompetitionRepository) : CommandHandler<Competition, CompleteChallenge> {
+class CompleteChallengeCommandHandler(
+        private val queryExecutor: QueryExecutor,
+        private val competitionRepository: CompetitionRepository)
+    : CommandHandler<Competition, CompleteChallenge> {
     override fun handle(command: CompleteChallenge): Competition {
         val competitionId = command.id
         val challengeId = command.challengeId
