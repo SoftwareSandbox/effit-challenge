@@ -2,7 +2,6 @@ package be.swsb.effit.domain.command.competition
 
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.core.competition.*
-import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.domain.query.competition.MaybeFindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.assertj.core.api.Assertions.assertThat

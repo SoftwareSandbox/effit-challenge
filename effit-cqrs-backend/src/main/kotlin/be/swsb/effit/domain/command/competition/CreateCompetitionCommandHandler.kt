@@ -5,7 +5,6 @@ import be.swsb.effit.domain.command.CommandHandler
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionAlreadyExistsDomainException
 import be.swsb.effit.domain.core.competition.CompetitionCreator
-import be.swsb.effit.domain.query.competition.FindCompetition
 import be.swsb.effit.domain.query.competition.MaybeFindCompetition
 import be.swsb.effit.messaging.query.QueryExecutor
 import org.springframework.stereotype.Component

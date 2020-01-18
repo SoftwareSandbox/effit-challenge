@@ -2,7 +2,8 @@ package be.swsb.effit.domain.core.competition
 
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.core.exceptions.DomainValidationRuntimeException
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 

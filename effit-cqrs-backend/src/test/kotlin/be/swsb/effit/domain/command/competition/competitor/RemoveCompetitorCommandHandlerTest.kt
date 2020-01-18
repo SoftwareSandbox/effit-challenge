@@ -1,12 +1,9 @@
 package be.swsb.effit.domain.command.competition.competitor
 
 import be.swsb.effit.adapter.sql.competition.CompetitionRepository
-import be.swsb.effit.domain.command.competition.AddCompetitor
 import be.swsb.effit.domain.command.competition.RemoveCompetitor
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
-import be.swsb.effit.domain.core.competition.competitor.Competitor
-import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import be.swsb.effit.domain.core.competition.defaultCompetitionForTest
 import be.swsb.effit.domain.core.competition.findCompetitor
 import be.swsb.effit.domain.query.competition.FindCompetition

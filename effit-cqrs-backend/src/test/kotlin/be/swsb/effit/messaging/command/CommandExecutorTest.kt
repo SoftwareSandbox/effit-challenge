@@ -2,8 +2,6 @@ package be.swsb.effit.messaging.command
 
 import be.swsb.effit.domain.command.Command
 import be.swsb.effit.domain.command.CommandHandler
-import be.swsb.effit.messaging.query.FindAllSnarfsQueryHandler
-import be.swsb.effit.messaging.query.NoQueryHandlerException
 import be.swsb.effit.messaging.query.Snarf
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType

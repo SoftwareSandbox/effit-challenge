@@ -4,9 +4,7 @@ import be.swsb.effit.adapter.sql.competition.CompetitionRepository
 import be.swsb.effit.domain.core.competition.Competition
 import be.swsb.effit.domain.core.competition.CompetitionId
 import be.swsb.effit.domain.core.competition.defaultCompetitionForTest
-import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
