@@ -3,7 +3,9 @@ package be.swsb.effit.domain.query.challenge
 import be.swsb.effit.adapter.sql.challenge.ChallengeRepository
 import be.swsb.effit.domain.core.challenge.Challenge
 import be.swsb.effit.domain.core.challenge.defaultChallengeForTest
+import be.swsb.effit.domain.core.exceptions.EntityNotFoundDomainRuntimeException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,7 +24,7 @@ class FindChallengeQueryHandlerTest {
     private lateinit var handler: FindChallengeQueryHandler
 
     @BeforeEach
-    internal fun setUp() {
+    fun setUp() {
         handler = FindChallengeQueryHandler(challengeRepositoryMock)
     }
 
@@ -38,12 +40,12 @@ class FindChallengeQueryHandlerTest {
     }
 
     @Test
-    fun `handle | repository finds no Challenge for given UUID, no Challenge is returned`() {
+    fun `handle | repository finds no Challenge for given UUID, EntityNotFound is thrown`() {
         val challengeId = randomUUID()
         `when`(challengeRepositoryMock.findById(challengeId)).thenReturn(Optional.empty())
 
-        val actual = handler.handle(FindChallenge(challengeId))
-
-        assertThat(actual).isNull()
+        assertThatExceptionOfType(EntityNotFoundDomainRuntimeException::class.java)
+                .isThrownBy { handler.handle(FindChallenge(challengeId)) }
+                .withMessage("Challenge with id $challengeId not found")
     }
 }

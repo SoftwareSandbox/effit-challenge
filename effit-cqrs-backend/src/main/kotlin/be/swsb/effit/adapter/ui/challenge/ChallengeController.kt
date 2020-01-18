@@ -20,8 +20,7 @@ class ChallengeController(private val challengeRepository: ChallengeRepository,
     @GetMapping("{challengeId}")
     fun challengeDetail(@PathVariable(value = "challengeId") challengeId: String): ResponseEntity<Challenge> {
         return queryExecutor.execute(FindChallenge(UUID.fromString(challengeId)))
-                ?.let { ResponseEntity.ok(it) }
-                ?: throw EntityNotFoundDomainRuntimeException("Challenge with id $challengeId not found")
+                .let { ResponseEntity.ok(it) }
     }
 
     @PutMapping("{challengeId}")

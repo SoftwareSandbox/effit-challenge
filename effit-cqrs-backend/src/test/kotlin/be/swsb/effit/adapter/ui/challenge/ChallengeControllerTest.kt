@@ -31,19 +31,6 @@ class ChallengeControllerTest: ControllerTest() {
     lateinit var challengeCaptor: ArgumentCaptor<Challenge>
 
     @Test
-    fun `GET api challenge id should return no challenge found for given id when challenge does not exist`() {
-        val givenId = UUID.randomUUID()
-
-        Mockito.`when`(queryExecutorMock.execute(FindChallenge(givenId))).thenReturn(null)
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{id}", givenId.toString())
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(EffitError("Challenge with id $givenId not found").toJson(objectMapper), true))
-    }
-
-    @Test
     fun `GET api challenge id should return specific Challenge for given id`() {
         val givenId = UUID.randomUUID()
         val expectedChallenge = Challenge.defaultChallengeForTest(id = givenId)
