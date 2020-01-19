@@ -1,10 +1,11 @@
 {
   "name": "effit-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "dark": "vue-cli-service build --mode dark",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },

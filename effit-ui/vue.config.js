@@ -7,5 +7,7 @@ module.exports = {
             }
         },
         port: 8081
-    }
+    },
+    publicPath: process.env.PUBLIC_PATH || '/',
+    assetsDir: process.env.ASSETS_DIR || ''
 };
