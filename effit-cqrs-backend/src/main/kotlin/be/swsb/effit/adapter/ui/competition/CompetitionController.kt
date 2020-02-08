@@ -1,7 +1,5 @@
 package be.swsb.effit.adapter.ui.competition
 
-import be.swsb.effit.adapter.sql.competition.CompetitionRepository
-import be.swsb.effit.adapter.sql.competition.competitor.CompetitorRepository
 import be.swsb.effit.adapter.ui.competition.competitor.CompleterId
 import be.swsb.effit.domain.command.competition.*
 import be.swsb.effit.domain.command.competition.competitor.CompetitorId
@@ -21,9 +19,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/competition",
         produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
-class CompetitionController(private val competitionRepository: CompetitionRepository,
-                            private val competitorRepository: CompetitorRepository,
-                            private val commandExecutor: CommandExecutor,
+class CompetitionController(private val commandExecutor: CommandExecutor,
                             private val queryExecutor: QueryExecutor) {
 
     @GetMapping
