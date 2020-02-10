@@ -17,6 +17,18 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
                                       val startDate: LocalDate,
                                       val endDate: LocalDate) : RestApiExposed {
 
+    val challenges: List<Challenge>
+        get() = _challenges
+
+    val competitors: List<Competitor>
+        get() = _competitors
+
+    val competitionId: CompetitionId
+        get() = competitionIdentifier
+
+    val started: Boolean
+        get() = _started
+
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "FK_COMPETITION_ID")
     @JsonSetter("challenges")
@@ -30,20 +42,8 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     @Embedded
     private var competitionIdentifier: CompetitionId
 
-    val challenges: List<Challenge>
-        get() = _challenges
-
-    val competitors: List<Competitor>
-        get() = _competitors
-
-    val competitionId: CompetitionId
-        get() = competitionIdentifier
-
     @Column(name = "started")
     private var _started: Boolean
-
-    val started: Boolean
-        get() = _started
 
     init {
         if (endDate.isBefore(startDate)) throw DomainValidationRuntimeException("The end date can not be before the start date")

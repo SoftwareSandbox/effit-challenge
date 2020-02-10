@@ -10,21 +10,21 @@ import java.time.LocalDate
 class CompetitionCreatorTest {
 
     @Test
-    fun `without startDate delegates properly`() {
+    fun `without startDate, creates Competition with default startDate`() {
         val endDate = LocalDate.now().plusDays(5)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", null, endDate))
         assertThat(actual.startDate).isNotNull()
     }
 
     @Test
-    fun `without endDate delegates properly`() {
+    fun `without endDate, creates Competition with default endDate`() {
         val startDate = LocalDate.now().minusDays(8)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", startDate, null))
         assertThat(actual.endDate).isNotNull()
     }
 
     @Test
-    fun `with both start and endDate not null delegates properly`() {
+    fun `with both start and endDate, creates Competition with default start and end dates`() {
         val startDate = LocalDate.now().minusDays(8)
         val endDate = LocalDate.now().plusDays(8)
         val actual = CompetitionCreator().from(CreateCompetition("unimportant", startDate, endDate))
