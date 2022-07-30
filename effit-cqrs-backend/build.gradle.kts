@@ -48,6 +48,10 @@ tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+application {
+    mainClass.set("be.swsb.effit.EffitCqrsApplication")
+}
+
 //distTar
 tasks.withType<Tar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
