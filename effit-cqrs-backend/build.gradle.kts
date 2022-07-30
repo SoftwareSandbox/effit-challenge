@@ -9,14 +9,10 @@ buildscript {
     }
 }
 
-apply(plugin = "io.spring.dependency-management")
-
 plugins {
-    kotlin("jvm") version "1.3.21"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.21"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.21" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.3.21"
-    id("org.springframework.boot") version "2.1.4.RELEASE"
+    id("effit.kotlin.application")
+    id("effit.spring.boot")
+    id("effit.db.jdbi")
 }
 
 repositories {
@@ -30,11 +26,6 @@ val test by tasks.getting(Test::class) {
 val junit5Version = "5.4.1"
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
-
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
@@ -50,17 +41,23 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter")
 }
 
-tasks.bootJar {
-    baseName = "effit-cqrs-webapp"
-    mainClassName = "be.swsb.effit.EffitCqrsApplication"
+//bootJar
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    archiveBaseName.set("effit-cqrs-webapp")
+//    mainClass.set("be.swsb.effit.EffitCqrsApplication")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-tasks.compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+//distTar
+tasks.withType<Tar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-tasks.compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+
+//distZip
+tasks.withType<Zip> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
 
 tasks.processResources {
     dependsOn(":effit-ui:build")
