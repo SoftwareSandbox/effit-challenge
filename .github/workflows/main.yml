@@ -17,9 +17,3 @@ jobs:
           cache: 'gradle'
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
-#      - name: Docker login to heroku registry
-#        run: echo "${{ secrets.HEROKU_AUTH_TOKEN }}" | docker login --username="${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com;
-#      - name: Docker build and push to heroku
-#        run: ./docker-build-and-push.sh
-#      - name: Heroku Release
-#        run: ./heroku-release.sh
