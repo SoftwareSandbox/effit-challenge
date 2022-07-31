@@ -9,6 +9,7 @@ buildscript {
 plugins {
     id("effit.kotlin.application")
     id("effit.spring.boot")
+    id("effit.spring.security")
     id("effit.db.jpa")
 }
 

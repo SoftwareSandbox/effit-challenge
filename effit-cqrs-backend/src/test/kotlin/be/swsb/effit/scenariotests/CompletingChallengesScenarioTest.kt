@@ -1,6 +1,7 @@
 package be.swsb.effit.scenariotests
 
 import be.swsb.effit.EffitCqrsApplication
+import be.swsb.effit.adapter.ui.web.SecurityConfig
 import be.swsb.effit.domain.command.competition.ChallengeToAdd
 import be.swsb.effit.domain.command.competition.CreateCompetition
 import be.swsb.effit.domain.core.competition.competitor.Competitor
@@ -14,26 +15,35 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
 import java.time.LocalDate
 
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(classes = [EffitCqrsApplication::class])
+@SpringBootTest(classes = [EffitCqrsApplication::class, SecurityConfig::class])
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CompletingChallengesScenarioTest {
 
     @Autowired
-    lateinit var mockMvc: MockMvc
+    private lateinit var context: WebApplicationContext
     @Autowired
-    lateinit var objectMapper: ObjectMapper
+    private lateinit var objectMapper: ObjectMapper
 
     private lateinit var scenarios: Scenarios
 
     @BeforeEach
     fun setUp() {
+        val mockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply<DefaultMockMvcBuilder>(SecurityMockMvcConfigurers.springSecurity())
+            .build()
+
         scenarios = Scenarios(mockMvc, objectMapper)
     }
 
