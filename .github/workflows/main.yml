@@ -8,16 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
-          java-version: 1.8
+          distribution: adopt
+          java-version: 17
+          cache: 'gradle'
       - name: Build with Gradle
-        run: ./gradlew build
-      - name: Docker login to heroku registry
-        run: echo "${{ secrets.HEROKU_AUTH_TOKEN }}" | docker login --username="${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com;
-      - name: Docker build and push to heroku
-        run: ./docker-build-and-push.sh
-      - name: Heroku Release
-        run: ./heroku-release.sh
+        run: ./gradlew build --no-daemon
+#      - name: Docker login to heroku registry
+#        run: echo "${{ secrets.HEROKU_AUTH_TOKEN }}" | docker login --username="${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com;
+#      - name: Docker build and push to heroku
+#        run: ./docker-build-and-push.sh
+#      - name: Heroku Release
+#        run: ./heroku-release.sh
