@@ -40,15 +40,13 @@ class Competition private constructor(@Id val id: UUID = UUID.randomUUID(),
     private var _competitors: MutableList<Competitor> = mutableListOf()
 
     @Embedded
-    private var competitionIdentifier: CompetitionId
+    private val competitionIdentifier: CompetitionId = CompetitionId(name)
 
     @Column(name = "started")
-    private var _started: Boolean
+    private var _started: Boolean = false
 
     init {
         if (endDate.isBefore(startDate)) throw DomainValidationRuntimeException("The end date can not be before the start date")
-        competitionIdentifier = CompetitionId(name)
-        _started = false
     }
 
     fun addChallenge(challengeToAdd: ChallengeToAdd) {

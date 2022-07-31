@@ -12,7 +12,7 @@ import be.swsb.effit.domain.core.competition.competitor.defaultCompetitorForTest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -25,8 +25,8 @@ class Scenarios(val mockMvc: MockMvc,
     fun createNewCompetition(competition: CreateCompetition, selectedChallenge: ChallengeToAdd? = null) : CompetitionId {
         val mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(competition.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated)
                 .andReturn()
         val competitionId = CompetitionId(mvcResult.response.getHeader(HttpHeaders.LOCATION)!!)
@@ -36,9 +36,9 @@ class Scenarios(val mockMvc: MockMvc,
 
     private fun retrieveCompetition(competitionId: CompetitionId): ResultActions {
         return mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", competitionId.id)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(APPLICATION_JSON))
     }
 
     fun getCompetition(competitionId: CompetitionId): Competition {
@@ -49,8 +49,8 @@ class Scenarios(val mockMvc: MockMvc,
     fun addChallenges(competitionId: CompetitionId, challenges: List<ChallengeToAdd>) {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", competitionId.id)
                 .content(challenges.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
 
@@ -58,8 +58,8 @@ class Scenarios(val mockMvc: MockMvc,
         val addedCompetitor = Competitor.defaultCompetitorForTest(name = competitorName)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", competitionId.id)
                 .content(addedCompetitor.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
 
         val foundCompetitor = getCompetition(competitionId).competitors.find { it.name == addedCompetitor.name }
@@ -75,22 +75,22 @@ class Scenarios(val mockMvc: MockMvc,
                 challengeId.toString()
         )
                 .content(CompleterId(competitorId).toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
 
     fun startCompetition(competitionId: CompetitionId) {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId.id)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
 
     fun unstartCompetition(competitionId: CompetitionId) {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId.id)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted)
     }
 
@@ -98,14 +98,14 @@ class Scenarios(val mockMvc: MockMvc,
         mockMvc.perform(MockMvcRequestBuilders.put("/api/challenge/{challengeId}",
                 updatedChallenge.id)
                 .content(updatedChallenge.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
     }
 
     fun getChallenge(requestedChallengeId: UUID): Challenge {
         val challengeAsJson = mockMvc.perform(MockMvcRequestBuilders.get("/api/challenge/{challengeId}", requestedChallengeId.toString())
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn().response.contentAsString
         return objectMapper.readValue(challengeAsJson, Challenge::class.java)

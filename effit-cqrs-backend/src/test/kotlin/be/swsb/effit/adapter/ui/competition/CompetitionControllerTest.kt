@@ -44,9 +44,9 @@ class CompetitionControllerTest : ControllerTest() {
         `when`(queryExecutorMock.execute(FindAllCompetitions)).thenReturn(expectedCompetitions)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition")
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedCompetitions.toJson(objectMapper), true))
     }
 
@@ -59,9 +59,9 @@ class CompetitionControllerTest : ControllerTest() {
         `when`(queryExecutorMock.execute(FindCompetition(CompetitionId(requestedCompetitionIdAsString)))).thenReturn(expectedCompetitionWithChallenges)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competition/{competitionId}", requestedCompetitionIdAsString)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expectedCompetitionWithChallenges.toJson(objectMapper), true))
     }
 
@@ -77,8 +77,8 @@ class CompetitionControllerTest : ControllerTest() {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(createCompetition.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated)
                 .andExpect(header().string(HttpHeaders.LOCATION, createdCompetition.competitionId.id))
     }
@@ -90,8 +90,8 @@ class CompetitionControllerTest : ControllerTest() {
         `when`(commandExecutorMock.execute(StartCompetition(CompetitionId(competitionId)))).thenReturn(existingCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/start", competitionId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
     }
 
@@ -102,8 +102,8 @@ class CompetitionControllerTest : ControllerTest() {
         `when`(commandExecutorMock.execute(UnstartCompetition(CompetitionId(competitionId)))).thenReturn(existingCompetition)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/unstart", competitionId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
     }
 
@@ -118,8 +118,8 @@ class CompetitionControllerTest : ControllerTest() {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", requestedCompetitionIdAsString)
                 .content(givenChallenges.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
 
         verify(commandExecutorMock).execute(AddChallenges(requestedCompetitionId, givenChallenges))
@@ -133,7 +133,7 @@ class CompetitionControllerTest : ControllerTest() {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeChallenge/{challengeId}",
                 givenCompetitionId,
                 givenChallengeId)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk)
 
         verify(commandExecutorMock).execute(RemoveChallenge(CompetitionId(givenCompetitionId), givenChallengeId))
@@ -150,8 +150,8 @@ class CompetitionControllerTest : ControllerTest() {
                 givenChallengeId.toString()
         )
                 .content(successfulCompetitor.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
 
         verify(commandExecutorMock).execute(CompleteChallenge(CompetitionId(givenCompetitionId), givenChallengeId, successfulCompetitor))
@@ -166,8 +166,8 @@ class CompetitionControllerTest : ControllerTest() {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/addCompetitor", givenCompetitionId)
                 .content(snarf.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
 
         verify(commandExecutorMock).execute(AddCompetitor(CompetitionId(givenCompetitionId), CompetitorName("Snarf")))
@@ -180,8 +180,8 @@ class CompetitionControllerTest : ControllerTest() {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{competitionId}/removeCompetitor", givenCompetitionId)
                 .content(snarfId.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted)
 
         verify(commandExecutorMock).execute(RemoveCompetitor(CompetitionId(givenCompetitionId), snarfId))

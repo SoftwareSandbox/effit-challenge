@@ -53,8 +53,8 @@ class CreatingCompetitionsScenarioTest {
                         "\"startDate\": \"2018-03-16\"," +
                         "\"endDate\": \"2018-03-16\"," +
                         "}")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest)
                 .andExpect(MockMvcResultMatchers.content().string(""))
     }
@@ -72,8 +72,8 @@ class CreatingCompetitionsScenarioTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competition")
                 .content(competitionWithIdThatAlreadyExists.toJson(objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest)
                 .andReturn()
     }
@@ -93,8 +93,8 @@ class CreatingCompetitionsScenarioTest {
         val challengesToBeAdded = listOf(challengeToBeCreated, invalidChallengeToBeCreated, anotherChallengeToBeCreated)
         scenarios.mockMvc.perform(MockMvcRequestBuilders.post("/api/competition/{id}/addChallenges", competitionId.id)
                 .content(challengesToBeAdded.toJson(scenarios.objectMapper))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest)
 
         assertThat(scenarios.getCompetition(competitionId).challenges).isEmpty()

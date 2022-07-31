@@ -10,7 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+    implementation("org.jetbrains.kotlin:kotlin-noarg:1.7.10")
     implementation("org.jetbrains.kotlin.plugin.spring:org.jetbrains.kotlin.plugin.spring.gradle.plugin:1.4.21")
     implementation("org.springframework.boot:spring-boot-gradle-plugin:2.5.1")
     implementation("io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:1.0.11.RELEASE")

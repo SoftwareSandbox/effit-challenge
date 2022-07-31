@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany
 @Entity
 data class Competitor(@Id val id: UUID = UUID.randomUUID(),
                       val name: String,
-                      @ManyToMany
+                      @ManyToMany(targetEntity = Challenge::class)
                       @JsonSetter("completedChallenges")
                       private var _completedChallenges: List<Challenge> = emptyList()
                       ): RestApiExposed {

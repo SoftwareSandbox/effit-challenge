@@ -12,7 +12,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/challenge",
-        produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+        produces = [MediaType.APPLICATION_JSON_VALUE])
 class ChallengeController(private val commandExecutor: CommandExecutor,
                           private val queryExecutor: QueryExecutor) {
 

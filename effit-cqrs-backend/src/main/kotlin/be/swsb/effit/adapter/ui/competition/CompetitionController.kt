@@ -18,7 +18,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/competition",
-        produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+        produces = [MediaType.APPLICATION_JSON_VALUE])
 class CompetitionController(private val commandExecutor: CommandExecutor,
                             private val queryExecutor: QueryExecutor) {
 
@@ -61,7 +61,7 @@ class CompetitionController(private val commandExecutor: CommandExecutor,
     fun removeChallenge(@PathVariable("competitionId") competitionId: String,
                         @PathVariable("challengeId") challengeId: UUID): ResponseEntity<Any> {
         commandExecutor.execute(RemoveChallenge(CompetitionId(competitionId), challengeId))
-        return ResponseEntity.ok().build<Any>()
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("{competitionId}/complete/{challengeId}")
