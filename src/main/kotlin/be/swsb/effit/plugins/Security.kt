@@ -5,7 +5,6 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.http.headers
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.config.*
@@ -14,11 +13,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
-import kotlinx.html.body
-import kotlinx.html.div
-import kotlinx.html.img
-import kotlinx.html.p
+import io.ktor.util.pipeline.*
+import kotlinx.html.*
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KFunction1
 
 fun Application.configureSecurity(httpClient: HttpClient) {
 
@@ -27,6 +25,7 @@ fun Application.configureSecurity(httpClient: HttpClient) {
     val googleConfig = environment.config.config("oauth").config("google")
     val googleClientId = googleConfig.tryGetString("clientId") ?: "clientId"
     val googleClientSecret = googleConfig.tryGetString("clientSecret") ?: "clientSecret"
+
     authentication {
         oauth("auth-oauth-google") {
             urlProvider = { "http://localhost:8080/callback" }
@@ -49,11 +48,13 @@ fun Application.configureSecurity(httpClient: HttpClient) {
             client = httpClient
         }
     }
+
     install(Sessions) {
         cookie<UserSession>("MY_SESSION") {
             cookie.extensions["SameSite"] = "lax"
         }
     }
+
     routing {
         authenticate("auth-oauth-google") {
             get("login") {
@@ -67,33 +68,36 @@ fun Application.configureSecurity(httpClient: HttpClient) {
                 call.respondRedirect(redirect!!)
             }
         }
-        get("/{path}") {
-            val userSession: UserSession? = call.sessions.get()
-            if (userSession != null) {
-                val response: HttpResponse = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
-                    headers {
-                        append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
-                    }
-                }
-                println(response.bodyAsText())
-                val userInfo: UserInfo = response.body()
-                call.respondHtml {
-                    body {
-                        div {
-                            p { +"Hello, ${userInfo.name}!" }
-                            img { src = userInfo.picture }
-                        }
-                    }
-                }
-            } else {
-                val redirectUrl = URLBuilder("http://0.0.0.0:8080/login").run {
-                    parameters.append("redirectUrl", call.request.uri)
-                    build()
-                }
-                call.respondRedirect(redirectUrl)
+    }
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.requiresAuthentication(
+    httpClient: HttpClient,
+    pageFn: HTML.(UserInfo) -> Unit
+) {
+    val userSession: UserSession? = call.sessions.get()
+    if (userSession != null) {
+        val response: HttpResponse = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
+            headers {
+                append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
             }
         }
+        val userInfo: UserInfo = response.body()
+        call.respondHtml(HttpStatusCode.OK) {
+            pageFn(userInfo)
+        }
+    } else {
+        val redirectUrl = URLBuilder("http://0.0.0.0:8080/login").run {
+            parameters.append("redirectUrl", call.request.uri)
+            build()
+        }
+        call.respondRedirect(redirectUrl)
     }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.protectedPage(
+    userInfo: UserInfo
+) {
 }
 
 data class UserSession(val state: String, val token: String)

@@ -19,17 +19,6 @@ import kotlin.test.*
 
 class ApplicationTest {
     @Test
-    fun testRoot() = testApplication {
-        application {
-            configureRouting()
-        }
-        client.get("/").apply {
-            assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello World!", bodyAsText())
-        }
-    }
-
-    @Test
     fun testSecurity() = testApplication {
         environment {
             config = ApplicationConfig("application-custom.yaml")
@@ -41,7 +30,6 @@ class ApplicationTest {
             }
         }
         application {
-            configureRouting()
             configureSecurity(testHttpClient)
         }
 
@@ -64,7 +52,7 @@ class ApplicationTest {
             }
         }
         val loginResponse = testHttpClient.get("/login-test")
-        val helloResponse = testHttpClient.get("/hello")
+        val helloResponse = testHttpClient.get("/")
 
         val expectedHtmlString = """
             <!DOCTYPE html>

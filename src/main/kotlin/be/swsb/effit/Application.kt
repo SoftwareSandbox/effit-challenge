@@ -1,6 +1,7 @@
 package be.swsb.effit
 
 import be.swsb.effit.plugins.*
+import be.swsb.effit.ui.configureUI
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -31,7 +32,6 @@ fun Application.module() {
     configureHTTP()
     configureMonitoring()
     configureSerialization()
-    configureTemplating()
     configureDatabases()
-    configureRouting()
+    configureUI(httpClient)
 }
