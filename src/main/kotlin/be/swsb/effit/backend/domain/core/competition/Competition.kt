@@ -134,7 +134,7 @@ class Competition private constructor(val id: UUID = UUID.randomUUID(),
 
 }
 
-class CompetitionId constructor(name: String) {
+class CompetitionId(name: String) {
 
     private var _id: String
 

@@ -1,6 +1,6 @@
 package be.swsb.effit.backend.domain.core.competition
 
-import be.swsb.effit.backend.domain.command.competition.CompetitionCommands.CreateCompetition
+import be.swsb.effit.backend.domain.command.competition.CreateCompetition
 import be.swsb.effit.backend.domain.core.exceptions.DomainValidationRuntimeException
 
 class CompetitionCreator {

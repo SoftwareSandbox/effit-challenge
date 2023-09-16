@@ -1,4 +1,4 @@
-package be.swsb.effit.backend.domain.query
+package be.swsb.effit.backend.messaging.query
 
 interface QueryHandler<out R, Q : Query<out R>> {
     fun handle(query: Q): R

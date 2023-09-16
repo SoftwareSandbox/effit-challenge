@@ -1,6 +1,6 @@
-package be.swsb.effit.backend.domain.query
+package be.swsb.effit.backend.messaging.command
 
-interface Query<R> {
+interface Command<A> {
     fun asString(): String {
         return this.javaClass.name
     }

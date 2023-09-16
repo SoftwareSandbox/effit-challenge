@@ -2,7 +2,7 @@ package be.swsb.effit.backend.domain.query.competition
 
 import be.swsb.effit.backend.domain.command.competition.CompetitionRepository
 import be.swsb.effit.backend.domain.core.competition.Competition
-import be.swsb.effit.backend.domain.query.QueryHandler
+import be.swsb.effit.backend.messaging.query.QueryHandler
 import be.swsb.effit.backend.domain.query.competition.CompetitionQueries.FindAllCompetitions
 
 class FindAllCompetitionsQueryHandler(

@@ -1,7 +1,6 @@
 package be.swsb.effit.backend.domain.command.competition
 
-import be.swsb.effit.backend.domain.command.CommandHandler
-import be.swsb.effit.backend.domain.command.competition.CompetitionCommands.StartCompetition
+import be.swsb.effit.backend.messaging.command.CommandHandler
 import be.swsb.effit.backend.domain.core.competition.Competition
 import be.swsb.effit.backend.domain.core.competition.CompetitionId
 import be.swsb.effit.backend.domain.query.competition.CompetitionQueries.FindCompetition
@@ -9,8 +8,8 @@ import be.swsb.effit.backend.messaging.query.QueryExecutor
 
 class StartCompetitionCommandHandler(
     private val queryExecutor: QueryExecutor,
-    private val competitionRepository: CompetitionRepository)
-    : CommandHandler<Competition, StartCompetition> {
+    private val competitionRepository: CompetitionRepository
+) : CommandHandler<Competition, StartCompetition> {
 
     override fun handle(command: StartCompetition): Competition {
         val competition = findCompetition(command.id)

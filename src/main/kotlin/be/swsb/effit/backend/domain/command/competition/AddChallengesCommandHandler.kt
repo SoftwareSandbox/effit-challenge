@@ -1,7 +1,6 @@
 package be.swsb.effit.backend.domain.command.competition
 
-import be.swsb.effit.backend.domain.command.CommandHandler
-import be.swsb.effit.backend.domain.command.competition.CompetitionCommands.AddChallenges
+import be.swsb.effit.backend.messaging.command.CommandHandler
 import be.swsb.effit.backend.domain.core.competition.Competition
 import be.swsb.effit.backend.domain.core.competition.CompetitionId
 import be.swsb.effit.backend.domain.query.competition.CompetitionQueries.FindCompetition

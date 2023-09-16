@@ -1,8 +1,5 @@
 package be.swsb.effit.backend.messaging.command
 
-import be.swsb.effit.backend.domain.command.Command
-import be.swsb.effit.backend.domain.command.CommandHandler
-
 class CommandExecutor(private val registeredHandlers: List<CommandHandler<*, *>>) {
 
 //    @Transactional
@@ -11,7 +8,7 @@ class CommandExecutor(private val registeredHandlers: List<CommandHandler<*, *>>
         return commandHandler.handle(command)
     }
 
-    private fun <R> getCommandHandler(command: Command<R>): CommandHandler<*,*> {
+    private fun <R> getCommandHandler(command: Command<R>): CommandHandler<*, *> {
         return registeredHandlers.firstOrNull { it.getCommandType() == command.javaClass }
                 ?: throw NoCommandHandlerException(command.asString())
     }

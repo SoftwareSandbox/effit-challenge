@@ -1,7 +1,6 @@
 package be.swsb.effit.backend.domain.command.competition
 
-import be.swsb.effit.backend.domain.command.CommandHandler
-import be.swsb.effit.backend.domain.command.competition.CompetitionCommands.CompleteChallenge
+import be.swsb.effit.backend.messaging.command.CommandHandler
 import be.swsb.effit.backend.domain.core.competition.Competition
 import be.swsb.effit.backend.domain.core.competition.CompetitionId
 import be.swsb.effit.backend.domain.core.exceptions.EntityNotFoundDomainRuntimeException
@@ -10,8 +9,9 @@ import be.swsb.effit.backend.messaging.query.QueryExecutor
 
 class CompleteChallengeCommandHandler(
     private val queryExecutor: QueryExecutor,
-    private val competitionRepository: CompetitionRepository)
-    : CommandHandler<Competition, CompleteChallenge> {
+    private val competitionRepository: CompetitionRepository
+) : CommandHandler<Competition, CompleteChallenge> {
+
     override fun handle(command: CompleteChallenge): Competition {
         val competitionId = command.id
         val challengeId = command.challengeId

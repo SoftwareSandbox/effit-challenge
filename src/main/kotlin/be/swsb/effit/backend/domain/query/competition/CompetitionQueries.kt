@@ -2,7 +2,7 @@ package be.swsb.effit.backend.domain.query.competition
 
 import be.swsb.effit.backend.domain.core.competition.Competition
 import be.swsb.effit.backend.domain.core.competition.CompetitionId
-import be.swsb.effit.backend.domain.query.Query
+import be.swsb.effit.backend.messaging.query.Query
 
 sealed class CompetitionQueries {
     object FindAllCompetitions: Query<List<Competition>>
