@@ -25,7 +25,7 @@ fun DIV.Navbar(userInfo: UserInfo) = nav("navbar is-primary") {
 }
 
 private fun DIV.Profile(userInfo: UserInfo) {
-    div( classes="media") {
+    div(classes = "media") {
         div(classes = "media-left") {
             figure(classes = "image is-48x48") {
                 img(alt = "Placeholder image") {
@@ -34,7 +34,7 @@ private fun DIV.Profile(userInfo: UserInfo) {
             }
         }
         div(classes = "media-content") {
-            p(classes = "title is-4"){
+            p(classes = "is-4") {
                 +userInfo.name
             }
         }
