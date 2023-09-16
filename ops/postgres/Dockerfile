@@ -1,0 +1,4 @@
+FROM postgres:16.0-alpine
+ENV POSTGRES_DB effitdb
+ENV POSTGRES_USER effit
+ENV POSTGRES_PASSWORD deveffit

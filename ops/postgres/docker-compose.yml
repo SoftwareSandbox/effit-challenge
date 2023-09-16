@@ -1,0 +1,6 @@
+version: '3'
+services:
+  effit_local_db:
+    build: .
+    ports:
+      - "5544:5432"

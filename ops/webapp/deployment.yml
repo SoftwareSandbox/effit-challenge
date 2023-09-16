@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: effit-deployment
+  labels:
+    app: effit-challenge-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: effit-challenge-webapp
+  template:
+    metadata:
+      labels:
+        app: effit-challenge-webapp
+      annotations:
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8082"
+        prometheus.io/scrape: "true"
+    spec:
+      containers:
+        - name: effit-app
+          image: registry.gitlab.rotate-it.be/sch3lp/effit-challenge:cqrs-stage-3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://acid-jesus.default:5432/effitchallenge
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: effit-app.acid-jesus.credentials
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: effit-app.acid-jesus.credentials
+                  key: password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: effit-service
+spec:
+  selector:
+    app: effit-challenge-webapp
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: effit-ingress
+spec:
+  rules:
+    - host: effit.demo.rotate-it.be
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: effit-service
+              servicePort: 8080

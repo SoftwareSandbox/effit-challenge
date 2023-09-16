@@ -1,0 +1,10 @@
+ktor:
+  application:
+    modules:
+      - be.swsb.effit.ApplicationKt.module
+  deployment:
+    port: 8080
+oauth:
+  google:
+    clientId: "239901082410-csmlhg27d90ela85l8pmk9gt4gikrkj3.apps.googleusercontent.com"
+    clientSecret: "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"
