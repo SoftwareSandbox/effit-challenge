@@ -1,0 +1,25 @@
+version: '3'
+services:
+  effit_keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    ports:
+      - "9090:8080"
+      - "9990:9990"
+    environment:
+      KEYCLOAK_ADMIN: bruce
+      KEYCLOAK_ADMIN_PASSWORD: bruce
+      DB_VENDOR: postgres
+      DB_ADDR: effit_keycloak_db
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+#      KEYCLOAK_IMPORT: /effit-realm.json
+#    volumes:
+#      - ./effit-realm.json:/effit-realm.json
+  effit_keycloak_db:
+    image: postgres:latest
+    ports:
+      - "6667:5432"
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak

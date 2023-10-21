@@ -18,7 +18,7 @@ import io.ktor.util.pipeline.*
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 
-fun Application.configureSecurity(httpClient: HttpClient) {
+fun Application.configureSimpleSecurity(httpClient: HttpClient) {
 
     val redirects = mutableMapOf<String, String>()
 
@@ -51,6 +51,23 @@ fun Application.configureSecurity(httpClient: HttpClient) {
                 call.sessions.set(UserSession(principal!!.state!!, principal.accessToken))
                 val redirect = redirects[principal.state!!]
                 call.respondRedirect(redirect!!)
+            }
+        }
+        get("/{path}") {
+            val userSession: UserSession? = call.sessions.get()
+            if (userSession != null) {
+                val userInfo: UserInfo = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
+                    headers {
+                        append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
+                    }
+                }.body()
+                call.respondText("Hello, ${userInfo.name}!")
+            } else {
+                val redirectUrl = URLBuilder("http://0.0.0.0:8080/login").run {
+                    parameters.append("redirectUrl", call.request.uri)
+                    build()
+                }
+                call.respondRedirect(redirectUrl)
             }
         }
     }
@@ -111,46 +128,10 @@ private fun AuthenticationConfig.google(
     }
 }
 
-suspend fun PipelineContext<Unit, ApplicationCall>.withUser(
-    httpClient: HttpClient,
-    requiresAuthentication: Boolean = false,
-    pageFn: HTML.(UserInfo?) -> Unit
-) {
-    val userSession: UserSession? = call.sessions.get()
-    if (userSession == null && !requiresAuthentication) {
-        call.respondHtml(HttpStatusCode.OK) {
-            pageFn(null)
-        }
-    } else if (userSession != null) {
-        val response: HttpResponse = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
-            headers {
-                append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
-            }
-        }
-        if (response.status == Unauthorized) {
-            redirectToLogin()
-        }
-        val userInfo: UserInfo = response.body()
-        call.respondHtml(HttpStatusCode.OK) {
-            pageFn(userInfo)
-        }
-    } else {
-        redirectToLogin()
-    }
-}
-
-private suspend fun PipelineContext<Unit, ApplicationCall>.redirectToLogin() {
-    val redirectUrl = URLBuilder("http://0.0.0.0:8080/login").run {
-        parameters.append("redirectUrl", call.request.uri)
-        build()
-    }
-    call.respondRedirect(redirectUrl)
-}
-
-data class UserSession(val state: String, val token: String)
+data class UserSession2(val state: String, val token: String)
 
 @Serializable
-data class UserInfo(
+data class UserInfo2(
     val id: String,
     val name: String,
     val picture: String,

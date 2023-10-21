@@ -6,5 +6,10 @@ ktor:
     port: 8080
 oauth:
   google:
-    clientId: "239901082410-csmlhg27d90ela85l8pmk9gt4gikrkj3.apps.googleusercontent.com"
-    clientSecret: "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"
+#    clientId: "239901082410-csmlhg27d90ela85l8pmk9gt4gikrkj3.apps.googleusercontent.com"
+#    clientSecret: "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"
+    clientId: "239901082410-c8jeo4su2033b0d6m475niv63ohtimls.apps.googleusercontent.com"
+    clientSecret: "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"
+  keycloak:
+    clientId: "effit-ktor-webapp"
+    clientSecret: "U057V8fpb4Iz3a3Mlwm2rNaot0obyuKr"

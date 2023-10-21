@@ -13,7 +13,7 @@ import kotlinx.html.id
 
 private const val EffitUiPage = "EffitUiPage"
 
-fun HTML.EffitUi(id: String = "EffitUi", navigableView: NavigableView, userInfo: UserInfo) = page {
+fun HTML.EffitUi(id: String = "EffitUi", navigableView: NavigableView, userInfo: UserInfo?) = page {
     FlexContainer(EffitUiPage) {
         this.id = id
         Navbar(userInfo)

@@ -5,9 +5,10 @@ val logback_version: String by project
 val postgres_version: String by project
 val h2_version: String by project
 plugins {
-    kotlin("jvm") version "1.9.10"
+    val kotlinVersion = "1.9.10"
+    kotlin("jvm") version kotlinVersion
     id("io.ktor.plugin") version "2.3.4"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion
 }
 
 group = "be.swsb.effit"
@@ -42,11 +43,12 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation")
     implementation("io.ktor:ktor-server-html-builder")
     implementation("io.ktor:ktor-server-netty")
-    implementation("io.ktor:ktor-server-config-yaml:2.3.4")
+    implementation("io.ktor:ktor-server-config-yaml")
     implementation("io.ktor:ktor-serialization-kotlinx-json")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+
 
     testImplementation("io.ktor:ktor-server-tests")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

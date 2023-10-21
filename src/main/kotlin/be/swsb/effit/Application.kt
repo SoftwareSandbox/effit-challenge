@@ -7,6 +7,7 @@ import io.ktor.client.engine.apache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.cors.routing.*
 import kotlinx.serialization.json.Json
 
 fun main(args: Array<String>) {
@@ -14,24 +15,25 @@ fun main(args: Array<String>) {
 }
 
 val httpClient = HttpClient(Apache) {
-    install(ContentNegotiation) {
-        json(json = Json {
-            encodeDefaults = true
-            isLenient = true
-            allowSpecialFloatingPointValues = true
-            allowStructuredMapKeys = true
-            prettyPrint = false
-            useArrayPolymorphism = false
-            ignoreUnknownKeys = true
-        })
-    }
+//    install(ContentNegotiation) {
+//        json(json = Json {
+//            encodeDefaults = true
+//            isLenient = true
+//            allowSpecialFloatingPointValues = true
+//            allowStructuredMapKeys = true
+//            prettyPrint = false
+//            useArrayPolymorphism = false
+//            ignoreUnknownKeys = true
+//        })
+//    }
 }
 
 fun Application.module() {
-    configureSecurity(httpClient)
     configureHTTP()
-    configureMonitoring()
-    configureSerialization()
-    configureDatabases()
+    configureSecurity(httpClient)
+//    configureSimpleSecurity(httpClient)
+//    configureMonitoring()
+//    configureSerialization()
+//    configureDatabases()
     configureUI(httpClient)
 }

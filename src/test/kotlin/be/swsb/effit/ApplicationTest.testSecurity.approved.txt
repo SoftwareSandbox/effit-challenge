@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="navbar-end">
-            <div class="navbar-item">
+            <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">
               <div class="media">
                 <div class="media-left">
                   <figure class="image is-48x48"><img alt="Placeholder image" src="image-url"></figure>
@@ -31,6 +31,8 @@
                   <p class="is-4">JetBrains</p>
                 </div>
               </div>
+</a>
+              <div class="navbar-dropdown" hx-boost="true"><a href="logout" class="navbar-item is-size-5">Log out</a></div>
             </div>
           </div>
         </div>
